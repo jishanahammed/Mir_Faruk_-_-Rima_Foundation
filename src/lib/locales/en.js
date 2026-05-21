@@ -15,9 +15,9 @@ const siteCopy = {
     openMenuLabel: "Open navigation menu",
     closeMenuLabel: "Close navigation menu",
     navItems: [
-      { label: "Home", href: "#home" },
-      { label: "About", href: "#about-us" },
-      { label: "Contact", href: "#contact-us" },
+      { label: "Home", href: "/" },
+      { label: "About", href: "/about" },
+      { label: "Contact", href: "/contact" },
     ],
   },
   hero: {
@@ -33,11 +33,11 @@ const siteCopy = {
       "Building a compassionate, self-reliant, and responsible society is our central mission.",
     primaryCta: {
       label: "Explore Registration",
-      href: "#registration",
+      href: "/register",
     },
     secondaryCta: {
       label: "Learn About the Mission",
-      href: "#about-us",
+      href: "/about",
     },
     trustTags: ["Fi Sabilillah", "Qard Hasanah", "Transparent Management"],
     panelLabel: "Sustainable Support Model",
@@ -100,22 +100,55 @@ const siteCopy = {
     continueLabel: "Continue",
     options: [
       {
-        id: "volunteer-registration",
-        title: "Volunteer Registration",
-        description:
-          "For people who want to contribute time, field support, and compassionate follow-up in community work.",
-      },
-      {
         id: "donor-registration",
         title: "Donor Registration",
         description:
           "For supporters who want to fund ethical, transparent, and self-reliance-focused assistance programs.",
       },
       {
-        id: "partner-registration",
-        title: "Partner Registration",
+        id: "beneficiary-registration",
+        title: "Beneficiary Registration",
         description:
-          "For collaborators and organizations that want to support implementation, oversight, and impact growth.",
+          "For families or individuals who want to apply for livelihood, self-reliance, and dignity-centered assistance.",
+      },
+      {
+        id: "volunteer-registration",
+        title: "Volunteer Registration",
+        description:
+          "For people who want to contribute time, field support, and compassionate follow-up in community work.",
+      },
+    ],
+  },
+  members: {
+    menuLabel: "Members",
+    eyebrow: "Member Directory",
+    title: "Foundation member and participant lists",
+    description:
+      "Organized pages for donor, beneficiary, and volunteer lists connected to the foundation.",
+    emptyLabel: "List update in progress",
+    emptyText:
+      "Verified and approved records will be published on this page.",
+    items: [
+      {
+        id: "donor-list",
+        title: "Donor List",
+        href: "/members/donors",
+        description:
+          "An organized list of donors participating in the foundation's support activities.",
+      },
+      {
+        id: "beneficiary-list",
+        title: "Beneficiary List",
+        href: "/members/beneficiaries",
+        description:
+          "A list of families or individuals verified for receiving assistance.",
+      },
+      {
+        id: "volunteer-list",
+        title: "Volunteer List",
+        href: "/members/volunteers",
+        description:
+          "A list of volunteers supporting field work and compassionate follow-up.",
       },
     ],
   },
@@ -123,26 +156,33 @@ const siteCopy = {
     eyebrow: "Contact Us",
     title: "Reach the foundation team with care, clarity, and confidence.",
     description:
-      "We are ready to speak with donors, volunteers, families, and partners who want to understand the mission or explore collaboration.",
+      "Contact us directly for foundation activities, assistance, donor participation, or volunteer coordination.",
+    summary:
+      "Transparent support, direct coordination, and responsible community care.",
     channels: [
       {
+        title: "Head Office Address",
+        value: "59/4/2, North Basabo, Sabujbagh, Dhaka-1214",
+        detail: "For office coordination, planning, and direct communication.",
+      },
+      {
+        title: "Mobile",
+        value: "+88 01771528299",
+        detail: "Call for urgent coordination or direct discussion.",
+        href: "tel:+8801771528299",
+      },
+      {
         title: "Email",
-        value: "info@mirfoundation.org",
+        value: "mf@plan365.dk",
         detail: "For general information, support questions, and partnership conversations.",
-      },
-      {
-        title: "Phone",
-        value: "+880 1XXX-XXXXXX",
-        detail: "Connect with the foundation team during working hours for direct coordination.",
-      },
-      {
-        title: "Office",
-        value: "Dhaka, Bangladesh",
-        detail: "A welcoming base for planning, monitoring, and community outreach activities.",
+        href: "mailto:mf@plan365.dk",
       },
     ],
   },
   footer: {
+    navigationLabel: "Navigation",
+    registrationLabel: "Registration",
+    contactLabel: "Contact",
     note: "Shariah-aligned social support platform designed for transparent, long-term community care.",
   },
 };

@@ -5,6 +5,7 @@ import { useSiteLocale } from "@/components/providers/locale-provider";
 export function Hero() {
   const { copy } = useSiteLocale();
   const { brand, hero } = copy;
+  const isBangla = copy.htmlLang === "bn";
 
   return (
     <section
@@ -25,17 +26,29 @@ export function Hero() {
                 </span>
 
                 <div className="space-y-5">
-                  <h3 className="max-w-4xl text-xl font-semibold tracking-tight text-slate-950 sm:text-3xl md:text-[2.7rem] md:leading-[1.05] xl:text-[3.2rem]">
-                    <span className="block text-balance bg-[linear-gradient(135deg,_#0f172a_8%,_#0f766e_48%,_#0891b2_92%)] bg-clip-text text-transparent">
+                  <h3 className="mt-4 max-w-4xl text-xl font-semibold tracking-normal text-slate-950 sm:text-3xl md:text-[2.7rem] md:leading-[1.16] xl:text-[3.2rem]">
+                    <span
+                      className={`block text-balance ${
+                        isBangla
+                          ? "text-cyan-950"
+                          : "bg-[linear-gradient(135deg,_#0f172a_8%,_#0f766e_48%,_#0891b2_92%)] bg-clip-text text-transparent"
+                      }`}
+                    >
                       {brand.name}
                     </span>
                     <span className="mt-3 block text-[0.68em] font-medium leading-[1.18] text-slate-600 sm:text-[0.7em]">
-                      <span className="bg-[linear-gradient(135deg,_#334155_0%,_#0f766e_100%)] bg-clip-text text-transparent">
-                      {hero.headingLines[1]}
+                      <span
+                        className={
+                          isBangla
+                            ? "text-teal-700"
+                            : "bg-[linear-gradient(135deg,_#334155_0%,_#0f766e_100%)] bg-clip-text text-transparent"
+                        }
+                      >
+                        {hero.headingLines[1]}
                       </span>
                     </span>
                   </h3>
-                  <p className="max-w-3xl text-sm leading-7 text-slate-600 sm:text-base sm:leading-8 md:text-lg">
+                  <p className="max-w-3xl text-xs leading-6 text-slate-600 sm:text-sm sm:leading-7 md:text-base md:leading-8">
                     {hero.paragraph}
                   </p>
                 </div>

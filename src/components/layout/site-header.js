@@ -2,18 +2,28 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { useSiteLocale } from "@/components/providers/locale-provider";
 
 const HEADER_OFFSET = 200;
+const languageFlagImages = {
+  EN: "/en.png",
+  BN: "/bg.png",
+  DK: "/dk.png",
+};
 
 export function SiteHeader() {
   const { copy, isLoading, languageOptions, locale, setLocale } = useSiteLocale();
+  const pathname = usePathname();
+  const headerRef = useRef(null);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isMembersOpen, setIsMembersOpen] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
 
-  const { header, registration } = copy;
+  const { header, members, registration } = copy;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,18 +39,51 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
+    setIsLanguageOpen(false);
     setIsMobileOpen(false);
+    setIsMembersOpen(false);
     setIsRegistrationOpen(false);
-  }, [locale]);
+  }, [locale, pathname]);
+
+  useEffect(() => {
+    function closeMenusOnOutsideClick(event) {
+      if (!headerRef.current?.contains(event.target)) {
+        setIsLanguageOpen(false);
+        setIsMembersOpen(false);
+        setIsRegistrationOpen(false);
+      }
+    }
+
+    function closeMenusOnEscape(event) {
+      if (event.key === "Escape") {
+        setIsLanguageOpen(false);
+        setIsMembersOpen(false);
+        setIsRegistrationOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", closeMenusOnOutsideClick);
+    document.addEventListener("keydown", closeMenusOnEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", closeMenusOnOutsideClick);
+      document.removeEventListener("keydown", closeMenusOnEscape);
+    };
+  }, []);
 
   const shellClassName = isPinned
     ? "fixed inset-x-0 top-0 z-30 border-b border-slate-200 bg-white/95 shadow-lg shadow-slate-900/5 backdrop-blur-xl"
     : "absolute inset-x-0 top-0 z-20 border-b border-transparent bg-transparent";
 
   const menuLabel = isMobileOpen ? header.closeMenuLabel : header.openMenuLabel;
+  const isMembersActive = pathname.startsWith("/members");
+  const isRegistrationActive = pathname === "/register";
+  const selectedLanguage =
+    languageOptions.find((language) => language.code === locale) ??
+    languageOptions[0];
 
   return (
-    <div className="relative h-24 lg:h-28">
+    <div ref={headerRef} className="relative h-24 lg:h-28">
       <header className={`${shellClassName} transition-all duration-300 ease-out`}>
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center" aria-label={header.homeAriaLabel}>
@@ -73,23 +116,92 @@ export function SiteHeader() {
               }`}
             >
               {header.navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-full px-4 py-2 transition hover:bg-cyan-50 hover:text-cyan-700"
-                  onClick={() => setIsRegistrationOpen(false)}
+                  aria-current={pathname === item.href ? "page" : undefined}
+                  className={`rounded-full px-4 py-2 transition ${
+                    pathname === item.href
+                      ? "border border-cyan-300 bg-white/70 text-cyan-800 shadow-sm shadow-cyan-100"
+                      : "hover:bg-cyan-50 hover:text-cyan-700"
+                  }`}
+                  onClick={() => {
+                    setIsMembersOpen(false);
+                    setIsRegistrationOpen(false);
+                  }}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
 
               <div className="relative">
                 <button
                   type="button"
-                  className="flex items-center gap-2 rounded-full px-4 py-2 transition hover:bg-cyan-50 hover:text-cyan-700"
+                  className={`flex items-center gap-2 rounded-full px-4 py-2 transition ${
+                    isMembersActive
+                      ? "border border-cyan-300 bg-white/70 text-cyan-800 shadow-sm shadow-cyan-100"
+                      : "hover:bg-cyan-50 hover:text-cyan-700"
+                  }`}
+                  aria-expanded={isMembersOpen}
+                  aria-controls="members-menu"
+                  aria-current={isMembersActive ? "page" : undefined}
+                  onClick={() => {
+                    setIsMembersOpen(!isMembersOpen);
+                    setIsRegistrationOpen(false);
+                  }}
+                >
+                  {members.menuLabel}
+                  <span
+                    className={`mt-[-0.15rem] block h-2.5 w-2.5 rotate-45 border-b border-r border-current transition ${
+                      isMembersOpen ? "-translate-y-px" : "translate-y-0"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                {isMembersOpen ? (
+                  <div
+                    id="members-menu"
+                    className="absolute right-0 top-[calc(100%+0.75rem)] w-72 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-200/80"
+                  >
+                    {members.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        className={`block rounded-2xl px-4 py-3 transition ${
+                          pathname === item.href
+                            ? "border border-cyan-300 bg-white text-cyan-800"
+                            : "hover:bg-cyan-50"
+                        }`}
+                        onClick={() => setIsMembersOpen(false)}
+                      >
+                        <p className="text-sm font-semibold text-slate-900">
+                          {item.title}
+                        </p>
+                        <p className="mt-1 text-xs leading-6 text-slate-500">
+                          {item.description}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="relative">
+                <button
+                  type="button"
+                  className={`flex items-center gap-2 rounded-full px-4 py-2 transition ${
+                    isRegistrationActive
+                      ? "border border-cyan-300 bg-white/70 text-cyan-800 shadow-sm shadow-cyan-100"
+                      : "hover:bg-cyan-50 hover:text-cyan-700"
+                  }`}
                   aria-expanded={isRegistrationOpen}
                   aria-controls="registration-menu"
-                  onClick={() => setIsRegistrationOpen(!isRegistrationOpen)}
+                  aria-current={isRegistrationActive ? "page" : undefined}
+                  onClick={() => {
+                    setIsRegistrationOpen(!isRegistrationOpen);
+                    setIsMembersOpen(false);
+                  }}
                 >
                   {registration.menuLabel}
                   <span
@@ -105,10 +217,21 @@ export function SiteHeader() {
                     id="registration-menu"
                     className="absolute right-0 top-[calc(100%+0.75rem)] w-72 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-200/80"
                   >
+                    <Link
+                      href="/register"
+                      className={`mb-2 block rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
+                        isRegistrationActive
+                          ? "border-cyan-300 bg-white text-cyan-800"
+                          : "border-cyan-100 bg-cyan-50 text-cyan-800 hover:bg-cyan-100"
+                      }`}
+                      onClick={() => setIsRegistrationOpen(false)}
+                    >
+                      {registration.menuLabel}
+                    </Link>
                     {registration.options.map((item) => (
-                      <a
+                      <Link
                         key={item.id}
-                        href={`#${item.id}`}
+                        href={`/register#${item.id}`}
                         className="block rounded-2xl px-4 py-3 transition hover:bg-cyan-50"
                         onClick={() => setIsRegistrationOpen(false)}
                       >
@@ -118,38 +241,83 @@ export function SiteHeader() {
                         <p className="mt-1 text-xs leading-6 text-slate-500">
                           {item.description}
                         </p>
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 ) : null}
               </div>
             </nav>
 
-            <label className="sr-only" htmlFor="language-select">
-              {header.languageLabel}
-            </label>
-            <select
-              id="language-select"
-              value={locale}
-              aria-label={header.languageLabel}
-              disabled={isLoading}
-              onChange={(event) => setLocale(event.target.value)}
-              className={`rounded-full px-4 py-2 text-sm font-medium outline-none transition ${
-                isPinned
-                  ? "border border-slate-200 bg-white text-slate-700 focus:border-cyan-400"
-                  : "border border-cyan-100 bg-white/92 text-slate-700 shadow-lg shadow-cyan-100/50 focus:border-cyan-300"
-              }`}
-            >
-              {languageOptions.map((language) => (
-                <option
-                  key={language.code}
-                  value={language.code}
-                  className="text-slate-700"
-                >
-                  {language.label}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <button
+                type="button"
+                aria-label={header.languageLabel}
+                aria-expanded={isLanguageOpen}
+                disabled={isLoading}
+                onClick={() => {
+                  setIsLanguageOpen(!isLanguageOpen);
+                  setIsMembersOpen(false);
+                  setIsRegistrationOpen(false);
+                }}
+                className={`flex items-center gap-3 rounded-full px-3 py-2 text-sm font-semibold outline-none transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                  isPinned
+                    ? "border border-slate-200 bg-white text-slate-700 hover:border-cyan-200"
+                    : "border border-cyan-100 bg-white/92 text-slate-700 shadow-lg shadow-cyan-100/50 hover:border-cyan-200"
+                }`}
+              >
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-cyan-50 text-[0.65rem] font-bold text-cyan-800">
+                  <Image
+                    src={languageFlagImages[selectedLanguage.code]}
+                    alt=""
+                    width={22}
+                    height={22}
+                    className="h-5 w-5 rounded-full object-cover"
+                  />
+                </span>
+                <span>{selectedLanguage.label}</span>
+                <span
+                  className={`mt-[-0.15rem] block h-2.5 w-2.5 rotate-45 border-b border-r border-current transition ${
+                    isLanguageOpen ? "-translate-y-px" : "translate-y-0"
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+
+              {isLanguageOpen ? (
+                <div className="absolute right-0 top-[calc(100%+0.75rem)] w-52 rounded-3xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-200/80">
+                  {languageOptions.map((language) => {
+                    const isSelected = language.code === locale;
+
+                    return (
+                      <button
+                        key={language.code}
+                        type="button"
+                        className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm font-semibold transition ${
+                          isSelected
+                            ? "border border-cyan-300 bg-cyan-50 text-cyan-800"
+                            : "text-slate-700 hover:bg-cyan-50 hover:text-cyan-800"
+                        }`}
+                        onClick={() => {
+                          setLocale(language.code);
+                          setIsLanguageOpen(false);
+                        }}
+                      >
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[0.68rem] font-bold text-slate-700">
+                          <Image
+                            src={languageFlagImages[language.code]}
+                            alt=""
+                            width={24}
+                            height={24}
+                            className="h-6 w-6 rounded-full object-cover"
+                          />
+                        </span>
+                        <span>{language.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
           </div>
 
           <button
@@ -195,18 +363,25 @@ export function SiteHeader() {
           >
             <div className="mx-auto flex w-full max-w-7xl flex-col gap-3">
               {header.navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={pathname === item.href ? "page" : undefined}
                   className={`rounded-2xl px-4 py-3 text-sm font-medium ${
-                    isPinned
-                      ? "border border-slate-200 bg-slate-50 text-slate-700"
-                      : "border border-cyan-100 bg-slate-50 text-slate-700"
+                    pathname === item.href
+                      ? "border border-cyan-300 bg-white text-cyan-800"
+                      : isPinned
+                        ? "border border-slate-200 bg-slate-50 text-slate-700"
+                        : "border border-cyan-100 bg-slate-50 text-slate-700"
                   }`}
-                  onClick={() => setIsMobileOpen(false)}
+                  onClick={() => {
+                    setIsMobileOpen(false);
+                    setIsMembersOpen(false);
+                    setIsRegistrationOpen(false);
+                  }}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
 
               <div
@@ -218,9 +393,75 @@ export function SiteHeader() {
               >
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-sm font-semibold text-slate-900"
+                  className={`flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-sm font-semibold ${
+                    isMembersActive
+                      ? "border border-cyan-300 bg-white text-cyan-800"
+                      : "text-slate-900"
+                  }`}
+                  aria-expanded={isMembersOpen}
+                  aria-current={isMembersActive ? "page" : undefined}
+                  onClick={() => {
+                    setIsMembersOpen(!isMembersOpen);
+                    setIsRegistrationOpen(false);
+                  }}
+                >
+                  <span>{members.menuLabel}</span>
+                  <span
+                    className={`mt-[-0.15rem] block h-2.5 w-2.5 rotate-45 border-b border-r border-current transition ${
+                      isMembersOpen ? "-translate-y-px" : "translate-y-0"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                {isMembersOpen ? (
+                  <div className="mt-2 space-y-2">
+                    {members.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        className={`block rounded-2xl px-4 py-3 ${
+                          pathname === item.href
+                            ? "border border-cyan-300 bg-white text-cyan-800"
+                            : "bg-white"
+                        }`}
+                        onClick={() => {
+                          setIsMembersOpen(false);
+                          setIsMobileOpen(false);
+                        }}
+                      >
+                        <p className="text-sm font-semibold text-slate-900">
+                          {item.title}
+                        </p>
+                        <p className="mt-1 text-xs leading-6 text-slate-500">
+                          {item.description}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+
+              <div
+                className={`rounded-3xl p-3 ${
+                  isPinned
+                    ? "border border-slate-200 bg-slate-50"
+                    : "border border-cyan-100 bg-slate-50"
+                }`}
+              >
+                <button
+                  type="button"
+                  className={`flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-sm font-semibold ${
+                    isRegistrationActive
+                      ? "border border-cyan-300 bg-white text-cyan-800"
+                      : "text-slate-900"
+                  }`}
                   aria-expanded={isRegistrationOpen}
-                  onClick={() => setIsRegistrationOpen(!isRegistrationOpen)}
+                  aria-current={isRegistrationActive ? "page" : undefined}
+                  onClick={() => {
+                    setIsRegistrationOpen(!isRegistrationOpen);
+                    setIsMembersOpen(false);
+                  }}
                 >
                   <span>{registration.menuLabel}</span>
                   <span
@@ -233,10 +474,24 @@ export function SiteHeader() {
 
                 {isRegistrationOpen ? (
                   <div className="mt-2 space-y-2">
+                    <Link
+                      href="/register"
+                      className={`block rounded-2xl border px-4 py-3 text-sm font-semibold ${
+                        isRegistrationActive
+                          ? "border-cyan-300 bg-white text-cyan-800"
+                          : "border-cyan-100 bg-cyan-50 text-cyan-800"
+                      }`}
+                      onClick={() => {
+                        setIsRegistrationOpen(false);
+                        setIsMobileOpen(false);
+                      }}
+                    >
+                      {registration.menuLabel}
+                    </Link>
                     {registration.options.map((item) => (
-                      <a
+                      <Link
                         key={item.id}
-                        href={`#${item.id}`}
+                        href={`/register#${item.id}`}
                         className="block rounded-2xl bg-white px-4 py-3"
                         onClick={() => {
                           setIsRegistrationOpen(false);
@@ -249,37 +504,56 @@ export function SiteHeader() {
                         <p className="mt-1 text-xs leading-6 text-slate-500">
                           {item.description}
                         </p>
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 ) : null}
               </div>
 
-              <label className="sr-only" htmlFor="language-select-mobile">
-                {header.languageLabel}
-              </label>
-              <select
-                id="language-select-mobile"
-                value={locale}
-                aria-label={header.languageLabel}
-                disabled={isLoading}
-                onChange={(event) => setLocale(event.target.value)}
-                className={`rounded-2xl px-4 py-3 text-sm font-medium outline-none ${
+              <div
+                className={`rounded-3xl p-3 ${
                   isPinned
-                    ? "border border-slate-200 bg-white text-slate-700 focus:border-cyan-400"
-                    : "border border-cyan-100 bg-white text-slate-700 focus:border-cyan-300"
+                    ? "border border-slate-200 bg-slate-50"
+                    : "border border-cyan-100 bg-slate-50"
                 }`}
               >
-                {languageOptions.map((language) => (
-                  <option
-                    key={language.code}
-                    value={language.code}
-                    className="text-slate-700"
-                  >
-                    {language.label}
-                  </option>
-                ))}
-              </select>
+                <p className="px-2 pb-2 text-xs font-semibold tracking-[0.22em] text-cyan-700 uppercase">
+                  {header.languageLabel}
+                </p>
+                <div className="grid gap-2">
+                  {languageOptions.map((language) => {
+                    const isSelected = language.code === locale;
+
+                    return (
+                      <button
+                        key={language.code}
+                        type="button"
+                        disabled={isLoading}
+                        className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                          isSelected
+                            ? "border border-cyan-300 bg-white text-cyan-800"
+                            : "bg-white text-slate-700"
+                        }`}
+                        onClick={() => {
+                          setLocale(language.code);
+                          setIsMobileOpen(false);
+                        }}
+                      >
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-50 text-[0.68rem] font-bold text-cyan-800">
+                          <Image
+                            src={languageFlagImages[language.code]}
+                            alt=""
+                            width={24}
+                            height={24}
+                            className="h-6 w-6 rounded-full object-cover"
+                          />
+                        </span>
+                        <span>{language.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         ) : null}

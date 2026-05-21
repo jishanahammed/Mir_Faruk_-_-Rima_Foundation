@@ -7,9 +7,9 @@ export function HomePage() {
   return (
     <>
       <Hero />
-      {/* <AboutSection />
+      <AboutSection />
       <RegistrationSection />
-      <ContactSection /> */}
+      <ContactSection />
     </>
   );
 }

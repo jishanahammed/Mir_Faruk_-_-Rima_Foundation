@@ -15,9 +15,9 @@ const siteCopy = {
     openMenuLabel: "Åbn navigationsmenu",
     closeMenuLabel: "Luk navigationsmenu",
     navItems: [
-      { label: "Hjem", href: "#home" },
-      { label: "Om os", href: "#about-us" },
-      { label: "Kontakt", href: "#contact-us" },
+      { label: "Hjem", href: "/" },
+      { label: "Om os", href: "/about" },
+      { label: "Kontakt", href: "/contact" },
     ],
   },
   hero: {
@@ -33,11 +33,11 @@ const siteCopy = {
       "At opbygge et medfølende, selvhjulpent og ansvarligt samfund er vores vigtigste mål.",
     primaryCta: {
       label: "Se registrering",
-      href: "#registration",
+      href: "/register",
     },
     secondaryCta: {
       label: "Lær missionen at kende",
-      href: "#about-us",
+      href: "/about",
     },
     trustTags: ["Fi Sabilillah", "Qard Hasanah", "Transparent drift"],
     panelLabel: "Bæredygtig støttemodel",
@@ -100,22 +100,55 @@ const siteCopy = {
     continueLabel: "Fortsæt",
     options: [
       {
-        id: "volunteer-registration",
-        title: "Frivillig registrering",
-        description:
-          "Til mennesker, der vil bidrage med tid, feltstøtte og omsorgsfuld opfølgning i lokalsamfundet.",
-      },
-      {
         id: "donor-registration",
         title: "Donorregistrering",
         description:
           "Til støtter, der vil finansiere etiske, transparente og selvhjulpenhedsorienterede hjælpeprogrammer.",
       },
       {
-        id: "partner-registration",
-        title: "Partnerregistrering",
+        id: "beneficiary-registration",
+        title: "Modtagerregistrering",
         description:
-          "Til samarbejdspartnere og organisationer, der vil støtte implementering, tilsyn og vækst i indsatsen.",
+          "Til familier eller personer, der vil ansøge om levebrødsstøtte, selvhjulpenhed og værdig hjælp.",
+      },
+      {
+        id: "volunteer-registration",
+        title: "Frivillig registrering",
+        description:
+          "Til mennesker, der vil bidrage med tid, feltstøtte og omsorgsfuld opfølgning i lokalsamfundet.",
+      },
+    ],
+  },
+  members: {
+    menuLabel: "Medlemmer",
+    eyebrow: "Medlemsoversigt",
+    title: "Fondens medlems- og deltagerlister",
+    description:
+      "Organiserede sider for donor-, modtager- og frivilliglisten i fonden.",
+    emptyLabel: "Listen opdateres",
+    emptyText:
+      "Verificerede og godkendte oplysninger bliver offentliggjort på denne side.",
+    items: [
+      {
+        id: "donor-list",
+        title: "Donorliste",
+        href: "/members/donors",
+        description:
+          "En organiseret liste over donorer, der deltager i fondens støtteaktiviteter.",
+      },
+      {
+        id: "beneficiary-list",
+        title: "Modtagerliste",
+        href: "/members/beneficiaries",
+        description:
+          "En liste over familier eller personer, der er verificeret til at modtage støtte.",
+      },
+      {
+        id: "volunteer-list",
+        title: "Frivilligliste",
+        href: "/members/volunteers",
+        description:
+          "En liste over frivillige, der støtter feltarbejde og omsorgsfuld opfølgning.",
       },
     ],
   },
@@ -123,26 +156,33 @@ const siteCopy = {
     eyebrow: "Kontakt",
     title: "Kontakt fondens team med omsorg, klarhed og tillid.",
     description:
-      "Vi er klar til at tale med donorer, frivillige, familier og partnere, der vil forstå missionen eller undersøge samarbejdsmuligheder.",
+      "Kontakt os direkte om fondens aktiviteter, støtte, donorbidrag eller frivillig koordinering.",
+    summary:
+      "Transparent støtte, direkte koordinering og ansvarlig omsorg i lokalsamfundet.",
     channels: [
       {
+        title: "Hovedkontorets adresse",
+        value: "59/4/2, North Basabo, Sabujbagh, Dhaka-1214",
+        detail: "Til kontorkoordinering, planlægning og direkte kommunikation.",
+      },
+      {
+        title: "Mobil",
+        value: "+88 01771528299",
+        detail: "Ring for hurtig koordinering eller direkte dialog.",
+        href: "tel:+8801771528299",
+      },
+      {
         title: "E-mail",
-        value: "info@mirfoundation.org",
+        value: "mf@plan365.dk",
         detail: "Til generelle spørgsmål, støttebehov og partnerskabssamtaler.",
-      },
-      {
-        title: "Telefon",
-        value: "+880 1XXX-XXXXXX",
-        detail: "Kontakt fondens team i arbejdstiden for direkte koordinering.",
-      },
-      {
-        title: "Kontor",
-        value: "Dhaka, Bangladesh",
-        detail: "En imødekommende base for planlægning, opfølgning og lokal outreach.",
+        href: "mailto:mf@plan365.dk",
       },
     ],
   },
   footer: {
+    navigationLabel: "Navigation",
+    registrationLabel: "Registrering",
+    contactLabel: "Kontakt",
     note: "Sharia-tilpasset social støtteplatform designet til transparent og langsigtet omsorg i lokalsamfundet.",
   },
 };

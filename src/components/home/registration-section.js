@@ -33,7 +33,7 @@ export function RegistrationSection() {
                 {item.description}
               </p>
               <a
-                href="#contact-us"
+                href="/contact"
                 className="mt-6 inline-flex rounded-full border border-cyan-200 bg-white px-5 py-3 text-sm font-semibold text-cyan-700 transition hover:bg-cyan-50"
               >
                 {registration.continueLabel}
