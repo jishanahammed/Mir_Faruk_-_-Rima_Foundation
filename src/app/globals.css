@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --surface: #f8fafc;
+  --surface-strong: #e2e8f0;
+  --border: rgba(15, 23, 42, 0.08);
+  --accent: #06b6d4;
+  --accent-soft: rgba(6, 182, 212, 0.12);
+  --muted: #475569;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background:
+    radial-gradient(circle at top, rgba(6, 182, 212, 0.12), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #f8fcff 48%, #ffffff 100%);
+}
+
+body {
+  margin: 0;
+  background: transparent;
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+html[data-locale="bn"] body {
+  font-family:
+    "Hind Siliguri",
+    "Noto Sans Bengali",
+    "SolaimanLipi",
+    var(--font-geist-sans),
+    sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(6, 182, 212, 0.24);
+  color: #082f49;
+}
