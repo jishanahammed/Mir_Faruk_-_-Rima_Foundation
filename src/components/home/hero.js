@@ -6,6 +6,14 @@ export function Hero() {
   const { copy } = useSiteLocale();
   const { brand, hero } = copy;
   const isBangla = copy.htmlLang === "bn";
+  const foundationNameMatch = brand.name.match(/^(.*)\s+(Foundation|Fonden)$/);
+  const brandNameParts = brand.name.trim().split(/\s+/);
+  const localizedFoundationTitle =
+    isBangla && brandNameParts.length > 1 ? brandNameParts.slice(0, -1).join(" ") : null;
+  const localizedFoundationSuffix =
+    isBangla && brandNameParts.length > 1 ? brandNameParts.at(-1) : null;
+  const brandTitle = foundationNameMatch?.[1] ?? localizedFoundationTitle ?? brand.name;
+  const brandSuffix = foundationNameMatch?.[2] ?? localizedFoundationSuffix;
 
   return (
     <section
@@ -26,15 +34,28 @@ export function Hero() {
                 </span>
 
                 <div className="space-y-5">
-                  <h3 className="mt-4 max-w-4xl text-xl font-semibold tracking-normal text-slate-950 sm:text-3xl md:text-[2.7rem] md:leading-[1.16] xl:text-[3.2rem]">
-                    <span
-                      className={`block text-balance ${
-                        isBangla
-                          ? "text-cyan-950"
-                          : "bg-[linear-gradient(135deg,_#0f172a_8%,_#0f766e_48%,_#0891b2_92%)] bg-clip-text text-transparent"
-                      }`}
-                    >
-                      {brand.name}
+                  <h3 className="mt-4 max-w-4xl text-[1.55rem] font-semibold leading-[1.05] tracking-normal text-slate-950 sm:text-[2.55rem] md:text-[3.35rem] xl:text-[3.9rem]">
+                    <span className="inline-block text-center text-balance">
+                      <span
+                        className={`block whitespace-nowrap ${
+                          isBangla
+                            ? "text-cyan-950"
+                            : "bg-[linear-gradient(135deg,_#0f172a_6%,_#0f766e_48%,_#0891b2_94%)] bg-clip-text text-transparent"
+                        }`}
+                      >
+                        {brandTitle}
+                      </span>
+                      {brandSuffix ? (
+                        <span
+                          className={`mx-auto mt-2 block text-center text-[0.66em] font-extrabold uppercase leading-none tracking-[0.18em] sm:text-[0.58em] ${
+                            isBangla
+                              ? "text-teal-700"
+                              : "bg-[linear-gradient(135deg,_#0f766e_0%,_#0891b2_70%,_#f59e0b_100%)] bg-clip-text text-transparent"
+                          }`}
+                        >
+                          {brandSuffix}
+                        </span>
+                      ) : null}
                     </span>
                     <span className="mt-3 block text-[0.68em] font-medium leading-[1.18] text-slate-600 sm:text-[0.7em]">
                       <span

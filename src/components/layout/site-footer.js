@@ -32,9 +32,7 @@ export function SiteFooter() {
                 <p className="text-lg font-semibold leading-7 text-white">
                   {brand.name}
                 </p>
-                <p className="mt-1 text-sm font-medium text-cyan-200">
-                  {brand.shortName}
-                </p>
+
               </div>
             </div>
 
