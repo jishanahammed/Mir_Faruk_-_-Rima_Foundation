@@ -1,8 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { RouteChangeLoader } from "@/components/route-change-loader";
 import "@/app/globals.css";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
-import { LocaleProvider } from "@/components/providers/locale-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,13 +26,8 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth`}
     >
       <body className="min-h-full bg-white text-slate-900 antialiased">
-        <LocaleProvider>
-          <div className="relative flex min-h-screen flex-col overflow-hidden">
-            <SiteHeader />
-            <main className="flex-1">{children}</main>
-            <SiteFooter />
-          </div>
-        </LocaleProvider>
+        <RouteChangeLoader />
+        {children}
       </body>
     </html>
   );

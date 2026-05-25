@@ -54,3 +54,25 @@ a {
   background: rgba(6, 182, 212, 0.24);
   color: #082f49;
 }
+
+[data-nextjs-dev-tools-button] {
+  display: none !important;
+}
+
+#devtools-indicator {
+  display: none !important;
+}
+
+@keyframes route-loader {
+  0% {
+    transform: translateX(-105%);
+  }
+
+  55% {
+    transform: translateX(70%);
+  }
+
+  100% {
+    transform: translateX(205%);
+  }
+}

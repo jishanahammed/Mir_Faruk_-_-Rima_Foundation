@@ -14,8 +14,12 @@ const siteCopy = {
     languageLabel: "Vælg sprog",
     openMenuLabel: "Åbn navigationsmenu",
     closeMenuLabel: "Luk navigationsmenu",
+    profileMenuLabel: "Åbn profilmenu",
+    profileLabel: "Profil",
+    loginLabel: "Log ind",
     navItems: [
       { label: "Hjem", href: "/" },
+      { label: "Vores Arbejde", href: "/our-work" },
       { label: "Om os", href: "/about" },
       { label: "Kontakt", href: "/contact" },
     ],
@@ -89,6 +93,107 @@ const siteCopy = {
           "Teknologi, rapportering og feltkontrol gør hvert trin synligt og ansvarligt.",
       },
     ],
+  },
+  ourWork: {
+    eyebrow: "Vores Arbejde",
+    brandTitle: "Mir Faruk & Rima Fonden",
+    brandSubtitle: "Rentefri islamisk Sharia-baseret fond",
+    title:
+      "Vores Aktiviteter",
+    description:
+      "En vedvarende velfaerdscyklus, hvor stotte bevager sig fra donorer til fonden, videre til modtagere og derefter videre til andre mennesker i behov.",
+    missionLabel: "Missionsfokus",
+    missionTitle:
+      "At hjaelpe udsatte og trængende mennesker til selvforsørgelse gennem qard hasanah og holde denne velfærdscyklus i gang.",
+    metrics: [
+      { value: "Rentefri", label: "Sharia-baseret stottemodel" },
+      { value: "Qard Hasanah", label: "En vaerdighedsbevarende stottestruktur" },
+      { value: "Gennemsigtighed", label: "Staerk monitorering og ansvarlighed" },
+    ],
+    stepLabel: "Trin",
+    steps: [
+      {
+        number: "01",
+        title: "Donor (Vil Donere)",
+        description:
+          "Donoren giver en donation som fi sabilillah. Det er et fuldt velgorende bidrag uden forventning om afkast eller renter.",
+      },
+      {
+        number: "02",
+        title: "Fonden Modtager",
+        description:
+          "Fonden modtager donationen og forvalter den korrekt i overensstemmelse med Sharia-principper.",
+      },
+      {
+        number: "03",
+        title: "Udvaelgelse af Modtager",
+        description:
+          "Egnede og reelt trængende personer bliver verificeret og udvalgt til at modtage støtte gennem qard hasanah.",
+      },
+      {
+        number: "04",
+        title: "Stotte Gives (Qard Hasanah)",
+        description:
+          "Modtageren får støtte som qard hasanah. Det er en rentefri støtte eller et lån, som tilbagebetales inden for den aftalte tid.",
+      },
+      {
+        number: "05",
+        title: "Forberedelse af Tilbagebetaling fra Overskud",
+        description:
+          "Modtageren tilbagebetaler qard hasanah inden for den fastsatte periode uden renter. Det afspejler ansvar og selvstændighed.",
+      },
+      {
+        number: "06",
+        title: "At Hjaelpe En Anden",
+        description:
+          "Efter tilbagebetaling kan modtageren hjælpe en anden trængende person gennem qard hasanah. På den måde fortsætter cyklussen, og velfærden vokser i samfundet.",
+      },
+    ],
+    centerBrand: "Mir Faruk & Rima Fonden",
+    centerTitle: "Rentefri | Sharia-baseret | Qard Hasanah",
+    centerDescription:
+      "Vores mål er at hjælpe udsatte og trængende mennesker til selvforsørgelse gennem qard hasanah og holde denne cyklus i gang.",
+    tags: ["Fi Sabilillah", "Qard Hasanah", "Transparent tilsyn"],
+    monitoringLabel: "Monitorering",
+    monitoringTitle:
+      "Monitorering og Tilsyn",
+    monitoringDescription:
+      "Vores monitoreringsteam observerer, overvåger og evaluerer hele processen, så Sharia-principper og retningslinjer bliver fulgt korrekt, og gennemsigtigheden bevares.",
+    monitoringNote:
+      "Denne monitoreringsstruktur holder hele støttecyklussen etisk, ansvarlig og effektiv.",
+    valuesLabel: "Politikker / Egenskaber",
+    values: [
+      {
+        title: "Islamisk Sharia-overholdelse",
+        description:
+          "Følge islamiske Sharia-retningslinjer",
+      },
+      {
+        title: "Rentefri Drift",
+        description:
+          "Rentefri aktiviteter",
+      },
+      {
+        title: "Gennemsigtighed og Ansvarlighed",
+        description:
+          "Gennemsigtighed og ansvarlighed",
+      },
+      {
+        title: "Medfolelse og Kaerlighed",
+        description:
+          "Medfølelse og kærlighed",
+      },
+      {
+        title: "Fortsat Velfaerdscyklus",
+        description:
+          "Øg samfundets velfærd ved at holde cyklussen i gang",
+      },
+    ],
+    summaryLabel: "Opsummering af cyklussen",
+    summaryText:
+      "Donor giver donation -> Fonden modtager -> Modtager får qard hasanah -> Betaler tilbage til tiden -> Hjaelper en anden person",
+    finalLine:
+      "Lad os sammen holde denne velfærdscyklus i live.",
   },
   registration: {
     menuLabel: "Registrering",
