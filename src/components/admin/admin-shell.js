@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +18,9 @@ import {
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: "dashboard" },
   { label: "Donor List", href: "/admin/donors", icon: "users" },
+  { label: "Registrations", href: "/admin/registrations", icon: "list" },
+  { label: "Profile", href: "/admin/profile", icon: "profile" },
+  { label: "Settings", href: "/admin/settings", icon: "settings" },
 ];
 
 const routeTitles = {
@@ -30,7 +32,18 @@ const routeTitles = {
     eyebrow: "Donor Management",
     title: "Donor list",
   },
-
+  "/admin/registrations": {
+    eyebrow: "Review Queue",
+    title: "Registrations",
+  },
+  "/admin/profile": {
+    eyebrow: "Account",
+    title: "Profile",
+  },
+  "/admin/settings": {
+    eyebrow: "Control Center",
+    title: "Settings",
+  },
 };
 
 function Icon({ name }) {
@@ -135,8 +148,8 @@ function NavLink({ item, onNavigate }) {
       aria-current={isActive ? "page" : undefined}
       onClick={onNavigate}
       className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition ${isActive
-          ? "bg-cyan-50 text-cyan-800 ring-1 ring-cyan-200"
-          : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+        ? "bg-cyan-50 text-cyan-800 ring-1 ring-cyan-200"
+        : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
         }`}
     >
       <Icon name={item.icon} />
@@ -259,104 +272,28 @@ function SettingsDropdown({ user = adminUser }) {
   );
 }
 
-function SidebarContent({ onNavigate, onToggle, isCollapsed = false, user = adminUser }) {
-  const pathname = usePathname();
-
+function SidebarContent({ onNavigate, user = adminUser }) {
   return (
-    <div className="relative h-full overflow-hidden bg-white">
-      <div
-        className={`absolute inset-0 transition-all duration-300 ease-in-out ${
-          isCollapsed
-            ? "translate-x-0 opacity-100"
-            : "-translate-x-2 opacity-0 pointer-events-none"
-        }`}
-      >
-        <div className="flex h-full flex-col items-center bg-white px-3 py-5">
-          <button
-            type="button"
-            aria-label="Open admin sidebar"
-            onClick={onToggle}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 transition hover:border-cyan-200 hover:text-cyan-800"
-          >
-            <Icon name="menu" />
-          </button>
-
-          <nav className="mt-5 flex flex-1 flex-col items-center gap-2">
-            {navItems.map((item) => {
-              const isActive =
-                item.href === "/admin" ? pathname === item.href : pathname.startsWith(item.href);
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  title={item.label}
-                  aria-label={item.label}
-                  aria-current={isActive ? "page" : undefined}
-                  onClick={onNavigate}
-                  className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${
-                    isActive
-                      ? "border-cyan-200 bg-cyan-50 text-cyan-800 shadow-sm shadow-cyan-100/80"
-                      : "border-transparent text-slate-600 hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-800"
-                  }`}
-                >
-                  <Icon name={item.icon} />
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-950 text-xs font-bold text-white">
-            {user.initials ?? "FA"}
-          </div>
-        </div>
+    <div className="flex h-full flex-col bg-white">
+      <div className="border-b border-cyan-100 bg-[linear-gradient(135deg,#0f172a,#155e75)] px-5 py-5 text-white">
+        <Link href="/" className="block" onClick={onNavigate}>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-100">
+            Foundation
+          </p>
+          <p className="mt-1 text-xl font-bold">Admin Panel</p>
+        </Link>
       </div>
 
-      <div
-        className={`absolute inset-0 transition-all duration-300 ease-in-out ${
-          isCollapsed
-            ? "translate-x-3 opacity-0 pointer-events-none"
-            : "translate-x-0 opacity-100"
-        }`}
-      >
-        <div className="flex h-full flex-col bg-white">
-          <div className="flex items-center justify-between gap-3 border-b-2 border-cyan-600 bg-[linear-gradient(135deg,#0f766e,#0891b2_52%,#155e75)] px-4 py-4 text-slate-700">
-            <Link
-              href="/"
-              className="min-w-0 rounded-2xl border border-cyan-500 bg-white px-3 py-2 shadow-sm shadow-cyan-950/5 transition hover:border-cyan-600"
-              onClick={onNavigate}
-            >
-              <Image
-                src="/logo.png"
-                alt="Mir Faruk & Rima Foundation"
-                width={180}
-                height={120}
-                priority
-                className="h-16 w-36 object-contain"
-              />
-            </Link>
-            <button
-              type="button"
-              aria-label="Close admin sidebar"
-              onClick={onToggle}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-cyan-500 bg-white text-cyan-800 transition hover:border-cyan-600 hover:bg-cyan-50"
-            >
-              <Icon name="menu" />
-            </button>
-          </div>
+      <nav className="flex-1 space-y-2 px-4 py-5">
+        {navItems.map((item) => (
+          <NavLink key={item.href} item={item} onNavigate={onNavigate} />
+        ))}
+      </nav>
 
-          <nav className="flex-1 space-y-2 px-4 py-5">
-            {navItems.map((item) => (
-              <NavLink key={item.href} item={item} onNavigate={onNavigate} />
-            ))}
-          </nav>
-
-          <div className="border-t border-slate-200 p-4">
-            <div className="rounded-xl border border-cyan-100 bg-cyan-50/70 p-3">
-              <p className="text-sm font-semibold text-slate-950">{user.name}</p>
-              <p className="mt-1 text-xs text-cyan-800">{user.role}</p>
-            </div>
-          </div>
+      <div className="border-t border-slate-200 p-4">
+        <div className="rounded-xl border border-cyan-100 bg-cyan-50/70 p-3">
+          <p className="text-sm font-semibold text-slate-950">{user.name}</p>
+          <p className="mt-1 text-xs text-cyan-800">{user.role}</p>
         </div>
       </div>
     </div>
@@ -365,18 +302,9 @@ function SidebarContent({ onNavigate, onToggle, isCollapsed = false, user = admi
 
 export function AdminShell({ children, user = adminUser }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
   const route = routeTitles[pathname] ?? routeTitles["/admin"];
-
-  useEffect(() => {
-    const storedValue = window.localStorage.getItem("mir_admin_sidebar_visible");
-
-    if (storedValue === "false") {
-      setIsSidebarVisible(false);
-    }
-  }, []);
 
   useEffect(() => {
     if (!shouldRefreshLoginSession()) {
@@ -410,23 +338,10 @@ export function AdminShell({ children, user = adminUser }) {
     };
   }, [router]);
 
-  function updateSidebarVisibility(nextValue) {
-    setIsSidebarVisible(nextValue);
-    window.localStorage.setItem("mir_admin_sidebar_visible", String(nextValue));
-  }
-
   return (
     <div className="min-h-screen bg-[#f5fbfc] text-slate-950">
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 hidden overflow-hidden border-r border-slate-200 bg-white shadow-sm shadow-cyan-950/5 transition-[width,box-shadow] duration-300 ease-in-out lg:block ${
-          isSidebarVisible ? "w-72" : "w-[76px]"
-        }`}
-      >
-        <SidebarContent
-          user={user}
-          isCollapsed={!isSidebarVisible}
-          onToggle={() => updateSidebarVisibility(!isSidebarVisible)}
-        />
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-slate-200 bg-white lg:block">
+        <SidebarContent user={user} />
       </aside>
 
       <header className="sticky top-0 z-20 border-b border-cyan-100 bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
@@ -445,37 +360,27 @@ export function AdminShell({ children, user = adminUser }) {
               onClick={() => setIsOpen((value) => !value)}
               className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700"
             >
-              <Icon name="menu" />
+              <Icon name={isOpen ? "close" : "menu"} />
             </button>
           </div>
         </div>
       </header>
 
-      <div
-        className={`fixed inset-0 z-40 lg:hidden transition-opacity duration-300 ease-in-out ${
-          isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      >
-        <button
-          type="button"
-          aria-label="Close admin menu overlay"
-          className="absolute inset-0 bg-slate-950/40"
-          onClick={() => setIsOpen(false)}
-        />
-        <aside
-          className={`relative h-full w-[min(20rem,86vw)] border-r border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-in-out ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <SidebarContent user={user} onNavigate={() => setIsOpen(false)} />
-        </aside>
-      </div>
+      {isOpen ? (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <button
+            type="button"
+            aria-label="Close admin menu overlay"
+            className="absolute inset-0 bg-slate-950/40"
+            onClick={() => setIsOpen(false)}
+          />
+          <aside className="relative h-full w-[min(20rem,86vw)] border-r border-slate-200 bg-white shadow-2xl">
+            <SidebarContent user={user} onNavigate={() => setIsOpen(false)} />
+          </aside>
+        </div>
+      ) : null}
 
-      <main
-        className={`transition-[padding] duration-300 ${
-          isSidebarVisible ? "lg:pl-72" : "lg:pl-[76px]"
-        }`}
-      >
+      <main className="lg:pl-72">
         <div className="sticky top-0 z-20 hidden border-b border-cyan-100 bg-white/90 px-8 py-4 backdrop-blur lg:block">
           <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6">
             <div>
