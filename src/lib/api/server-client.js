@@ -26,11 +26,16 @@ const donorRegistrationTimeout = getTimeoutMs(
   process.env.AUTH_API_DONOR_REGISTRATION_TIMEOUT_MS,
   30000,
 );
+const beneficiaryRegistrationTimeout = getTimeoutMs(
+  process.env.AUTH_API_BENEFICIARY_REGISTRATION_TIMEOUT_MS,
+  120000,
+);
 const allowSelfSigned = process.env.AUTH_API_ALLOW_SELF_SIGNED === "true";
 
 export const apiTimeouts = {
   default: timeout,
   donorRegistration: donorRegistrationTimeout,
+  beneficiaryRegistration: beneficiaryRegistrationTimeout,
 };
 
 export const authApiClient = axios.create({

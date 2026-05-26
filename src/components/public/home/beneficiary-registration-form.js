@@ -407,8 +407,6 @@ const initialFormState = {
   recommendationLetter: null,
   guarantorNidCopy: null,
   guarantorPhoto: null,
-  password: "",
-  confirmPassword: "",
   terms: false,
   truthConfirmed: false,
   guarantorKnownConfirmed: false,
@@ -463,8 +461,6 @@ const requiredByStep = {
     "applicantNidCopy",
     "applicantPhoto",
     "guarantorNidCopy",
-    "password",
-    "confirmPassword",
     "terms",
     "truthConfirmed",
     "guarantorKnownConfirmed",
@@ -650,16 +646,6 @@ function validateStep(form, stepIndex, text) {
     }
   });
 
-  if (stepIndex === 3) {
-    if (form.password && (form.password.length < 8 || !/[\p{L}]/u.test(form.password) || !/[\p{Nd}]/u.test(form.password))) {
-      errors.password = text.passwordMessage;
-    }
-
-    if (form.password && form.confirmPassword && form.password !== form.confirmPassword) {
-      errors.confirmPassword = text.confirmPasswordMessage;
-    }
-  }
-
   return errors;
 }
 
@@ -674,6 +660,8 @@ export function BeneficiaryRegistrationForm() {
   const [activeStep, setActiveStep] = useState(0);
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const progress = useMemo(() => ((activeStep + 1) / steps.length) * 100, [activeStep]);
 
   const updateField = (field) => (event) => {
@@ -690,6 +678,7 @@ export function BeneficiaryRegistrationForm() {
       return nextErrors;
     });
     setIsSubmitted(false);
+    setSubmitError("");
 
     setForm((current) => ({
       ...current,
@@ -717,14 +706,62 @@ export function BeneficiaryRegistrationForm() {
     setActiveStep((current) => Math.max(current - 1, 0));
   };
 
-  const handleSubmit = (event) => {
+  async function submitRegistration() {
+    const payload = new FormData();
+
+    Object.entries(form).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === "") {
+        return;
+      }
+
+      if (typeof value === "boolean") {
+        payload.append(key, String(value));
+        return;
+      }
+
+      payload.append(key, value);
+    });
+
+    const response = await fetch("/api/beneficiaries/register", {
+      method: "POST",
+      body: payload,
+    });
+
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      throw new Error(
+        result?.message ?? "Unable to complete beneficiary registration right now.",
+      );
+    }
+
+    return result;
+  }
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!validateCurrentStep()) {
       return;
     }
 
-    setIsSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    try {
+      await submitRegistration();
+      setIsSubmitted(true);
+      setForm(initialFormState);
+      setErrors({});
+      setActiveStep(0);
+    } catch (error) {
+      setSubmitError(
+        error?.message ?? "Unable to complete beneficiary registration right now.",
+      );
+      setIsSubmitted(false);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -879,13 +916,6 @@ export function BeneficiaryRegistrationForm() {
               <FileInput id="recommendationLetter" {...fieldProps} />
               <FileInput id="guarantorNidCopy" {...fieldProps} />
               <FileInput id="guarantorPhoto" {...fieldProps} />
-              <TextInput id="password" {...fieldProps} type="password" autoComplete="new-password" />
-              <TextInput
-                id="confirmPassword"
-                {...fieldProps}
-                type="password"
-                autoComplete="new-password"
-              />
               <div className="grid gap-3 sm:col-span-2">
                 <CheckboxField id="terms" {...fieldProps} />
                 <CheckboxField id="truthConfirmed" {...fieldProps} />
@@ -893,6 +923,13 @@ export function BeneficiaryRegistrationForm() {
                 <CheckboxField id="guarantorCooperationConfirmed" {...fieldProps} />
                 <CheckboxField id="digitalSignature" {...fieldProps} />
               </div>
+            </div>
+          ) : null}
+
+          {submitError ? (
+            <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-700">
+              <strong className="block font-semibold">Registration could not be submitted</strong>
+              {submitError}
             </div>
           ) : null}
 
@@ -923,6 +960,7 @@ export function BeneficiaryRegistrationForm() {
             {activeStep < steps.length - 1 ? (
               <button
                 type="button"
+                disabled={isSubmitting}
                 className="inline-flex h-12 items-center justify-center rounded-full border border-transparent bg-[linear-gradient(135deg,_#0f766e,_#0891b2)] px-6 text-sm font-semibold text-white shadow-lg shadow-cyan-200/80 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-300/70"
                 onClick={goNext}
               >
@@ -931,9 +969,10 @@ export function BeneficiaryRegistrationForm() {
             ) : (
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="inline-flex h-12 items-center justify-center rounded-full border border-transparent bg-[linear-gradient(135deg,_#0f766e,_#0891b2)] px-6 text-sm font-semibold text-white shadow-lg shadow-cyan-200/80 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-300/70"
               >
-                {text.submit}
+                {isSubmitting ? "Submitting..." : text.submit}
               </button>
             )}
           </div>
