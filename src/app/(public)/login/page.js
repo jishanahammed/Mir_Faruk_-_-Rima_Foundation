@@ -202,7 +202,7 @@ export default function LoginPage() {
                     autoComplete="current-password"
                     placeholder="Enter your password"
                     required
-                    minLength={8}
+
                     className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 pr-13 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100"
                   />
                   <button
