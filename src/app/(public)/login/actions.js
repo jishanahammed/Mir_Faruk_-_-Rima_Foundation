@@ -9,6 +9,8 @@ import {
   ADMIN_SESSION_VALUE,
   ADMIN_TOKEN_EXPIRY_COOKIE,
   ADMIN_USER_COOKIE,
+  getUserHomePath,
+  normalizeAdminUser,
   serializeAdminUser,
 } from "@/lib/admin-auth";
 
@@ -86,9 +88,11 @@ export async function loginAdmin(_state, formData) {
     maxAge,
   });
 
+  const normalizedUser = normalizeAdminUser(authResult.user);
+
   return {
     success: true,
-    redirectTo: "/admin",
+    redirectTo: getUserHomePath(normalizedUser),
     session: {
       accessToken: authResult.accessToken ?? authResult.token ?? "",
       refreshToken: authResult.refreshToken ?? "",

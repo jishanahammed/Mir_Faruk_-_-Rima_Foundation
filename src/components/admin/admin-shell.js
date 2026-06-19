@@ -19,6 +19,7 @@ import {
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: "dashboard" },
   { label: "Donor List", href: "/admin/donors", icon: "users" },
+  { label: "Payment History", href: "/admin/donersPayment", icon: "payment" },
   { label: "Beneficiary List", href: "/admin/beneficiaries", icon: "list" },
 ];
 
@@ -30,6 +31,10 @@ const routeTitles = {
   "/admin/donors": {
     eyebrow: "Donor Management",
     title: "Donor list",
+  },
+  "/admin/donersPayment": {
+    eyebrow: "Donor Payments",
+    title: "Donation / Payment History",
   },
   "/admin/beneficiaries": {
     eyebrow: "Beneficiary Management",
@@ -104,6 +109,15 @@ function Icon({ name }) {
         <path d="M19 19a3 3 0 0 0-2-2.82" strokeLinecap="round" />
         <path d="M7 10a2.5 2.5 0 1 1 0-5" strokeLinecap="round" />
         <path d="M17 10a2.5 2.5 0 1 0 0-5" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (name === "payment") {
+    return (
+      <svg {...common}>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="M3 10h18M7 15h4" strokeLinecap="round" />
       </svg>
     );
   }

@@ -19,6 +19,13 @@ export const adminUser = {
   location: "Dhaka, Bangladesh",
 };
 
+function normalizeRoleName(value) {
+  return String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
 function getInitials(name) {
   return String(name ?? "")
     .split(" ")
@@ -38,6 +45,12 @@ export function normalizeAdminUser(user = {}) {
 
   return {
     id: user.userId ?? user.id ?? "",
+    donorProfileId:
+      user.donorProfileId ??
+      user.DonorProfileId ??
+      user.donorId ??
+      user.DonorId ??
+      "",
     name,
     role,
     email: user.email ?? user.workEmail ?? adminUser.email,
@@ -49,6 +62,41 @@ export function normalizeAdminUser(user = {}) {
     initials: getInitials(name),
     raw: user,
   };
+}
+
+export function isDonorRole(role) {
+  const normalizedRole = normalizeRoleName(role);
+  return normalizedRole === "donor" || normalizedRole === "doner";
+}
+
+export function isAdminRole(role) {
+  const normalizedRole = normalizeRoleName(role);
+
+  return (
+    normalizedRole.includes("admin") ||
+    normalizedRole.includes("manager") ||
+    normalizedRole.includes("operations")
+  );
+}
+
+export function isDonorUser(user) {
+  return isDonorRole(user?.role);
+}
+
+export function isAdminUser(user) {
+  return isAdminRole(user?.role) && !isDonorUser(user);
+}
+
+export function getUserHomePath(user) {
+  if (isDonorUser(user)) {
+    return "/doner";
+  }
+
+  if (isAdminUser(user)) {
+    return "/admin";
+  }
+
+  return "/login";
 }
 
 export function serializeAdminUser(user) {

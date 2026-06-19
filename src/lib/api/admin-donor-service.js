@@ -67,13 +67,16 @@ async function getAdminAuthConfig() {
 }
 
 export async function getAdminDonorList(filters = {}) {
+  const body = {
+    PageNumber: normalizePageNumber(filters.page),
+    PageSize: normalizePageSize(filters.pageSize),
+    SearchText: normalizeSearchText(filters.search) || null,
+    IsPublic: filters.isPublic === "true" ? true : filters.isPublic === "false" ? false : null,
+  };
+
   const payload = await apiPost(
     "Donors/paged",
-    {
-      PageNumber: normalizePageNumber(filters.page),
-      PageSize: normalizePageSize(filters.pageSize),
-      SearchText: normalizeSearchText(filters.search) || null,
-    },
+    body,
     await getAdminAuthConfig(),
   );
 

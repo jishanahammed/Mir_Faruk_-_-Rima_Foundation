@@ -29,10 +29,12 @@ function normalizePageSize(value) {
 
 export default async function AdminDonorsPage({ searchParams }) {
   const params = await searchParams;
+  const rawIsPublic = readSingleValue(params.isPublic, "");
   const filters = {
     search: String(readSingleValue(params.search, "")).trim(),
     page: normalizePageNumber(params.page),
     pageSize: normalizePageSize(params.pageSize),
+    isPublic: rawIsPublic === "true" || rawIsPublic === "false" ? rawIsPublic : "",
   };
 
   let donors = {

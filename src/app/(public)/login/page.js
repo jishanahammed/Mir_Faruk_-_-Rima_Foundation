@@ -250,7 +250,7 @@ export default function LoginPage() {
               </p>
               <Link
                 href="/register"
-                className="mt-4 inline-flex rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75)] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-slate-900/10 transition hover:brightness-110"
+                className="mt-4 inline-flex rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75)] px-4 py-2 text-sm font-semibold !text-white visited:!text-white hover:!text-white focus-visible:!text-white active:!text-white shadow-md shadow-slate-900/10 transition hover:brightness-110"
               >
                 Go to registration
               </Link>
