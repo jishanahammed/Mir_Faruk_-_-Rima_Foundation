@@ -20,9 +20,35 @@ const siteCopy = {
     navItems: [
       { label: "Home", href: "/" },
       { label: "Our Work", href: "/our-work" },
-      { label: "About", href: "/about" },
-      { label: "Contact", href: "/contact" },
+      { label: "Projects", href: "/projects" },
+      { label: "About Us", href: "/about" },
     ],
+    about: {
+      menuLabel: "About Us",
+      items: [
+        {
+          id: "about-mission",
+          href: "/about#mission",
+          title: "Our Mission",
+          description: "The principles and purpose that guide the foundation's work.",
+          icon: "mission",
+        },
+        {
+          id: "about-board-members",
+          href: "/about/board-members",
+          title: "Board Members",
+          description: "Meet the board members guiding the foundation's mission.",
+          icon: "board",
+        },
+        {
+          id: "about-contact",
+          href: "/contact",
+          title: "Contact Us",
+          description: "Get in touch with the foundation.",
+          icon: "contact",
+        },
+      ],
+    },
   },
   hero: {
     tagline: "Shariah-compliant social support and self-reliance development initiative",
@@ -276,9 +302,9 @@ const siteCopy = {
       },
       {
         title: "Email",
-        value: "mf@plan365.dk",
+        value: "support@farukrimafoundation.org",
         detail: "For general information, support questions, and partnership conversations.",
-        href: "mailto:mf@plan365.dk",
+        href: "mailto:support@farukrimafoundation.org",
       },
     ],
   },
@@ -287,6 +313,119 @@ const siteCopy = {
     registrationLabel: "Registration",
     contactLabel: "Contact",
     note: "Shariah-aligned social support platform designed for transparent, long-term community care.",
+  },
+  projects: {
+    eyebrow: "Our Projects",
+    heroTitle: "Where Purpose Meets Action",
+    heroSubtitle:
+      "Every category represents a commitment — to dignity, self-reliance, and a community that lifts itself forward through faith and responsibility.",
+    title: "Project Categories",
+    description:
+      "Browse the areas where we work. Each category runs as a structured programme with field monitoring, qard hasanah financing, and transparent reporting.",
+    emptyTitle: "Projects coming soon",
+    emptyText:
+      "Our project categories are being prepared. Check back soon to see the foundation's active programmes.",
+    categoryLabel: "Category",
+    allCategories: "All Categories",
+    statusLabel: "Status",
+    learnMore: "Learn More",
+    riskManagement: {
+      eyebrow: "Risk Management",
+      title: "Risk Management Policy",
+      summary:
+        "Mir Faruk & Rima Foundation follows a structured risk management policy to protect donor trust, beneficiary welfare, Shariah-compliant operations, and the continuity of the support cycle. Every programme ensures transparency, accountability, proper verification, regular monitoring, and necessary documentation. For livestock-based qard hasanah support, even after handover to the beneficiary, the foundation accounts for potential risks including veterinary care, feed, vaccination, and related expenses.",
+      reserveFundNote: "30% of total allocated funds are kept as a reserve to cover potential health risks, veterinary treatment, feed, vaccination, and other ancillary costs during the beneficiary's possession period.",
+      risks: [
+        {
+          number: "01",
+          title: "Beneficiary Verification Risk",
+          description:
+            "Before providing support, the beneficiary's identity, address, financial condition, family situation, income source, actual need, and capacity to receive support are verified — ensuring only genuinely eligible individuals are selected.",
+        },
+        {
+          number: "02",
+          title: "Livestock Health & Treatment Risk",
+          description:
+            "During livestock rearing, illness, health hazards, accidents, or unexpected veterinary costs may arise. The foundation will arrange regular monitoring, preliminary consultations, and veterinary support as needed. A 30% reserve of the total allocation is maintained for such costs.",
+        },
+        {
+          number: "03",
+          title: "Misuse of Support Risk",
+          description:
+            "Regular monitoring will be conducted to ensure the provided livestock, funds, or support are used for the approved purpose. If a beneficiary misuses support, provides false information, or breaches contract terms, the foundation may take necessary administrative action.",
+        },
+        {
+          number: "04",
+          title: "Qard Hasanah Repayment Risk",
+          description:
+            "Qard hasanah is an interest-free support system. After the agreed period, it is the beneficiary's responsibility to return equivalent value or as agreed. To minimise repayment risk, the foundation maintains written agreements, timelines, guarantor details, regular follow-ups, and accurate records.",
+        },
+        {
+          number: "05",
+          title: "Shariah Compliance Risk",
+          description:
+            "All support activities will be conducted in accordance with Islamic Shariah principles. Interest, unethical transactions, unclear financial terms, or Shariah-violating activities will be avoided. Transparent and halal methods will be followed for both donor contributions and beneficiary support.",
+        },
+        {
+          number: "06",
+          title: "Donor Trust & Transparency Risk",
+          description:
+            "Donor contributions will be properly received, stored, accounted for, and used for their intended purpose. Necessary documentation and reporting will be maintained for donation management, beneficiary selection, and support delivery to preserve donor trust.",
+        },
+        {
+          number: "07",
+          title: "Monitoring & Operational Risk",
+          description:
+            "The monitoring team will regularly observe beneficiary activities, livestock condition, use of support, and repayment progress. Field-level verification, photo/report collection, follow-ups, and counselling will ensure programme success.",
+        },
+        {
+          number: "08",
+          title: "Documentation & Fraud Risk",
+          description:
+            "Applications with false information, fake documents, multiple submissions, concealed identity, or untrue statements may be rejected. Approved support may be suspended, cancelled, or re-evaluated if needed. All applications, agreements, guarantor details, and transaction records will be preserved.",
+        },
+      ],
+      processTitle: "Risk Control Process",
+      steps: [
+        "Application receipt & preliminary verification",
+        "Identity, address & financial status verification",
+        "Guarantor information collection & verification",
+        "Approval in accordance with policy",
+        "Written agreement & qard hasanah terms acceptance",
+        "Livestock / support handover",
+        "30% of total allocation kept as health & ancillary expense reserve",
+        "Regular monitoring & veterinary support",
+        "Repayment / return process at agreed time",
+        "Returned support re-used for next beneficiary",
+      ],
+    },
+  },
+  boardMembers: {
+    eyebrow: "Board Management",
+    title: "Board Members",
+    description: "Meet the board members who guide the vision and operations of Mir Faruk & Rima Foundation.",
+    emptyLabel: "No board members found",
+    organizationLabel: "Organization",
+    responsibilityLabel: "Responsibility",
+    addMember: "Add Member",
+    editMember: "Edit Member",
+    serialNo: "Serial No",
+    nameEn: "Name (English)",
+    nameBn: "Name (Bangla)",
+    nameDk: "Name (Danish)",
+    designationEn: "Designation (English)",
+    designationBn: "Designation (Bangla)",
+    designationDk: "Designation (Danish)",
+    organizationNameEn: "Organization Name (English)",
+    organizationNameBn: "Organization Name (Bangla)",
+    organizationNameDk: "Organization Name (Danish)",
+    responsibilityNoteEn: "Responsibility Note (English)",
+    responsibilityNoteBn: "Responsibility Note (Bangla)",
+    responsibilityNoteDk: "Responsibility Note (Danish)",
+    profileImage: "Profile Image",
+    status: "Status",
+    active: "Active",
+    inactive: "Inactive",
   },
 };
 

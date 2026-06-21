@@ -21,6 +21,9 @@ const navItems = [
   { label: "Donor List", href: "/admin/donors", icon: "users" },
   { label: "Payment History", href: "/admin/donersPayment", icon: "payment" },
   { label: "Beneficiary List", href: "/admin/beneficiaries", icon: "list" },
+  { label: "Board Members", href: "/admin/Board_Member_Page", icon: "board" },
+  { label: "Locations", href: "/admin/location-page", icon: "location" },
+  { label: "Project Category", href: "/admin/project-category", icon: "project" },
 ];
 
 const routeTitles = {
@@ -39,6 +42,18 @@ const routeTitles = {
   "/admin/beneficiaries": {
     eyebrow: "Beneficiary Management",
     title: "Beneficiary list",
+  },
+  "/admin/Board_Member_Page": {
+    eyebrow: "Board Management",
+    title: "Board members",
+  },
+  "/admin/location-page": {
+    eyebrow: "Master Data",
+    title: "Location management",
+  },
+  "/admin/project-category": {
+    eyebrow: "Projects",
+    title: "Project Categories",
   },
   "/admin/registrations": {
     eyebrow: "Review Queue",
@@ -59,6 +74,13 @@ function resolveRoute(pathname) {
     return {
       eyebrow: "Beneficiary Management",
       title: "Beneficiary details",
+    };
+  }
+
+  if (pathname.startsWith("/admin/Board_Member_Page/")) {
+    return {
+      eyebrow: "Board Management",
+      title: "Board member",
     };
   }
 
@@ -149,6 +171,35 @@ function Icon({ name }) {
     );
   }
 
+  if (name === "board") {
+    return (
+      <svg {...common}>
+        <path d="M17 20a5 5 0 0 0-10 0M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" strokeLinecap="round" />
+        <path d="M4 20a3 3 0 0 1 2-2.83M20 20a3 3 0 0 0-2-2.83" strokeLinecap="round" />
+        <path d="M7 10a2.5 2.5 0 1 1 0-5M17 10a2.5 2.5 0 1 0 0-5" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (name === "location") {
+    return (
+      <svg {...common}>
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Z" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="12" cy="9" r="2.5" />
+      </svg>
+    );
+  }
+
+  if (name === "project") {
+    return (
+      <svg {...common}>
+        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="9" y="3" width="6" height="4" rx="1" />
+        <path d="M9 12h6M9 16h4" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
   if (name === "menu") {
     return (
       <svg {...common}>
@@ -175,17 +226,18 @@ function Icon({ name }) {
 function NavLink({ item, onNavigate }) {
   const pathname = usePathname();
   const isActive =
-    item.href === "/admin" ? pathname === item.href : pathname.startsWith(item.href);
+    item.href === "/admin" ? pathname === item.href : pathname.startsWith(item.href.split("?")[0]);
 
   return (
     <Link
       href={item.href}
       aria-current={isActive ? "page" : undefined}
       onClick={onNavigate}
-      className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition ${isActive
-        ? "bg-cyan-50 text-cyan-800 ring-1 ring-cyan-200"
-        : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
-        }`}
+      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+        isActive
+          ? "bg-cyan-50 text-cyan-800 ring-1 ring-cyan-200"
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+      }`}
     >
       <Icon name={item.icon} />
       <span>{item.label}</span>

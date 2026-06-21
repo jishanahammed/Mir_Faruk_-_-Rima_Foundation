@@ -36,8 +36,8 @@ function ProfileIcon() {
 
 function splitPrimaryNavItems(items) {
   return {
-    leadingItems: items.slice(0, 2),
-    trailingItems: items.slice(2),
+    leadingItems: items.slice(0, 3),
+    trailingItems: items.slice(3),
   };
 }
 
@@ -58,10 +58,12 @@ export function SiteHeader() {
   const [isMembersOpen, setIsMembersOpen] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
   const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
 
   const { header, members, registration } = copy;
+  const aboutDropdown = header.about;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,6 +84,7 @@ export function SiteHeader() {
     setIsMembersOpen(false);
     setIsRegistrationOpen(false);
     setIsProfileOpen(false);
+    setIsAboutOpen(false);
   }, [locale, pathname]);
 
   useEffect(() => {
@@ -91,6 +94,7 @@ export function SiteHeader() {
         setIsMembersOpen(false);
         setIsRegistrationOpen(false);
         setIsProfileOpen(false);
+        setIsAboutOpen(false);
       }
     }
 
@@ -100,6 +104,7 @@ export function SiteHeader() {
         setIsMembersOpen(false);
         setIsRegistrationOpen(false);
         setIsProfileOpen(false);
+        setIsAboutOpen(false);
       }
     }
 
@@ -120,7 +125,8 @@ export function SiteHeader() {
   const isMembersActive = pathname.startsWith("/members");
   const isRegistrationActive = pathname.startsWith("/register");
   const isLoginActive = pathname === "/login";
-  const { leadingItems, trailingItems } = splitPrimaryNavItems(header.navItems);
+  const isAboutActive = pathname.startsWith("/about");
+  const { leadingItems, trailingItems: [aboutNavItem, ...remainingTrailingItems] } = splitPrimaryNavItems(header.navItems);
   const selectedLanguage =
     languageOptions.find((language) => language.code === locale) ??
     languageOptions[0];
@@ -318,7 +324,58 @@ export function SiteHeader() {
                 ) : null}
               </div>
 
-              {trailingItems.map((item) => (
+              {/* About dropdown */}
+              <div className="relative">
+                <button
+                  type="button"
+                  className={`flex items-center gap-2 rounded-full px-4 py-2 transition ${
+                    isAboutActive
+                      ? "border border-cyan-300 bg-white/70 text-cyan-800 shadow-sm shadow-cyan-100"
+                      : "hover:bg-cyan-50 hover:text-cyan-700"
+                  }`}
+                  aria-expanded={isAboutOpen}
+                  aria-controls="about-menu"
+                  aria-current={isAboutActive ? "page" : undefined}
+                  onClick={() => {
+                    setIsAboutOpen(!isAboutOpen);
+                    setIsMembersOpen(false);
+                    setIsRegistrationOpen(false);
+                    setIsProfileOpen(false);
+                  }}
+                >
+                  {aboutNavItem.label}
+                  <span
+                    className={`mt-[-0.15rem] block h-2.5 w-2.5 rotate-45 border-b border-r border-current transition ${
+                      isAboutOpen ? "-translate-y-px" : "translate-y-0"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                {isAboutOpen ? (
+                  <div
+                    id="about-menu"
+                    className="absolute right-0 top-[calc(100%+0.75rem)] w-72 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-200/80"
+                  >
+                    {aboutDropdown.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        className={`block rounded-2xl px-4 py-3 transition ${
+                          pathname === item.href
+                            ? "border border-cyan-300 bg-white text-cyan-800"
+                            : "hover:bg-cyan-50"
+                        }`}
+                        onClick={() => setIsAboutOpen(false)}
+                      >
+                        <p className="text-sm font-semibold text-slate-900">{item.title}</p>
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+
+              {remainingTrailingItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -331,6 +388,7 @@ export function SiteHeader() {
                   onClick={() => {
                     setIsMembersOpen(false);
                     setIsRegistrationOpen(false);
+                    setIsAboutOpen(false);
                     setIsProfileOpen(false);
                   }}
                 >
@@ -586,7 +644,63 @@ export function SiteHeader() {
                 ) : null}
               </div>
 
-              {trailingItems.map((item) => (
+              {/* About accordion */}
+              <div
+                className={`rounded-3xl p-3 ${
+                  isPinned
+                    ? "border border-slate-200 bg-slate-50"
+                    : "border border-cyan-100 bg-slate-50"
+                }`}
+              >
+                <button
+                  type="button"
+                  className={`flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-sm font-semibold ${
+                    isAboutActive
+                      ? "border border-cyan-300 bg-white text-cyan-800"
+                      : "text-slate-900"
+                  }`}
+                  aria-expanded={isAboutOpen}
+                  aria-current={isAboutActive ? "page" : undefined}
+                  onClick={() => {
+                    setIsAboutOpen(!isAboutOpen);
+                    setIsMembersOpen(false);
+                    setIsRegistrationOpen(false);
+                    setIsProfileOpen(false);
+                  }}
+                >
+                  <span>{aboutNavItem.label}</span>
+                  <span
+                    className={`mt-[-0.15rem] block h-2.5 w-2.5 rotate-45 border-b border-r border-current transition ${
+                      isAboutOpen ? "-translate-y-px" : "translate-y-0"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                {isAboutOpen ? (
+                  <div className="mt-2 space-y-2">
+                    {aboutDropdown.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        className={`block rounded-2xl px-4 py-3 ${
+                          pathname === item.href
+                            ? "border border-cyan-300 bg-white text-cyan-800"
+                            : "bg-white"
+                        }`}
+                        onClick={() => {
+                          setIsAboutOpen(false);
+                          setIsMobileOpen(false);
+                        }}
+                      >
+                        <p className="text-sm font-semibold text-slate-900">{item.title}</p>
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+
+              {remainingTrailingItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -602,6 +716,7 @@ export function SiteHeader() {
                     setIsMobileOpen(false);
                     setIsMembersOpen(false);
                     setIsRegistrationOpen(false);
+                    setIsAboutOpen(false);
                     setIsProfileOpen(false);
                   }}
                 >

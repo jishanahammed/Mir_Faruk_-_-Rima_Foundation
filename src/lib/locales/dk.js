@@ -20,9 +20,35 @@ const siteCopy = {
     navItems: [
       { label: "Hjem", href: "/" },
       { label: "Vores Arbejde", href: "/our-work" },
+      { label: "Projekter", href: "/projects" },
       { label: "Om os", href: "/about" },
-      { label: "Kontakt", href: "/contact" },
     ],
+    about: {
+      menuLabel: "Om Os",
+      items: [
+        {
+          id: "about-mission",
+          href: "/about#mission",
+          title: "Vores Mission",
+          description: "De principper og det formål, der styrer fondens arbejde.",
+          icon: "mission",
+        },
+        {
+          id: "about-board-members",
+          href: "/about/board-members",
+          title: "Bestyrelsesmedlemmer",
+          description: "Mød bestyrelsesmedlemmerne, der leder fondens mission.",
+          icon: "board",
+        },
+        {
+          id: "about-contact",
+          href: "/contact",
+          title: "Kontakt",
+          description: "Kom i kontakt med fonden.",
+          icon: "contact",
+        },
+      ],
+    },
   },
   hero: {
     tagline: "Sharia-kompatibelt socialt støtte- og selvforsyningsinitiativ",
@@ -278,9 +304,9 @@ const siteCopy = {
       },
       {
         title: "E-mail",
-        value: "mf@plan365.dk",
+        value: "support@farukrimafoundation.org",
         detail: "Til generelle spørgsmål, støttebehov og partnerskabssamtaler.",
-        href: "mailto:mf@plan365.dk",
+        href: "mailto:support@farukrimafoundation.org",
       },
     ],
   },
@@ -289,6 +315,119 @@ const siteCopy = {
     registrationLabel: "Registrering",
     contactLabel: "Kontakt",
     note: "Sharia-tilpasset social støtteplatform designet til transparent og langsigtet omsorg i lokalsamfundet.",
+  },
+  projects: {
+    eyebrow: "Vores Projekter",
+    heroTitle: "Hvor formål møder handling",
+    heroSubtitle:
+      "Hver kategori repræsenterer et løfte — om værdighed, selvhjulpenhed og et samfund, der løfter sig frem gennem tro og ansvar.",
+    title: "Projektkategorier",
+    description:
+      "Se de områder, vi arbejder inden for. Hver kategori drives som et struktureret program med feltmonitorering, qard hasanah-finansiering og transparent rapportering.",
+    emptyTitle: "Projekter kommer snart",
+    emptyText:
+      "Vores projektkategorier er ved at blive forberedt. Kom tilbage snart for at se fondens aktive programmer.",
+    categoryLabel: "Kategori",
+    allCategories: "Alle Kategorier",
+    statusLabel: "Status",
+    learnMore: "Læs Mere",
+    riskManagement: {
+      eyebrow: "Risikostyring",
+      title: "Risikostyringspolitik",
+      summary:
+        "Mir Faruk & Rima Fonden følger en struktureret risikostyringspolitik for at beskytte donortillid, modtagervelfærd, shariah-kompatible aktiviteter og støttecyklussens kontinuitet. Hvert program sikrer gennemsigtighed, ansvarlighed, korrekt verifikation, regelmæssig monitorering og nødvendig dokumentation. For husdyrbaseret qard hasanah-støtte tager fonden, selv efter overdragelse til modtageren, højde for potentielle risici, herunder dyrlægebehandling, fodring, vaccination og relaterede udgifter.",
+      reserveFundNote: "30% af de samlede tildelte midler holdes som reserve til at dække potentielle sundhedsrisici, dyrlægebehandling, fodring, vaccination og andre tilknyttede udgifter i modtagerens besiddelsesperiode.",
+      risks: [
+        {
+          number: "01",
+          title: "Risiko ved modtagerverifikation",
+          description:
+            "Før støtte ydes verificeres modtagerens identitet, adresse, økonomiske forhold, familiestatus, indkomstkilde, faktiske behov og kapacitet til at modtage støtte — for at sikre, at kun reelt berettigede personer udvælges.",
+        },
+        {
+          number: "02",
+          title: "Risiko ved dyresundhed og behandlingsudgifter",
+          description:
+            "Under husdyrhold kan sygdom, sundhedsrisici, ulykker eller uventede dyrlægeudgifter opstå. Fonden vil arrangere regelmæssig monitorering, indledende rådgivning og dyrlægestøtte efter behov. 30% af den samlede tildeling reserveres til sådanne udgifter.",
+        },
+        {
+          number: "03",
+          title: "Risiko for misbrug af støtte",
+          description:
+            "Der gennemføres regelmæssig monitorering for at sikre, at husdyr, midler eller støtte anvendes til det godkendte formål. Hvis en modtager misbruger støtte, giver falske oplysninger eller bryder kontraktbetingelser, kan fonden træffe de nødvendige administrative foranstaltninger.",
+        },
+        {
+          number: "04",
+          title: "Risiko ved qard hasanah-tilbagebetaling",
+          description:
+            "Qard hasanah er et rentefrit støttesystem. Det er modtagerens ansvar at returnere tilsvarende værdi eller som aftalt efter den aftalte periode. For at minimere tilbagebetalingsrisiko opretholder fonden skriftlige aftaler, tidsfrister, garantoplysninger, regelmæssige opfølgninger og nøjagtige registreringer.",
+        },
+        {
+          number: "05",
+          title: "Risiko for shariah-overholdelse",
+          description:
+            "Alle støtteaktiviteter gennemføres i overensstemmelse med islamiske shariah-principper. Renter, uetiske transaktioner, uklare finansielle vilkår eller shariah-stridende aktiviteter undgås. Gennemsigtige og halal-metoder følges for både donorbidrag og modtagerstøtte.",
+        },
+        {
+          number: "06",
+          title: "Risiko for donortillid og gennemsigtighed",
+          description:
+            "Donorbidrag modtages, opbevares, bogføres og anvendes korrekt til det tilsigtede formål. Nødvendig dokumentation og rapportering opretholdes for donationsforvaltning, modtagervalg og støttelevering for at bevare donortilliden.",
+        },
+        {
+          number: "07",
+          title: "Monitorerings- og driftsrisiko",
+          description:
+            "Monitoreringsteamet vil regelmæssigt observere modtageraktiviteter, dyrestatus, støtteanvendelse og tilbagebetalingsfremskridt. Feltverifikation, foto/rapportindsamling, opfølgning og rådgivning vil sikre programsucces.",
+        },
+        {
+          number: "08",
+          title: "Dokumentations- og svindelrisiko",
+          description:
+            "Ansøgninger med falske oplysninger, falske dokumenter, flere indsendelser, skjult identitet eller usande udsagn kan afvises. Godkendt støtte kan suspenderes, annulleres eller genvurderes efter behov. Alle ansøgninger, aftaler, garantoplysninger og transaktionsregistreringer bevares.",
+        },
+      ],
+      processTitle: "Risikokontrolproces",
+      steps: [
+        "Modtagelse af ansøgning og foreløbig verifikation",
+        "Verifikation af identitet, adresse og økonomisk status",
+        "Indsamling og verifikation af garantoplysninger",
+        "Godkendelse i overensstemmelse med politik",
+        "Skriftlig aftale og accept af qard hasanah-vilkår",
+        "Overdragelse af husdyr / støtte",
+        "30% af den samlede tildeling holdes som sundheds- og tilknyttede udgiftsreserve",
+        "Regelmæssig monitorering og dyrlægestøtte",
+        "Tilbagebetalings-/returproces til aftalt tid",
+        "Returneret støtte genanvendes til næste modtager",
+      ],
+    },
+  },
+  boardMembers: {
+    eyebrow: "Bestyrelsesledelse",
+    title: "Bestyrelsesmedlemmer",
+    description: "Mød bestyrelsesmedlemmerne, der guider visionen og driften af Mir Faruk & Rima Fonden.",
+    emptyLabel: "Ingen bestyrelsesmedlemmer fundet",
+    organizationLabel: "Organisation",
+    responsibilityLabel: "Ansvar",
+    addMember: "Tilføj medlem",
+    editMember: "Rediger medlem",
+    serialNo: "Løbenummer",
+    nameEn: "Navn (Engelsk)",
+    nameBn: "Navn (Bengalsk)",
+    nameDk: "Navn (Dansk)",
+    designationEn: "Betegnelse (Engelsk)",
+    designationBn: "Betegnelse (Bengalsk)",
+    designationDk: "Betegnelse (Dansk)",
+    organizationNameEn: "Organisationsnavn (Engelsk)",
+    organizationNameBn: "Organisationsnavn (Bengalsk)",
+    organizationNameDk: "Organisationsnavn (Dansk)",
+    responsibilityNoteEn: "Ansvarsbeskrivelse (Engelsk)",
+    responsibilityNoteBn: "Ansvarsbeskrivelse (Bengalsk)",
+    responsibilityNoteDk: "Ansvarsbeskrivelse (Dansk)",
+    profileImage: "Profilbillede",
+    status: "Status",
+    active: "Aktiv",
+    inactive: "Inaktiv",
   },
 };
 
