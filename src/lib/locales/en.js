@@ -334,7 +334,7 @@ const siteCopy = {
       title: "Risk Management Policy",
       summary:
         "Mir Faruk & Rima Foundation follows a structured risk management policy to protect donor trust, beneficiary welfare, Shariah-compliant operations, and the continuity of the support cycle. Every programme ensures transparency, accountability, proper verification, regular monitoring, and necessary documentation. For livestock-based qard hasanah support, even after handover to the beneficiary, the foundation accounts for potential risks including veterinary care, feed, vaccination, and related expenses.",
-      reserveFundNote: "30% of total allocated funds are kept as a reserve to cover potential health risks, veterinary treatment, feed, vaccination, and other ancillary costs during the beneficiary's possession period.",
+      reserveFundNote: "3%–5% of total allocated funds are kept as a reserve to cover potential health risks, veterinary treatment, feed, vaccination, and other ancillary costs during the beneficiary's possession period.",
       risks: [
         {
           number: "01",
@@ -346,7 +346,7 @@ const siteCopy = {
           number: "02",
           title: "Livestock Health & Treatment Risk",
           description:
-            "During livestock rearing, illness, health hazards, accidents, or unexpected veterinary costs may arise. The foundation will arrange regular monitoring, preliminary consultations, and veterinary support as needed. A 30% reserve of the total allocation is maintained for such costs.",
+            "During livestock rearing, illness, health hazards, accidents, or unexpected veterinary costs may arise. The foundation will arrange regular monitoring, preliminary consultations, and veterinary support as needed. A 3%–5% reserve of the total allocation is maintained for such costs.",
         },
         {
           number: "03",
@@ -393,7 +393,7 @@ const siteCopy = {
         "Approval in accordance with policy",
         "Written agreement & qard hasanah terms acceptance",
         "Livestock / support handover",
-        "30% of total allocation kept as health & ancillary expense reserve",
+        "3%–5% of total allocation kept as health & ancillary expense reserve",
         "Regular monitoring & veterinary support",
         "Repayment / return process at agreed time",
         "Returned support re-used for next beneficiary",

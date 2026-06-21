@@ -336,7 +336,7 @@ const siteCopy = {
       title: "Risikostyringspolitik",
       summary:
         "Mir Faruk & Rima Fonden følger en struktureret risikostyringspolitik for at beskytte donortillid, modtagervelfærd, shariah-kompatible aktiviteter og støttecyklussens kontinuitet. Hvert program sikrer gennemsigtighed, ansvarlighed, korrekt verifikation, regelmæssig monitorering og nødvendig dokumentation. For husdyrbaseret qard hasanah-støtte tager fonden, selv efter overdragelse til modtageren, højde for potentielle risici, herunder dyrlægebehandling, fodring, vaccination og relaterede udgifter.",
-      reserveFundNote: "30% af de samlede tildelte midler holdes som reserve til at dække potentielle sundhedsrisici, dyrlægebehandling, fodring, vaccination og andre tilknyttede udgifter i modtagerens besiddelsesperiode.",
+      reserveFundNote: "3%–5% af de samlede tildelte midler holdes som reserve til at dække potentielle sundhedsrisici, dyrlægebehandling, fodring, vaccination og andre tilknyttede udgifter i modtagerens besiddelsesperiode.",
       risks: [
         {
           number: "01",
@@ -348,7 +348,7 @@ const siteCopy = {
           number: "02",
           title: "Risiko ved dyresundhed og behandlingsudgifter",
           description:
-            "Under husdyrhold kan sygdom, sundhedsrisici, ulykker eller uventede dyrlægeudgifter opstå. Fonden vil arrangere regelmæssig monitorering, indledende rådgivning og dyrlægestøtte efter behov. 30% af den samlede tildeling reserveres til sådanne udgifter.",
+            "Under husdyrhold kan sygdom, sundhedsrisici, ulykker eller uventede dyrlægeudgifter opstå. Fonden vil arrangere regelmæssig monitorering, indledende rådgivning og dyrlægestøtte efter behov. 3%–5% af den samlede tildeling reserveres til sådanne udgifter.",
         },
         {
           number: "03",
@@ -395,7 +395,7 @@ const siteCopy = {
         "Godkendelse i overensstemmelse med politik",
         "Skriftlig aftale og accept af qard hasanah-vilkår",
         "Overdragelse af husdyr / støtte",
-        "30% af den samlede tildeling holdes som sundheds- og tilknyttede udgiftsreserve",
+        "3%–5% af den samlede tildeling holdes som sundheds- og tilknyttede udgiftsreserve",
         "Regelmæssig monitorering og dyrlægestøtte",
         "Tilbagebetalings-/returproces til aftalt tid",
         "Returneret støtte genanvendes til næste modtager",

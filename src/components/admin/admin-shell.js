@@ -24,6 +24,7 @@ const navItems = [
   { label: "Board Members", href: "/admin/Board_Member_Page", icon: "board" },
   { label: "Locations", href: "/admin/location-page", icon: "location" },
   { label: "Project Category", href: "/admin/project-category", icon: "project" },
+  { label: "Foundation Projects", href: "/admin/Foundation_Projects", icon: "folder" },
 ];
 
 const routeTitles = {
@@ -54,6 +55,10 @@ const routeTitles = {
   "/admin/project-category": {
     eyebrow: "Projects",
     title: "Project Categories",
+  },
+  "/admin/Foundation_Projects": {
+    eyebrow: "Projects",
+    title: "Foundation Projects",
   },
   "/admin/registrations": {
     eyebrow: "Review Queue",
@@ -196,6 +201,15 @@ function Icon({ name }) {
         <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" strokeLinecap="round" strokeLinejoin="round" />
         <rect x="9" y="3" width="6" height="4" rx="1" />
         <path d="M9 12h6M9 16h4" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (name === "folder") {
+    return (
+      <svg {...common}>
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2Z" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 11v6M9 14h6" strokeLinecap="round" />
       </svg>
     );
   }

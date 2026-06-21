@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 import { RiskManagementSection } from "@/components/public/projects/risk-management-section";
 
@@ -127,22 +128,25 @@ function CategoryCard({ category, index, locale }) {
   const name = pick(category.nameEn, category.nameBn, category.nameDk, locale);
 
   return (
-    <div className="group flex cursor-pointer items-center gap-4 rounded-2xl border border-slate-200 bg-[#f7f7f7] px-5 py-5 transition-all duration-200 hover:border-slate-300 hover:bg-white hover:shadow-md hover:shadow-slate-900/8">
+    <Link
+      href={`/projects/${category.id}`}
+      className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-[#f7f7f7] px-5 py-5 transition-all duration-200 hover:border-slate-300 hover:bg-white hover:shadow-md hover:shadow-slate-900/8"
+    >
       {/* Icon */}
       <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm shadow-slate-200 ${color}`}>
         {icon}
       </div>
 
       {/* Name */}
-      <span className="flex-1 text-[15px] font-bold text-slate-800 leading-snug group-hover:text-slate-900">
+      <span className="flex-1 text-[15px] font-bold text-slate-800 leading-snug group-hover:text-cyan-700 transition-colors">
         {name}
       </span>
 
       {/* Arrow */}
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-slate-700" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-cyan-600" aria-hidden="true">
         <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-    </div>
+    </Link>
   );
 }
 

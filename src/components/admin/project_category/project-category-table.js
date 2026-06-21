@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ProjectCategoryDeleteButton } from "./project-category-delete-button";
 import { ProjectCategoryStatusToggle } from "./project-category-status-toggle";
@@ -116,7 +118,7 @@ export function ProjectCategoryTable({ data, search, updateStatusAction, deleteA
             <select
               name="pageSize"
               defaultValue={pageSize}
-              onChange="this.form.submit()"
+              onChange={(e) => e.currentTarget.form.submit()}
               className="h-9 rounded-xl border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-600 outline-none focus:border-cyan-300"
             >
               {[10, 20, 50, 100].map((n) => (
