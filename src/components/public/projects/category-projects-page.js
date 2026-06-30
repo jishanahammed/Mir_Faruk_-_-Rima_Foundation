@@ -50,7 +50,7 @@ function ProjectCard({ project, locale }) {
   const thumb = project.images?.[0]?.imageUrl ?? null;
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-slate-900/10 hover:-translate-y-1">
+    <Link href={`/projects/${project.projectCategoryId}/${project.id}`} className="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-slate-900/10 hover:-translate-y-1">
       {/* Thumbnail */}
       <div className="relative h-52 overflow-hidden bg-gradient-to-br from-cyan-50 to-slate-100">
         {thumb ? (
@@ -83,15 +83,18 @@ function ProjectCard({ project, locale }) {
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      <div className="flex flex-1 flex-col p-5">
+        {/* Title */}
         <h3 className="text-base font-extrabold leading-snug text-slate-900 group-hover:text-cyan-700 transition-colors">
           {title}
         </h3>
 
+        {/* Short description — up to 4 lines */}
         {desc && (
-          <p className="line-clamp-2 text-sm leading-relaxed text-slate-500">{desc}</p>
+          <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-slate-500">{desc}</p>
         )}
 
+        {/* Meta footer */}
         <div className="mt-auto flex flex-col gap-2 border-t border-slate-100 pt-3">
           {location && (
             <div className="flex items-center gap-2 text-xs text-slate-500">
@@ -112,8 +115,16 @@ function ProjectCard({ project, locale }) {
             </div>
           )}
         </div>
+
+        {/* View details CTA */}
+        <div className="mt-4 flex items-center gap-1 text-xs font-bold text-cyan-600 group-hover:text-cyan-700 transition-colors">
+          View Details
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

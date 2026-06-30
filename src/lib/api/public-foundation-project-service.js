@@ -35,6 +35,9 @@ function normalizeProject(p) {
     shortDescriptionEn: pick(p, "shortDescriptionEn", "ShortDescriptionEn", null),
     shortDescriptionBn: pick(p, "shortDescriptionBn", "ShortDescriptionBn", null),
     shortDescriptionDk: pick(p, "shortDescriptionDk", "ShortDescriptionDk", null),
+    fullDescriptionEn: pick(p, "fullDescriptionEn", "FullDescriptionEn", null),
+    fullDescriptionBn: pick(p, "fullDescriptionBn", "FullDescriptionBn", null),
+    fullDescriptionDk: pick(p, "fullDescriptionDk", "FullDescriptionDk", null),
     objectiveEn: pick(p, "objectiveEn", "ObjectiveEn", null),
     objectiveBn: pick(p, "objectiveBn", "ObjectiveBn", null),
     objectiveDk: pick(p, "objectiveDk", "ObjectiveDk", null),
@@ -45,8 +48,14 @@ function normalizeProject(p) {
     estimatedBudget: pick(p, "estimatedBudget", "EstimatedBudget", null),
     collectedAmount: pick(p, "collectedAmount", "CollectedAmount", null),
     distributedAmount: pick(p, "distributedAmount", "DistributedAmount", null),
+    thumbnailImage: buildImageUrl(pick(p, "thumbnailImage", "ThumbnailImage", null)),
     status: pick(p, "status", "Status", "active"),
     sortOrder: pick(p, "sortOrder", "SortOrder", null),
+    divisionId: pick(p, "divisionId", "DivisionId", null),
+    districtId: pick(p, "districtId", "DistrictId", null),
+    upazilaId: pick(p, "upazilaId", "UpazilaId", null),
+    createdAt: pick(p, "createdAt", "CreatedAt", null),
+    updatedAt: pick(p, "updatedAt", "UpdatedAt", null),
     images: (pick(p, "images", "Images", []) ?? []).map(normalizeImage).filter(Boolean),
   };
 }
@@ -58,5 +67,14 @@ export async function getPublicProjectsByCategory(categoryId) {
     return items.map(normalizeProject).filter(Boolean);
   } catch {
     return [];
+  }
+}
+
+export async function getPublicProjectById(id) {
+  try {
+    const p = await apiGet(`FoundationProjects/public/${encodeURIComponent(id)}`);
+    return normalizeProject(p);
+  } catch {
+    return null;
   }
 }
