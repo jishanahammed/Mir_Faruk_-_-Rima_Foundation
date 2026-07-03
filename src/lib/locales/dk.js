@@ -97,6 +97,14 @@ const siteCopy = {
       { value: "Teknologisk", label: "Synlig og transparent proces" },
     ],
   },
+  ceoMessage: {
+    eyebrow: "Fra stifterens skrivebord",
+    title: "En hilsen fra vores stifter & CEO",
+    description:
+      "Ord om taknemmelighed og engagement fra Mir Mohammad Faruk om fondens rejse og de mennesker, den tjener.",
+    imageAlt:
+      "Budskab fra Mir Mohammad Faruk, stifter & CEO af Mir Faruk & Rima Foundation",
+  },
   about: {
     eyebrow: "Vores tilgang",
     title: "En social støttemodel bygget på tillid, disciplin og varig værdighed.",

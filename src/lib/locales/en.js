@@ -97,6 +97,14 @@ const siteCopy = {
       { value: "Tech-enabled", label: "Transparent process visibility" },
     ],
   },
+  ceoMessage: {
+    eyebrow: "Founder's Desk",
+    title: "A Message from Our Founder & CEO",
+    description:
+      "Words of gratitude and commitment from Mir Mohammad Faruk on the foundation's journey and the people it serves.",
+    imageAlt:
+      "Message from Mir Mohammad Faruk, Founder & CEO of Mir Faruk & Rima Foundation",
+  },
   about: {
     eyebrow: "Our Approach",
     title: "A social support model built on trust, discipline, and lasting dignity.",
