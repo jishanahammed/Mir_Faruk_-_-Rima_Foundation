@@ -6,7 +6,7 @@ import { useSiteLocale } from "@/components/public/providers/locale-provider";
 const letterImages = {
   BN: { src: "/bng-b.png", width: 2208, height: 2996 },
   EN: { src: "/eng-b.png", width: 2200, height: 3000 },
-  DK: { src: "/dk-b.png", width: 2204, height: 2789 },
+  DK: { src: "/dk-bb.png", width: 2204, height: 2789 },
 };
 
 export function CeoBani() {
