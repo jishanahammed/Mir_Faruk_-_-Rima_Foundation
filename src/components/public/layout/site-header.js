@@ -59,6 +59,7 @@ export function SiteHeader() {
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isMobileLanguageOpen, setIsMobileLanguageOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
   const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
 
@@ -85,6 +86,7 @@ export function SiteHeader() {
     setIsRegistrationOpen(false);
     setIsProfileOpen(false);
     setIsAboutOpen(false);
+    setIsMobileLanguageOpen(false);
   }, [locale, pathname]);
 
   useEffect(() => {
@@ -95,6 +97,7 @@ export function SiteHeader() {
         setIsRegistrationOpen(false);
         setIsProfileOpen(false);
         setIsAboutOpen(false);
+        setIsMobileLanguageOpen(false);
       }
     }
 
@@ -105,6 +108,7 @@ export function SiteHeader() {
         setIsRegistrationOpen(false);
         setIsProfileOpen(false);
         setIsAboutOpen(false);
+        setIsMobileLanguageOpen(false);
       }
     }
 
@@ -516,21 +520,97 @@ export function SiteHeader() {
               </div>
             </div>
 
-            <button
-              type="button"
-              className={`flex h-11 w-11 items-center justify-center rounded-2xl transition lg:hidden ${
-                isPinned
-                  ? "border border-slate-200 bg-slate-50 text-slate-700 hover:bg-cyan-50"
-                  : "border border-cyan-100 bg-white/92 text-slate-700 shadow-lg shadow-cyan-100/50 hover:bg-cyan-50"
-              }`}
-              aria-label={menuLabel}
-              aria-expanded={isMobileOpen}
-              aria-controls="mobile-menu"
-              onClick={() => {
-                setIsMobileOpen(!isMobileOpen);
-                setIsProfileOpen(false);
-              }}
-            >
+            <div className="flex items-center gap-2 lg:hidden">
+              <div className="relative">
+                <button
+                  type="button"
+                  aria-label={header.languageLabel}
+                  aria-expanded={isMobileLanguageOpen}
+                  aria-controls="mobile-language-menu"
+                  disabled={isLoading}
+                  onClick={() => {
+                    setIsMobileLanguageOpen(!isMobileLanguageOpen);
+                    setIsMobileOpen(false);
+                    setIsProfileOpen(false);
+                  }}
+                  className={`flex h-11 items-center gap-1.5 rounded-2xl px-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                    isPinned
+                      ? "border border-slate-200 bg-slate-50 text-slate-700 hover:bg-cyan-50"
+                      : "border border-cyan-100 bg-white/92 text-slate-700 shadow-lg shadow-cyan-100/50 hover:bg-cyan-50"
+                  }`}
+                >
+                  <Image
+                    src={languageFlagImages[selectedLanguage.code]}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="h-6 w-6 rounded-full object-cover"
+                  />
+                  <span>{selectedLanguage.label}</span>
+                  <span
+                    className={`mt-[-0.15rem] block h-2 w-2 rotate-45 border-b border-r border-current transition ${
+                      isMobileLanguageOpen ? "-translate-y-px" : "translate-y-0"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                {isMobileLanguageOpen ? (
+                  <div
+                    id="mobile-language-menu"
+                    className="absolute right-0 top-[calc(100%+0.5rem)] z-40 w-48 rounded-3xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-200/80"
+                  >
+                    {languageOptions.map((language) => {
+                      const isSelected = language.code === locale;
+
+                      return (
+                        <button
+                          key={language.code}
+                          type="button"
+                          disabled={isLoading}
+                          className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                            isSelected
+                              ? "border border-cyan-300 bg-cyan-50 text-cyan-800"
+                              : "text-slate-700 hover:bg-cyan-50 hover:text-cyan-800"
+                          }`}
+                          onClick={() => {
+                            setLocale(language.code);
+                            setIsMobileLanguageOpen(false);
+                          }}
+                        >
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100">
+                            <Image
+                              src={languageFlagImages[language.code]}
+                              alt=""
+                              width={24}
+                              height={24}
+                              className="h-6 w-6 rounded-full object-cover"
+                            />
+                          </span>
+                          <span>{language.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
+
+              <button
+                type="button"
+                className={`flex h-11 w-11 items-center justify-center rounded-2xl transition ${
+                  isPinned
+                    ? "border border-slate-200 bg-slate-50 text-slate-700 hover:bg-cyan-50"
+                    : "border border-cyan-100 bg-white/92 text-slate-700 shadow-lg shadow-cyan-100/50 hover:bg-cyan-50"
+                }`}
+                aria-label={menuLabel}
+                aria-expanded={isMobileOpen}
+                aria-controls="mobile-menu"
+                onClick={() => {
+                  setIsMobileOpen(!isMobileOpen);
+                  setIsProfileOpen(false);
+                  setIsMobileLanguageOpen(false);
+                }}
+              >
               <span className="relative block h-4 w-5" aria-hidden="true">
                 <span
                   className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition ${
@@ -549,6 +629,7 @@ export function SiteHeader() {
                 />
               </span>
             </button>
+            </div>
           </div>
 
           {isMobileOpen ? (
@@ -866,52 +947,6 @@ export function SiteHeader() {
                     </Link>
                   </div>
                 ) : null}
-              </div>
-
-              <div
-                className={`rounded-3xl p-3 ${
-                  isPinned
-                    ? "border border-slate-200 bg-slate-50"
-                    : "border border-cyan-100 bg-slate-50"
-                }`}
-              >
-                <p className="px-2 pb-2 text-xs font-semibold tracking-[0.22em] text-cyan-700 uppercase">
-                  {header.languageLabel}
-                </p>
-                <div className="grid gap-2">
-                  {languageOptions.map((language) => {
-                    const isSelected = language.code === locale;
-
-                    return (
-                      <button
-                        key={language.code}
-                        type="button"
-                        disabled={isLoading}
-                        className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
-                          isSelected
-                            ? "border border-cyan-300 bg-white text-cyan-800"
-                            : "bg-white text-slate-700"
-                        }`}
-                        onClick={() => {
-                          setLocale(language.code);
-                          setIsMobileOpen(false);
-                          setIsProfileOpen(false);
-                        }}
-                      >
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-50 text-[0.68rem] font-bold text-cyan-800">
-                          <Image
-                            src={languageFlagImages[language.code]}
-                            alt=""
-                            width={24}
-                            height={24}
-                            className="h-6 w-6 rounded-full object-cover"
-                          />
-                        </span>
-                        <span>{language.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
               </div>
               </div>
             </div>
