@@ -46,6 +46,7 @@ export function CeoBani() {
               sizes="(max-width: 672px) 100vw, 672px"
               className="h-auto w-full rounded-[2rem] object-contain"
             />
+
           </figure>
         </div>
       </div>
