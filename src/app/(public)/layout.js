@@ -11,5 +11,6 @@ export default function PublicLayout({ children }) {
         <SiteFooter />
       </div>
     </LocaleProvider>
+
   );
 }
