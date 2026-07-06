@@ -435,6 +435,72 @@ const siteCopy = {
     active: "Active",
     inactive: "Inactive",
   },
+  goatFarming: {
+    title: "Goat Rearing at a Glance – Growth & Breeding Chart",
+    subtitle: "Easily understand how the number of goats grows over time",
+    columns: {
+      period: "Period",
+      explanation: "Explanation",
+      illustration: "Illustration",
+      newborns: "New Kids",
+      total: "Total Goats",
+    },
+    unit: "pcs",
+    stages: [
+      {
+        period: "Start",
+        periodNote: "(0 months)",
+        explanation: [
+          "We gave a Qard Hasanah beneficiary two mother goats, each 6 months old.",
+        ],
+        newborns: "—",
+        total: "2",
+      },
+      {
+        period: "After 6 months",
+        explanation: [
+          "The two mother goats each gave birth.",
+          "Total new kids: 4.",
+        ],
+        newborns: "4",
+        total: "6",
+      },
+      {
+        period: "After 12 months",
+        explanation: [
+          "The mother goats gave birth to 4 more kids.",
+          "(The first batch of kids has not given birth yet.)",
+          "Total new kids: 4.",
+        ],
+        newborns: "4",
+        total: "10",
+      },
+      {
+        period: "After 18 months",
+        explanation: [
+          "From the 4 kids born in the first 6 months, at least 2 are now old enough to breed.",
+          "So 2 new mother goats gave birth — total new kids: 8.",
+        ],
+        newborns: "8",
+        total: "18",
+      },
+      {
+        period: "After 24 months",
+        periodNote: "(2 years)",
+        explanation: [
+          "The 2 original mothers + 2 new mothers (4 mothers in total) gave birth together.",
+          "At least 32 new kids will be born.",
+        ],
+        newborns: "32+",
+        total: "32+",
+        totalNote: "(or even more)",
+      },
+    ],
+    summaryLabel: "Summary",
+    summaryNote: "(total number of goats)",
+    footer:
+      "Rear goats, become self-reliant — move ahead on the path to greater profit in less time.",
+  },
 };
 
 export default siteCopy;

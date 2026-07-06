@@ -9,6 +9,7 @@ export function MemberListPage({ type }) {
   const currentItem =
     members.items.find((item) => item.id === type) ?? members.items[0];
 
+
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(180deg,_#ffffff_0%,_#f8fafc_48%,_#ecfeff_100%)] px-6 py-20 lg:px-8">
       <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,_transparent,_rgba(8,145,178,0.35),_transparent)]" />
@@ -32,11 +33,10 @@ export function MemberListPage({ type }) {
                 <Link
                   key={item.id}
                   href={item.href}
-                  className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
-                    item.id === currentItem.id
-                      ? "border-cyan-300 bg-white text-cyan-800 shadow-sm shadow-cyan-100"
-                      : "border-slate-200 bg-slate-50 text-slate-700 hover:border-cyan-200 hover:text-cyan-700"
-                  }`}
+                  className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${item.id === currentItem.id
+                    ? "border-cyan-300 bg-white text-cyan-800 shadow-sm shadow-cyan-100"
+                    : "border-slate-200 bg-slate-50 text-slate-700 hover:border-cyan-200 hover:text-cyan-700"
+                    }`}
                 >
                   {item.title}
                 </Link>

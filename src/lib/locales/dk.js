@@ -437,6 +437,72 @@ const siteCopy = {
     active: "Aktiv",
     inactive: "Inaktiv",
   },
+  goatFarming: {
+    title: "Gedehold på et øjeblik – vækst- og avlsdiagram",
+    subtitle: "Forstå nemt, hvordan antallet af geder vokser over tid",
+    columns: {
+      period: "Periode",
+      explanation: "Forklaring",
+      illustration: "Illustration",
+      newborns: "Nye kid",
+      total: "Geder i alt",
+    },
+    unit: "stk.",
+    stages: [
+      {
+        period: "Start",
+        periodNote: "(0 måneder)",
+        explanation: [
+          "Vi gav en Qard Hasanah-modtager to modergeder, hver 6 måneder gamle.",
+        ],
+        newborns: "—",
+        total: "2",
+      },
+      {
+        period: "Efter 6 måneder",
+        explanation: [
+          "De to modergeder fik hver killinger.",
+          "Nye kid i alt: 4.",
+        ],
+        newborns: "4",
+        total: "6",
+      },
+      {
+        period: "Efter 12 måneder",
+        explanation: [
+          "Modergederne fik 4 kid mere.",
+          "(Det første hold kid har endnu ikke fået killinger.)",
+          "Nye kid i alt: 4.",
+        ],
+        newborns: "4",
+        total: "10",
+      },
+      {
+        period: "Efter 18 måneder",
+        explanation: [
+          "Af de 4 kid, der blev født i de første 6 måneder, er mindst 2 nu gamle nok til at avle.",
+          "Så 2 nye modergeder fik killinger — nye kid i alt: 8.",
+        ],
+        newborns: "8",
+        total: "18",
+      },
+      {
+        period: "Efter 24 måneder",
+        periodNote: "(2 år)",
+        explanation: [
+          "De 2 oprindelige mødre + 2 nye mødre (4 mødre i alt) fik killinger samtidig.",
+          "Mindst 32 nye kid vil blive født.",
+        ],
+        newborns: "32+",
+        total: "32+",
+        totalNote: "(eller endnu flere)",
+      },
+    ],
+    summaryLabel: "Resumé",
+    summaryNote: "(samlet antal geder)",
+    footer:
+      "Hold geder, bliv selvforsynende — kom videre mod større fortjeneste på kortere tid.",
+  },
 };
 
 export default siteCopy;

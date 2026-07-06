@@ -10,6 +10,7 @@ function pick(en, bn, dk, locale) {
   return en;
 }
 
+
 // keyword → icon mapping — matches against the English name (lowercase)
 const KEYWORD_ICON_MAP = [
   {
