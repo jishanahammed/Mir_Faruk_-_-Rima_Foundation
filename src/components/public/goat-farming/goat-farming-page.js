@@ -207,24 +207,30 @@ function GoatHerd({
     };
   });
 
-  const motherGlyphSize =
-    motherItems.length > 2 ? "text-xl sm:text-3xl" : "text-3xl sm:text-4xl";
+  const motherGlyphSize = kidRowLayout
+    ? "text-sm sm:text-xl"
+    : motherItems.length > 2
+      ? "text-xl sm:text-3xl"
+      : "text-3xl sm:text-4xl";
 
   // In row-layout stages the mothers align to the same grid columns as the kids.
-  // FIXED widths (shared by the mother grid and every kid grid) guarantee that a
-  // mother chunk (2 big goats) and a kid chunk (4 small goats) occupy the same
-  // width, so every "+" lines up vertically across all rows.
+  // Column widths come from CSS vars (--goat-col / --plus-col) set responsively on
+  // each grid container, so a mother chunk (2 big goats) and a kid chunk (4 small
+  // goats) share a width AND the whole grid shrinks to fit narrow phones.
   const rowMaxChunks = kidRowLayout
     ? Math.max(...kidItems.map((item) => splitIntoChunks(item.count, item.chunk).length))
     : 0;
   // goat column, then (+ column, goat column) repeated.
   const gridColumns = kidRowLayout
-    ? `6rem ${"1.5rem 6rem ".repeat(rowMaxChunks - 1)}`.trim()
+    ? `var(--goat-col) ${"var(--plus-col) var(--goat-col) ".repeat(rowMaxChunks - 1)}`.trim()
     : null;
+  // Responsive column-width vars: tighter on mobile, roomier from sm up.
+  const gridColVars =
+    "[--goat-col:3.25rem] [--plus-col:0.85rem] sm:[--goat-col:6rem] sm:[--plus-col:1.5rem]";
 
   const mothers = kidRowLayout ? (
     <div
-      className="grid items-start gap-y-1"
+      className={`grid items-start gap-y-1 ${gridColVars}`}
       style={{ gridTemplateColumns: gridColumns }}
     >
       {motherItems.map((item, index) => (
@@ -240,7 +246,7 @@ function GoatHerd({
                 <GoatGlyph key={glyphIndex} className={motherGlyphSize} />
               ))}
             </div>
-            <span className="w-24 text-center text-[0.55rem] font-semibold leading-tight text-slate-500 sm:text-[0.62rem]">
+            <span className="w-[3.25rem] text-center text-[0.5rem] font-semibold leading-tight text-slate-500 sm:w-24 sm:text-[0.62rem]">
               {item.count} {item.label}
             </span>
           </div>
@@ -273,7 +279,7 @@ function GoatHerd({
           {rows.map((chunks, rowIndex) => (
             <div key={`row-${rowIndex}`} className="flex flex-col items-center gap-1">
               <div
-                className="grid items-center"
+                className={`grid items-center ${gridColVars}`}
                 style={{ gridTemplateColumns: gridColumns }}
               >
                 {Array.from({ length: maxChunks }).map((_, colIndex) => (
@@ -290,7 +296,7 @@ function GoatHerd({
                         (__, glyphIndex) => (
                           <GoatGlyph
                             key={glyphIndex}
-                            className="text-base sm:text-lg"
+                            className="text-[0.7rem] sm:text-lg"
                           />
                         )
                       )}
