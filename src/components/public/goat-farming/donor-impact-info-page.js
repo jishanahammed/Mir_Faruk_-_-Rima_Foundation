@@ -3,6 +3,14 @@
 import { Fragment } from "react";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
+function SectionHeading({ children }) {
+  return (
+    <h2 className="text-center text-lg font-bold text-emerald-900 sm:text-2xl">
+      {children}
+    </h2>
+  );
+}
+
 // Per-stage accent colors for the growth table (same palette/order as the
 // goat-farming pages: start, 6mo, 12mo, 18mo, 24mo).
 const growthRowThemes = [
@@ -11,7 +19,6 @@ const growthRowThemes = [
     chip: "bg-emerald-700 text-white",
     total: "bg-emerald-700 text-white",
     accent: "text-emerald-700",
-    border: "border-emerald-100",
     bar: "bg-emerald-600",
   },
   {
@@ -19,7 +26,6 @@ const growthRowThemes = [
     chip: "bg-sky-600 text-white",
     total: "bg-sky-700 text-white",
     accent: "text-sky-700",
-    border: "border-sky-100",
     bar: "bg-sky-500",
   },
   {
@@ -27,7 +33,6 @@ const growthRowThemes = [
     chip: "bg-violet-600 text-white",
     total: "bg-violet-700 text-white",
     accent: "text-violet-700",
-    border: "border-violet-100",
     bar: "bg-violet-500",
   },
   {
@@ -35,7 +40,6 @@ const growthRowThemes = [
     chip: "bg-orange-500 text-white",
     total: "bg-orange-500 text-white",
     accent: "text-orange-600",
-    border: "border-orange-100",
     bar: "bg-orange-400",
   },
   {
@@ -43,18 +47,9 @@ const growthRowThemes = [
     chip: "bg-emerald-800 text-white",
     total: "bg-emerald-800 text-white",
     accent: "text-emerald-800",
-    border: "border-emerald-100",
     bar: "bg-emerald-700",
   },
 ];
-
-function SectionHeading({ children }) {
-  return (
-    <h2 className="text-center text-lg font-bold text-emerald-900 sm:text-2xl">
-      {children}
-    </h2>
-  );
-}
 
 function CheckItem({ children }) {
   return (
@@ -156,11 +151,186 @@ function CycleCard({ icon, title, description, highlight }) {
   );
 }
 
-export function DonorImpactPage() {
+// Growth table (same design as the goat-farming donor-plan page): reads the
+// goat-farming stage copy so the numbers/wording stay in sync.
+function GrowthTable({ gf, note, heading, variant, stepHeading }) {
+  const cardsOnly = variant === "cards";
+  return (
+    <div className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-emerald-100 bg-white shadow-[0_18px_60px_rgba(6,95,70,0.06)]">
+      {stepHeading ? (
+        <div className="flex min-h-[11rem] flex-col bg-emerald-800 px-3 py-2.5 text-white">
+          <p className="text-center text-sm font-bold">
+            {stepHeading.title}
+          </p>
+          <div className="mt-2 flex flex-1 flex-col items-center justify-start gap-1">
+            {stepHeading.flow.map((node, nodeIndex) =>
+              node.arrow ? (
+                <div
+                  key={nodeIndex}
+                  className="flex flex-col items-center text-center"
+                >
+                  <span className="text-xs leading-none text-emerald-300" aria-hidden="true">
+                    ↓
+                  </span>
+                  <span className="text-[0.62rem] font-medium leading-4 text-emerald-100">
+                    {node.arrow}
+                  </span>
+                </div>
+              ) : (
+                <span
+                  key={nodeIndex}
+                  className="w-full rounded-lg bg-white/10 px-2.5 py-1.5 text-center text-[0.68rem] font-semibold leading-4 text-white ring-1 ring-white/15"
+                >
+                  {node.box}
+                </span>
+              )
+            )}
+          </div>
+        </div>
+      ) : (
+        <p className="bg-emerald-800 px-5 py-3.5 text-center text-sm font-bold text-white">
+          {heading}
+        </p>
+      )}
+
+      {/* Desktop table (hidden in cards-only mode) */}
+      <table
+        className={`w-full table-fixed border-collapse text-sm ${
+          cardsOnly ? "hidden" : "hidden sm:table"
+        }`}
+      >
+        <thead>
+          <tr className="bg-emerald-800 text-white">
+            <th className="w-[20%] border-r border-emerald-700/40 px-4 py-4 text-left font-semibold">
+              {gf.columns.period}
+            </th>
+            <th className="border-r border-emerald-700/40 px-4 py-4 text-left font-semibold">
+              {gf.columns.explanation}
+            </th>
+            <th className="w-[17%] border-r border-emerald-700/40 px-4 py-4 text-center font-semibold">
+              {gf.columns.newborns}
+            </th>
+            <th className="w-[17%] px-4 py-4 text-center font-semibold">
+              {gf.columns.total}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {gf.stages.map((stage, index) => (
+            <tr key={stage.period} className="border-t border-emerald-100 align-middle">
+              <td className="border-r border-emerald-100 px-4 py-5">
+                <span
+                  className={`inline-flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-center text-sm font-bold ${growthRowThemes[index].badge}`}
+                >
+                  <span>{stage.period}</span>
+                  {stage.periodNote ? (
+                    <span className="text-xs font-medium opacity-90">
+                      {stage.periodNote}
+                    </span>
+                  ) : null}
+                </span>
+              </td>
+              <td className="border-r border-emerald-100 px-4 py-5 text-[0.88rem] leading-7 text-slate-700">
+                {stage.explanation.map((line, lineIndex) => (
+                  <p key={lineIndex} className={lineIndex > 0 ? "mt-1" : ""}>
+                    {line}
+                  </p>
+                ))}
+              </td>
+              <td className="border-r border-emerald-100 px-4 py-5 text-center">
+                <span
+                  className={`inline-flex h-12 w-12 items-center justify-center rounded-full text-base font-bold ${growthRowThemes[index].chip}`}
+                >
+                  {stage.newborns}
+                </span>
+                <div className={`mt-1 text-xs font-semibold ${growthRowThemes[index].accent}`}>
+                  {gf.unit}
+                </div>
+              </td>
+              <td className="px-4 py-5 text-center">
+                <span
+                  className={`inline-flex min-w-[3.5rem] flex-col items-center rounded-2xl px-3 py-2.5 text-xl font-bold ${growthRowThemes[index].total}`}
+                >
+                  <span>{stage.total}</span>
+                  <span className="text-xs font-semibold">{gf.unit}</span>
+                  {stage.totalNote ? (
+                    <span className="mt-1 text-[0.6rem] font-medium opacity-90">
+                      {stage.totalNote}
+                    </span>
+                  ) : null}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Stacked cards (always shown in cards-only mode; else mobile-only) */}
+      <div className={`space-y-2.5 p-3 ${cardsOnly ? "" : "sm:hidden"}`}>
+        {gf.stages.map((stage, index) => (
+          <article
+            key={stage.period}
+            className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_6px_18px_rgba(15,23,42,0.05)]"
+          >
+            <div className="p-3">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="text-sm font-bold text-slate-900">{stage.period}</p>
+                  {stage.periodNote ? (
+                    <p className="text-[0.7rem] font-medium text-slate-500">
+                      {stage.periodNote}
+                    </p>
+                  ) : null}
+                </div>
+                <span
+                  className={`inline-flex flex-col items-center rounded-xl px-3 py-1.5 text-center leading-tight ${growthRowThemes[index].total}`}
+                >
+                  <span className="text-base font-extrabold">
+                    {stage.total} {gf.unit}
+                  </span>
+                  <span className="text-[0.55rem] font-medium opacity-90">
+                    {gf.columns.total}
+                  </span>
+                </span>
+              </div>
+
+              <div className="mt-2 space-y-0.5 text-[0.8rem] leading-5 text-slate-600">
+                {stage.explanation.map((line, lineIndex) => (
+                  <p key={lineIndex}>{line}</p>
+                ))}
+              </div>
+
+              <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2 text-[0.8rem]">
+                <span className="font-semibold text-slate-500">
+                  {gf.columns.newborns}
+                </span>
+                <span
+                  className={`ml-auto inline-flex h-7 min-w-7 items-center justify-center rounded-full px-2 text-[0.8rem] font-bold ${growthRowThemes[index].chip}`}
+                >
+                  {stage.newborns}
+                </span>
+                <span className={`font-semibold ${growthRowThemes[index].accent}`}>
+                  {gf.unit}
+                </span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {note ? (
+        <p className="border-t border-emerald-100 bg-emerald-50/50 px-5 py-3 text-[0.68rem] leading-5 text-slate-500">
+          {note}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+export function DonorImpactInfoPage() {
   const { copy } = useSiteLocale();
   const di = copy.donorImpact;
-  // The growth table reuses the goat-farming chart copy so both pages show
-  // exactly the same stages, wording and numbers.
+  // Growth table reuses the goat-farming chart copy so the numbers stay in sync.
   const gf = copy.goatFarming;
 
   return (
@@ -257,7 +427,7 @@ export function DonorImpactPage() {
           </div>
         </div>
 
-        {/* ── Step 1 → Growth/Flow → Step 2 ────────────────────────────── */}
+        {/* ── Step 1 → Chain flow → Step 2 ─────────────────────────────── */}
         <div className="flex flex-col gap-5">
           {/* Step 1 */}
           <StepCard
@@ -268,150 +438,11 @@ export function DonorImpactPage() {
 
           <FlowDown />
 
-          {/* Growth table */}
-          <div className="overflow-hidden rounded-[2rem] border border-emerald-100 bg-white shadow-[0_18px_60px_rgba(6,95,70,0.06)]">
-            <p className="bg-emerald-800 px-5 py-3.5 text-center text-sm font-bold text-white">
-              {di.growth.heading}
-            </p>
-
-            {/* Desktop table */}
-            <table className="hidden w-full table-fixed border-collapse text-sm sm:table">
-              <thead>
-                <tr className="bg-emerald-800 text-white">
-                  <th className="w-[20%] border-r border-emerald-700/40 px-4 py-4 text-left font-semibold">
-                    {gf.columns.period}
-                  </th>
-                  <th className="border-r border-emerald-700/40 px-4 py-4 text-left font-semibold">
-                    {gf.columns.explanation}
-                  </th>
-                  <th className="w-[17%] border-r border-emerald-700/40 px-4 py-4 text-center font-semibold">
-                    {gf.columns.newborns}
-                  </th>
-                  <th className="w-[17%] px-4 py-4 text-center font-semibold">
-                    {gf.columns.total}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {gf.stages.map((stage, index) => (
-                  <tr
-                    key={stage.period}
-                    className="border-t border-emerald-100 align-middle"
-                  >
-                    <td className="border-r border-emerald-100 px-4 py-5">
-                      <span
-                        className={`inline-flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-center text-sm font-bold ${growthRowThemes[index].badge}`}
-                      >
-                        <span>{stage.period}</span>
-                        {stage.periodNote ? (
-                          <span className="text-xs font-medium opacity-90">
-                            {stage.periodNote}
-                          </span>
-                        ) : null}
-                      </span>
-                    </td>
-                    <td className="border-r border-emerald-100 px-4 py-5 text-[0.88rem] leading-7 text-slate-700">
-                      {stage.explanation.map((line, lineIndex) => (
-                        <p key={lineIndex} className={lineIndex > 0 ? "mt-1" : ""}>
-                          {line}
-                        </p>
-                      ))}
-                    </td>
-                    <td className="border-r border-emerald-100 px-4 py-5 text-center">
-                      <span
-                        className={`inline-flex h-12 w-12 items-center justify-center rounded-full text-base font-bold ${growthRowThemes[index].chip}`}
-                      >
-                        {stage.newborns}
-                      </span>
-                      <div
-                        className={`mt-1 text-xs font-semibold ${growthRowThemes[index].accent}`}
-                      >
-                        {gf.unit}
-                      </div>
-                    </td>
-                    <td className="px-4 py-5 text-center">
-                      <span
-                        className={`inline-flex min-w-[3.5rem] flex-col items-center rounded-2xl px-3 py-2.5 text-xl font-bold ${growthRowThemes[index].total}`}
-                      >
-                        <span>{stage.total}</span>
-                        <span className="text-xs font-semibold">{gf.unit}</span>
-                        {stage.totalNote ? (
-                          <span className="mt-1 text-[0.6rem] font-medium opacity-90">
-                            {stage.totalNote}
-                          </span>
-                        ) : null}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {/* Mobile stacked cards */}
-            <div className="space-y-4 p-4 sm:hidden">
-              {gf.stages.map((stage, index) => (
-                <article
-                  key={stage.period}
-                  className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)]"
-                >
-                  {/* accent bar */}
-                  <span
-                    className={`block h-1.5 w-full ${growthRowThemes[index].bar}`}
-                    aria-hidden="true"
-                  />
-                  <div className="p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-base font-bold text-slate-900">
-                          {stage.period}
-                        </p>
-                        {stage.periodNote ? (
-                          <p className="text-xs font-medium text-slate-500">
-                            {stage.periodNote}
-                          </p>
-                        ) : null}
-                      </div>
-                      <span
-                        className={`inline-flex flex-col items-center rounded-2xl px-4 py-2 text-center leading-tight ${growthRowThemes[index].total}`}
-                      >
-                        <span className="text-lg font-extrabold">
-                          {stage.total} {gf.unit}
-                        </span>
-                        <span className="text-[0.6rem] font-medium opacity-90">
-                          {gf.columns.total}
-                        </span>
-                      </span>
-                    </div>
-
-                    <div className="mt-3 space-y-1 text-[0.85rem] leading-7 text-slate-600">
-                      {stage.explanation.map((line, lineIndex) => (
-                        <p key={lineIndex}>{line}</p>
-                      ))}
-                    </div>
-
-                    <div className="mt-3 flex items-center gap-2 border-t border-slate-100 pt-3 text-sm">
-                      <span className="font-semibold text-slate-500">
-                        {gf.columns.newborns}
-                      </span>
-                      <span
-                        className={`ml-auto inline-flex h-9 min-w-9 items-center justify-center rounded-full px-2.5 text-sm font-bold ${growthRowThemes[index].chip}`}
-                      >
-                        {stage.newborns}
-                      </span>
-                      <span
-                        className={`font-semibold ${growthRowThemes[index].accent}`}
-                      >
-                        {gf.unit}
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <p className="border-t border-emerald-100 bg-emerald-50/50 px-5 py-3 text-[0.68rem] leading-5 text-slate-500">
-              {di.growth.note}
-            </p>
+          {/* Growth — 3 card-mode tables in one responsive row */}
+          <div className="grid gap-4 lg:grid-cols-3">
+            <GrowthTable variant="cards" gf={gf} stepHeading={di.chain.stepHeadings[0]} note={di.growth.note} />
+            <GrowthTable variant="cards" gf={gf} stepHeading={di.chain.stepHeadings[1]} note={di.growth.note} />
+            <GrowthTable variant="cards" gf={gf} stepHeading={di.chain.stepHeadings[2]} note={di.growth.note} />
           </div>
 
           <FlowDown />

@@ -560,6 +560,54 @@ const siteCopy = {
         "Sådan bliver en modtager selv en giver. Cyklussen fortsætter, og mange flere familier får mulighed for at blive selvforsynende.",
       ],
     },
+    chain: {
+      stepHeadings: [
+        {
+          title: "Trin 1",
+          flow: [
+            { box: "Donor–1" },
+            { arrow: "Fi Sabilillah-donation" },
+            { box: "Modtager–1" },
+            { arrow: "Selvforsynende efter 2 år" },
+            { box: "Modtager–1 → giver mindst 2 eller flere modergeder til Modtager–2" },
+          ],
+        },
+        {
+          title: "Trin 2",
+          flow: [
+            { box: "Modtager–2" },
+            { arrow: "Selvforsynende efter 2 år" },
+            { box: "Modtager–2 → giver mindst 2 eller flere modergeder til Modtager–3" },
+          ],
+        },
+        {
+          title: "Trin 3",
+          flow: [
+            { box: "Modtager–3" },
+            { arrow: "Selvforsynende efter 2 år" },
+            { box: "Modtager–3 → giver mindst 2 eller flere modergeder til Modtager–4" },
+          ],
+        },
+      ],
+      heading: "Hvordan én donation når familie efter familie",
+      steps: [
+        {
+          label: "Start",
+          cards: [
+            { role: "Donor", note: "Fi Sabilillah-donation", icon: "🤲", tone: "donor" },
+            { role: "Modtager 1", note: "Modtager 2 eller flere modergeder", icon: "🏠", tone: "receive" },
+          ],
+        },
+        {
+          label: "Efter 2 år",
+          cards: [
+            { role: "Modtager 2", note: "Giver mindst 2 eller flere modergeder", icon: "🐐", tone: "give" },
+            { role: "Modtager 3", note: "Giver mindst 2 eller flere modergeder", icon: "🐐", tone: "give" },
+          ],
+        },
+      ],
+      note: "Og sådan fortsætter det — hver selvforsynende familie hjælper den næste og spreder det gode til utallige hjem.",
+    },
     cycle: {
       heading: "Den vedvarende støttecyklus",
       subheading: "(utallige familier gavnes af én donation)",

@@ -509,7 +509,7 @@ const siteCopy = {
       "Rear goats, become self-reliant — move ahead on the path to greater profit in less time.",
   },
   donorImpact: {
-    title: "One Donation, a Lifetime of Good",
+    title: "One Donation – An Endless Impact Forever",
     subtitle: "A Shariah-compliant, Qard Hasanah-based self-reliance program",
     quote: {
       arabic: "مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
@@ -557,6 +557,54 @@ const siteCopy = {
         "Following the Qard Hasanah principles, they then pass on at least 2 mother goats — or more — to one or several other families in need.",
         "Thus a beneficiary becomes a giver of support. The cycle keeps running, and many more families get the chance to become self-reliant.",
       ],
+    },
+    chain: {
+      stepHeadings: [
+        {
+          title: "Step 1",
+          flow: [
+            { box: "Donor–1" },
+            { arrow: "Fi Sabilillah donation" },
+            { box: "Receiver–1" },
+            { arrow: "Self-reliant after 2 years" },
+            { box: "Receiver–1 → gives at least 2 or more mother goats to Receiver–2" },
+          ],
+        },
+        {
+          title: "Step 2",
+          flow: [
+            { box: "Receiver–2" },
+            { arrow: "Self-reliant after 2 years" },
+            { box: "Receiver–2 → gives at least 2 or more mother goats to Receiver–3" },
+          ],
+        },
+        {
+          title: "Step 3",
+          flow: [
+            { box: "Receiver–3" },
+            { arrow: "Self-reliant after 2 years" },
+            { box: "Receiver–3 → gives at least 2 or more mother goats to Receiver–4" },
+          ],
+        },
+      ],
+      heading: "How one donation reaches family after family",
+      steps: [
+        {
+          label: "Start",
+          cards: [
+            { role: "Donor", note: "Fi Sabilillah donation", icon: "🤲", tone: "donor" },
+            { role: "Receiver 1", note: "Receives 2 or more mother goats", icon: "🏠", tone: "receive" },
+          ],
+        },
+        {
+          label: "After 2 years",
+          cards: [
+            { role: "Receiver 2", note: "Gives at least 2 or more mother goats", icon: "🐐", tone: "give" },
+            { role: "Receiver 3", note: "Gives at least 2 or more mother goats", icon: "🐐", tone: "give" },
+          ],
+        },
+      ],
+      note: "And so it continues — each self-reliant family helps the next, spreading the good across countless homes.",
     },
     cycle: {
       heading: "The Continuous Cycle of Support",
