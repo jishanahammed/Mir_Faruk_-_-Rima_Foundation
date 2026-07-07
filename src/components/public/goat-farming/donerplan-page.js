@@ -1,6 +1,5 @@
 "use client";
 
-import { Fragment } from "react";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
 // Presentation-only data, indexed by stage position (same order across locales).
@@ -130,232 +129,7 @@ const stageVisuals = [
   },
 ];
 
-function GoatGlyph({ className = "" }) {
-  return (
-    <span className={`select-none leading-none ${className}`} aria-hidden="true">
-      🐐
-    </span>
-  );
-}
-
-function GoatGroup({ count, label, glyphClassName }) {
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="flex max-w-[16rem] flex-wrap items-center justify-center gap-x-1 gap-y-0.5">
-        {Array.from({ length: count }).map((_, index) => (
-          <GoatGlyph key={index} className={glyphClassName} />
-        ))}
-      </div>
-      <span className="max-w-[5.5rem] text-center text-[0.6rem] font-semibold leading-tight text-slate-500 sm:text-[0.65rem]">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-function splitIntoChunks(count, chunk) {
-  if (!chunk || chunk >= count) return [count];
-  const chunks = [];
-  let remaining = count;
-  while (remaining > 0) {
-    chunks.push(Math.min(chunk, remaining));
-    remaining -= chunk;
-  }
-  return chunks;
-}
-
-function PlusSign() {
-  return (
-    <span
-      className="text-sm font-bold text-slate-400 sm:text-base"
-      aria-hidden="true"
-    >
-      +
-    </span>
-  );
-}
-
-function GoatHerd({
-  motherGroups,
-  kidGroups = [],
-  labels,
-  hideKidsPlus,
-  stack,
-  stackKids,
-  kidRowLayout,
-  sumLine,
-}) {
-  const kidItems = kidGroups.map((group) => {
-    if (typeof group === "number") {
-      return { count: group, label: labels.kidLabel };
-    }
-    return {
-      count: group.count,
-      label: labels[group.labelKey] ?? labels.kidLabel,
-      chunk: group.chunk,
-      noPlus: group.noPlus,
-    };
-  });
-
-  const motherItems = motherGroups.map((group) => {
-    if (typeof group === "number") {
-      return { count: group, label: labels.motherLabel };
-    }
-    return {
-      count: group.count,
-      label: labels[group.labelKey] ?? labels.motherLabel,
-    };
-  });
-
-  const motherGlyphSize =
-    motherItems.length > 2 ? "text-xl sm:text-3xl" : "text-3xl sm:text-4xl";
-
-  // In row-layout stages the mothers align to the same grid columns as the kids.
-  // FIXED widths (shared by the mother grid and every kid grid) guarantee that a
-  // mother chunk (2 big goats) and a kid chunk (4 small goats) occupy the same
-  // width, so every "+" lines up vertically across all rows.
-  const rowMaxChunks = kidRowLayout
-    ? Math.max(...kidItems.map((item) => splitIntoChunks(item.count, item.chunk).length))
-    : 0;
-  // goat column, then (+ column, goat column) repeated.
-  const gridColumns = kidRowLayout
-    ? `6rem ${"1.5rem 6rem ".repeat(rowMaxChunks - 1)}`.trim()
-    : null;
-
-  const mothers = kidRowLayout ? (
-    <div
-      className="grid items-start gap-y-1"
-      style={{ gridTemplateColumns: gridColumns }}
-    >
-      {motherItems.map((item, index) => (
-        <Fragment key={index}>
-          {index > 0 ? (
-            <span className="flex h-7 items-center justify-center sm:h-8">
-              <PlusSign />
-            </span>
-          ) : null}
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center justify-center gap-x-0.5">
-              {Array.from({ length: item.count }).map((_, glyphIndex) => (
-                <GoatGlyph key={glyphIndex} className={motherGlyphSize} />
-              ))}
-            </div>
-            <span className="w-24 text-center text-[0.55rem] font-semibold leading-tight text-slate-500 sm:text-[0.62rem]">
-              {item.count} {item.label}
-            </span>
-          </div>
-        </Fragment>
-      ))}
-    </div>
-  ) : (
-    <div className="flex max-w-full flex-wrap items-center justify-center gap-x-1.5 gap-y-2 sm:gap-x-3">
-      {motherItems.map((item, index) => (
-        <div key={index} className="flex items-center gap-x-1.5 sm:gap-x-3">
-          {index > 0 ? <PlusSign /> : null}
-          <GoatGroup
-            count={item.count}
-            label={`${item.count} ${item.label}`}
-            glyphClassName={motherGlyphSize}
-          />
-        </div>
-      ))}
-    </div>
-  );
-
-  let kids = null;
-  if (kidItems.length > 0) {
-    if (kidRowLayout) {
-      const rows = kidItems.map((item) => splitIntoChunks(item.count, item.chunk));
-      const maxChunks = Math.max(...rows.map((chunks) => chunks.length));
-
-      kids = (
-        <div className="flex flex-col items-center gap-3">
-          {rows.map((chunks, rowIndex) => (
-            <div key={`row-${rowIndex}`} className="flex flex-col items-center gap-1">
-              <div
-                className="grid items-center"
-                style={{ gridTemplateColumns: gridColumns }}
-              >
-                {Array.from({ length: maxChunks }).map((_, colIndex) => (
-                  <Fragment key={colIndex}>
-                    {colIndex > 0 ? (
-                      <span className="flex justify-center">
-                        {chunks[colIndex] != null && !kidItems[rowIndex].noPlus ? (
-                          <PlusSign />
-                        ) : null}
-                      </span>
-                    ) : null}
-                    <div className="flex items-center justify-center gap-x-0.5">
-                      {Array.from({ length: chunks[colIndex] ?? 0 }).map(
-                        (__, glyphIndex) => (
-                          <GoatGlyph
-                            key={glyphIndex}
-                            className="text-base sm:text-lg"
-                          />
-                        )
-                      )}
-                    </div>
-                  </Fragment>
-                ))}
-              </div>
-              <span className="text-center text-[0.65rem] font-semibold text-slate-500">
-                {kidItems[rowIndex].count} {kidItems[rowIndex].label}
-              </span>
-            </div>
-          ))}
-        </div>
-      );
-    } else {
-      kids = (
-        <div
-          className={`flex items-center justify-center gap-x-3 gap-y-2 ${stackKids ? "flex-col" : "flex-wrap"
-            }`}
-        >
-          {kidItems.map((item, index) => (
-            <Fragment key={`k-${index}`}>
-              {index > 0 ? <PlusSign /> : null}
-              <GoatGroup
-                count={item.count}
-                label={`${item.count} ${item.label}`}
-                glyphClassName="text-base sm:text-lg"
-              />
-            </Fragment>
-          ))}
-        </div>
-      );
-    }
-  }
-
-  const sumText = sumLine
-    ? `${sumLine.parts
-      .map((part) => `${part.count} ${labels[part.labelKey] ?? ""}`)
-      .join(" + ")} = ${sumLine.total} ${labels.unit}`
-    : null;
-
-  return (
-    <div className="flex flex-col items-center gap-3">
-      <div
-        className={`flex items-center justify-center gap-x-3 gap-y-2 ${stack ? "flex-col" : "flex-wrap"
-          }`}
-      >
-        {mothers}
-        {kids ? (
-          <>
-            {!stack && !hideKidsPlus ? <PlusSign /> : null}
-            {kids}
-          </>
-        ) : null}
-      </div>
-      {sumText ? (
-        <p className="rounded-full bg-slate-100 px-3 py-1 text-center text-xs font-semibold text-slate-700">
-          {sumText}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
-export function GoatFarmingPage() {
+export function DonorPlanPage() {
   const { copy } = useSiteLocale();
   const gf = copy.goatFarming;
 
@@ -388,19 +162,16 @@ export function GoatFarmingPage() {
           <table className="w-full table-fixed border-collapse text-sm">
             <thead>
               <tr className="bg-emerald-800 text-white">
-                <th className="w-[13%] border-r border-emerald-700/40 px-4 py-4 text-left font-semibold">
+                <th className="w-[20%] border-r border-emerald-700/40 px-4 py-4 text-left font-semibold">
                   {gf.columns.period}
                 </th>
-                <th className="w-[27%] border-r border-emerald-700/40 px-4 py-4 text-left font-semibold">
+                <th className="border-r border-emerald-700/40 px-4 py-4 text-left font-semibold">
                   {gf.columns.explanation}
                 </th>
-                <th className="border-r border-emerald-700/40 px-4 py-4 text-center font-semibold">
-                  {gf.columns.illustration}
-                </th>
-                <th className="w-[13%] border-r border-emerald-700/40 px-4 py-4 text-center font-semibold">
+                <th className="w-[16%] border-r border-emerald-700/40 px-4 py-4 text-center font-semibold">
                   {gf.columns.newborns}
                 </th>
-                <th className="w-[13%] px-4 py-4 text-center font-semibold">
+                <th className="w-[16%] px-4 py-4 text-center font-semibold">
                   {gf.columns.total}
                 </th>
               </tr>
@@ -434,18 +205,6 @@ export function GoatFarmingPage() {
                         {line}
                       </p>
                     ))}
-                  </td>
-                  <td className="border-r border-emerald-100 px-4 py-6">
-                    <GoatHerd
-                      motherGroups={stage.motherGroups}
-                      kidGroups={stage.kidGroups}
-                      labels={gf}
-                      hideKidsPlus={stage.hideKidsPlus}
-                      stack={stage.stack}
-                      stackKids={stage.stackKids}
-                      kidRowLayout={stage.kidRowLayout}
-                      sumLine={stage.sumLine}
-                    />
                   </td>
                   <td className="border-r border-emerald-100 px-4 py-6 text-center">
                     <span
@@ -526,22 +285,6 @@ export function GoatFarmingPage() {
                           {gf.columns.total} ({gf.unit})
                         </span>
                       </span>
-                    </div>
-
-                    {/* illustration */}
-                    <div
-                      className={`mt-4 rounded-2xl border p-3 ${stage.theme.soft} ${stage.theme.softBorder}`}
-                    >
-                      <GoatHerd
-                        motherGroups={stage.motherGroups}
-                        kidGroups={stage.kidGroups}
-                        labels={gf}
-                        hideKidsPlus={stage.hideKidsPlus}
-                        stack={stage.stack}
-                        stackKids={stage.stackKids}
-                        kidRowLayout={stage.kidRowLayout}
-                        sumLine={stage.sumLine}
-                      />
                     </div>
 
                     {/* explanation */}
