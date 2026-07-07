@@ -1,4 +1,4 @@
-import { DonorPlanPage } from "@/components/public/goat-farming/donerplan-page";
+import { DonorPlanPage } from "@/components/public/goat-farming/goat-farming-donor-plan";
 
 export const metadata = {
   title: "ছাগল পালন ডোনার প্ল্যান | Mir Faruk & Rima Foundation",
