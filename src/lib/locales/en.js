@@ -508,6 +508,145 @@ const siteCopy = {
     footer:
       "Rear goats, become self-reliant — move ahead on the path to greater profit in less time.",
   },
+  donorImpact: {
+    title: "One Donation, a Lifetime of Good",
+    subtitle: "A Shariah-compliant, Qard Hasanah-based self-reliance program",
+    quote: {
+      arabic: "مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
+      text: "“Whoever guides someone to goodness will have a reward like the one who did it.”",
+      source: "(Sahih Muslim: 1893)",
+    },
+    features: [
+      { icon: "🤲", label: "Fi Sabilillah donation" },
+      { icon: "👨‍👩‍👧", label: "Qard Hasanah-based support" },
+      { icon: "🏠", label: "Building self-reliant families" },
+      { icon: "🔄", label: "A continuous cycle of support" },
+      { icon: "💚", label: "Sadaqah Jariyah that keeps going" },
+    ],
+    mission: {
+      heading: "Our Goal",
+      paragraphs: [
+        "Our goal is to build a sustainable, transparent, Shariah-compliant social support system where donors give as Fi Sabilillah and beneficiaries gain the opportunity to become self-reliant through Qard Hasanah-based support.",
+        "This is not merely a one-time donation; it is an ongoing humanitarian support cycle in which a donor's single gift becomes a means of positive change in the lives of countless families for many years.",
+        "We aim to establish a system where today's beneficiary becomes tomorrow's supporter of another family. In this way one donation travels from family to family, building a culture of self-reliance across society.",
+      ],
+    },
+    step1: {
+      heading: "Step 1: The Donor's Gift",
+      items: [
+        "A donor gives 2 mother goats for one family as Fi Sabilillah.",
+        "After careful verification, the foundation selects an eligible beneficiary and provides the family with 2 mother goats on a Qard Hasanah basis.",
+        "The beneficiary family rears and cares for the goats, building a sustainable source of income from them.",
+      ],
+    },
+    growth: {
+      heading: "Projected goat growth in the first 24 months (per family)",
+      columns: { time: "Time", detail: "Projected progress", newborns: "New kids", total: "Total goats" },
+      rows: [
+        { time: "6 months", detail: "4 new kids from the original 2 mother goats", newborns: "4", total: "6", breakdown: "(2 + 4)" },
+        { time: "12 months", detail: "4 more new kids from the original 2 mother goats", newborns: "4", total: "10", breakdown: "(6 + 4)" },
+        { time: "18 months", detail: "8 new kids in total from the original 2 mothers and 2 newly matured mothers", newborns: "8", total: "18", breakdown: "(10 + 8)" },
+        { time: "24 months", detail: "12 new kids from 6 breeding mothers in total", newborns: "12", total: "30", breakdown: "(18 + 12)" },
+      ],
+      note: "Note: the figures above are an ideal, indicative plan. Actual results may vary depending on animal health, mortality, sex ratio, fertility and management.",
+    },
+    step2: {
+      heading: "Step 2: Self-Reliance & Paying It Forward",
+      items: [
+        "After two years the beneficiary family becomes self-reliant through goat rearing and accumulates sufficient assets.",
+        "Following the Qard Hasanah principles, they then pass on at least 2 mother goats — or more — to one or several other families in need.",
+        "Thus a beneficiary becomes a giver of support. The cycle keeps running, and many more families get the chance to become self-reliant.",
+      ],
+    },
+    cycle: {
+      heading: "The Continuous Cycle of Support",
+      subheading: "(countless families benefit from one donation)",
+      donorTitle: "Donor",
+      donorDesc: "Fi Sabilillah donation",
+      receiverTitle: "Receiver",
+      receiveDesc: "Receives 2 or more mother goats",
+      giveDesc: "Gives at least 2 or more mother goats",
+      afterLabel: "After 2 years",
+      infinity: "And so it continues, generation after generation… an endless stream of good.",
+    },
+    example: {
+      heading: "An Example",
+      phases: [
+        {
+          year: "Year 0",
+          lines: [
+            "A donor gives 2 mother goats.",
+            "Receiver 1 gets the support.",
+            "Two years later, Receiver 1 — now self-reliant — gives 2 or 3 mother goats to Receiver 2.",
+          ],
+        },
+        {
+          year: "Year 2",
+          lines: [
+            "Receiver 2 becomes self-reliant and gives 2, 3 or even more mother goats to Receiver 3.",
+            "Meanwhile the first family keeps running its own farm.",
+          ],
+        },
+        {
+          year: "Year 4",
+          lines: [
+            "Receiver 3 supports a new family.",
+            "Receiver 2 supports one more family.",
+            "Receiver 1 may already be able to support several families.",
+          ],
+        },
+      ],
+      closing:
+        "In this way one donor's single gift gradually spreads across many families, building a strong social network of self-reliance.",
+    },
+    why: {
+      heading: "Why Is This Model Exceptional?",
+      items: [
+        "Shariah-compliant Qard Hasanah system",
+        "One-time donation, long-term impact",
+        "Beneficiaries become future supporters",
+        "Creates self-reliant families",
+        "Sustainable and scalable model",
+        "Technology-driven transparency & accountability",
+        "Regular monitoring and reporting",
+        "Continuous spread of humanitarian support",
+      ],
+    },
+    donorView: {
+      heading: "What Will a Donor See?",
+      intro:
+        "When you support a family, you will see not only that family's progress but also, step by step, how many families your donation has gone on to benefit. Through your donor ID you will know—",
+      items: [
+        "Which family received your donation",
+        "Their current progress",
+        "When they became self-reliant",
+        "How many mother goats they passed on to other families",
+        "How many families in total have benefited from your single donation",
+        "How your donation's impact keeps expanding year after year",
+      ],
+      closing:
+        "In this way a donor can transparently follow the long-term social impact of their donation.",
+    },
+    commitment: {
+      heading: "Our Commitment",
+      items: [
+        "Ensuring Shariah-compliant management",
+        "Maintaining full transparency and accountability",
+        "Tracking every donation and its impact through technology",
+        "Training, advising and regularly supervising beneficiaries",
+        "Building self-reliant families as a lasting solution to poverty",
+        "Turning one donation into a lifetime cycle of humanitarian support",
+      ],
+    },
+    belief: {
+      heading: "What We Believe",
+      lines: [
+        "One donor's single donation helps one family.",
+        "One self-reliant family helps many more families.",
+        "Thus from a single donation begins an unending journey of humanitarian support that, insha'Allah, will keep the stream of good flowing through society for generations.",
+      ],
+    },
+  },
 };
 
 export default siteCopy;

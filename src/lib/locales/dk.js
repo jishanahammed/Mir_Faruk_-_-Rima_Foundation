@@ -510,6 +510,145 @@ const siteCopy = {
     footer:
       "Hold geder, bliv selvforsynende — kom videre mod større fortjeneste på kortere tid.",
   },
+  donorImpact: {
+    title: "Én donation, livslang velsignelse",
+    subtitle: "Et shariah-kompatibelt selvforsørgelsesprogram baseret på Qard Hasanah",
+    quote: {
+      arabic: "مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
+      text: "“Den, der viser vej til noget godt, får samme belønning som den, der gør det.”",
+      source: "(Sahih Muslim: 1893)",
+    },
+    features: [
+      { icon: "🤲", label: "Fi Sabilillah-donation" },
+      { icon: "👨‍👩‍👧", label: "Støtte baseret på Qard Hasanah" },
+      { icon: "🏠", label: "Selvforsynende familier" },
+      { icon: "🔄", label: "En vedvarende støttecyklus" },
+      { icon: "💚", label: "Sadaqah Jariyah, der fortsætter" },
+    ],
+    mission: {
+      heading: "Vores mål",
+      paragraphs: [
+        "Vores mål er at opbygge et bæredygtigt, gennemsigtigt og shariah-kompatibelt socialt støttesystem, hvor donorer giver som Fi Sabilillah, og modtagere får mulighed for at blive selvforsynende gennem Qard Hasanah-baseret støtte.",
+        "Dette er ikke blot en engangsdonation; det er en vedvarende humanitær støttecyklus, hvor en donors ene gave i mange år bliver et middel til positiv forandring i utallige familiers liv.",
+        "Vi vil etablere et system, hvor dagens modtager bliver morgendagens støttegiver for en anden familie. Sådan rejser én donation fra familie til familie og opbygger en kultur af selvforsørgelse i samfundet.",
+      ],
+    },
+    step1: {
+      heading: "Trin 1: Donorens gave",
+      items: [
+        "En donor giver 2 modergeder til én familie som Fi Sabilillah.",
+        "Efter grundig udvælgelse finder fonden en egnet modtager og giver familien 2 modergeder på Qard Hasanah-basis.",
+        "Modtagerfamilien passer gederne og opbygger en bæredygtig indtægtskilde gennem dem.",
+      ],
+    },
+    growth: {
+      heading: "Forventet vækst i de første 24 måneder (pr. familie)",
+      columns: { time: "Tid", detail: "Forventet fremgang", newborns: "Nye kid", total: "Geder i alt" },
+      rows: [
+        { time: "6 mdr.", detail: "4 nye kid fra de oprindelige 2 modergeder", newborns: "4", total: "6", breakdown: "(2 + 4)" },
+        { time: "12 mdr.", detail: "4 nye kid mere fra de oprindelige 2 modergeder", newborns: "4", total: "10", breakdown: "(6 + 4)" },
+        { time: "18 mdr.", detail: "8 nye kid i alt fra de 2 oprindelige og 2 nyligt modnede mødre", newborns: "8", total: "18", breakdown: "(10 + 8)" },
+        { time: "24 mdr.", detail: "12 nye kid fra i alt 6 avlsdygtige mødre", newborns: "12", total: "30", breakdown: "(18 + 12)" },
+      ],
+      note: "Bemærk: Tallene ovenfor er en ideel, vejledende plan. De faktiske resultater kan variere afhængigt af dyrenes sundhed, dødelighed, kønsfordeling, frugtbarhed og pasning.",
+    },
+    step2: {
+      heading: "Trin 2: Selvforsørgelse og videregivelse",
+      items: [
+        "Efter to år er modtagerfamilien blevet selvforsynende gennem gedehold og har opbygget tilstrækkelige aktiver.",
+        "I henhold til Qard Hasanah-principperne giver de derefter mindst 2 modergeder — eller flere — videre til en eller flere andre trængende familier.",
+        "Sådan bliver en modtager selv en giver. Cyklussen fortsætter, og mange flere familier får mulighed for at blive selvforsynende.",
+      ],
+    },
+    cycle: {
+      heading: "Den vedvarende støttecyklus",
+      subheading: "(utallige familier gavnes af én donation)",
+      donorTitle: "Donor",
+      donorDesc: "Fi Sabilillah-donation",
+      receiverTitle: "Modtager",
+      receiveDesc: "Modtager 2 eller flere modergeder",
+      giveDesc: "Giver mindst 2 eller flere modergeder",
+      afterLabel: "Efter 2 år",
+      infinity: "Og sådan fortsætter det, generation efter generation… en endeløs strøm af godhed.",
+    },
+    example: {
+      heading: "Et eksempel",
+      phases: [
+        {
+          year: "År 0",
+          lines: [
+            "En donor giver 2 modergeder.",
+            "Modtager 1 får støtten.",
+            "To år senere giver Modtager 1 — nu selvforsynende — 2 eller 3 modergeder til Modtager 2.",
+          ],
+        },
+        {
+          year: "År 2",
+          lines: [
+            "Modtager 2 bliver selvforsynende og giver 2, 3 eller flere modergeder til Modtager 3.",
+            "Imens driver den første familie fortsat sin egen bedrift.",
+          ],
+        },
+        {
+          year: "År 4",
+          lines: [
+            "Modtager 3 støtter en ny familie.",
+            "Modtager 2 støtter endnu en familie.",
+            "Modtager 1 kan allerede være i stand til at støtte flere familier.",
+          ],
+        },
+      ],
+      closing:
+        "Sådan spredes én donors ene gave gradvist til mange familier og opbygger et stærkt socialt netværk af selvforsørgelse.",
+    },
+    why: {
+      heading: "Hvorfor er denne model enestående?",
+      items: [
+        "Shariah-kompatibelt Qard Hasanah-system",
+        "Én donation, langsigtet effekt",
+        "Modtagere bliver fremtidens givere",
+        "Skaber selvforsynende familier",
+        "Bæredygtig og skalerbar model",
+        "Teknologibaseret gennemsigtighed og ansvarlighed",
+        "Regelmæssig overvågning og rapportering",
+        "Vedvarende udbredelse af humanitær støtte",
+      ],
+    },
+    donorView: {
+      heading: "Hvad vil en donor se?",
+      intro:
+        "Når du støtter en familie, ser du ikke kun den families fremgang, men også trin for trin, hvor mange familier din donation er nået videre til. Via dit donor-ID kan du følge—",
+      items: [
+        "Hvilken familie der modtog din donation",
+        "Deres aktuelle fremgang",
+        "Hvornår de blev selvforsynende",
+        "Hvor mange modergeder de har givet videre til andre familier",
+        "Hvor mange familier din ene donation i alt har gavnet",
+        "Hvordan din donations effekt vokser år efter år",
+      ],
+      closing:
+        "På den måde kan en donor gennemsigtigt følge sin donations langsigtede sociale effekt.",
+    },
+    commitment: {
+      heading: "Vores løfte",
+      items: [
+        "Sikre shariah-kompatibel forvaltning",
+        "Opretholde fuld gennemsigtighed og ansvarlighed",
+        "Følge hver donation og dens effekt gennem teknologi",
+        "Uddanne, rådgive og løbende følge op på modtagerne",
+        "Opbygge selvforsynende familier som varig løsning på fattigdom",
+        "Forvandle én donation til en livslang humanitær støttecyklus",
+      ],
+    },
+    belief: {
+      heading: "Vores overbevisning",
+      lines: [
+        "Én donors ene donation hjælper én familie.",
+        "Én selvforsynende familie hjælper mange flere familier.",
+        "Sådan begynder en uendelig rejse af humanitær støtte med én donation — en rejse, der insha'Allah vil lade godhedens strøm fortsætte i samfundet i generationer.",
+      ],
+    },
+  },
 };
 
 export default siteCopy;
