@@ -155,7 +155,7 @@ function GrowthTable({ gf, note, heading, variant }) {
   const cardsOnly = variant === "cards";
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-emerald-100 bg-white shadow-[0_18px_60px_rgba(6,95,70,0.06)]">
-      <p className="bg-emerald-800 px-5 py-3 text-center text-sm font-bold leading-5 text-white">
+      <p className="bg-emerald-800 px-5 py-2.5 text-center text-sm font-bold leading-5 text-white">
         {(Array.isArray(heading) ? heading : [heading]).map((line, index) => (
           <span key={index} className="block">
             {line}
@@ -235,24 +235,24 @@ function GrowthTable({ gf, note, heading, variant }) {
       </table>
 
       {/* Stacked cards (always shown in cards-only mode; else mobile-only) */}
-      <div className={`space-y-2.5 p-3 ${cardsOnly ? "" : "sm:hidden"}`}>
+      <div className={`space-y-1.5 p-2 ${cardsOnly ? "" : "sm:hidden"}`}>
         {gf.stages.map((stage, index) => (
           <article
             key={stage.period}
             className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_6px_18px_rgba(15,23,42,0.05)]"
           >
-            <div className="p-3">
+            <div className="p-2">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <p className="text-sm font-bold text-slate-900">{stage.period}</p>
+                  <p className="text-sm font-bold leading-4 text-slate-900">{stage.period}</p>
                   {stage.periodNote ? (
-                    <p className="text-[0.7rem] font-medium text-slate-500">
+                    <p className="text-[0.7rem] font-medium leading-4 text-slate-500">
                       {stage.periodNote}
                     </p>
                   ) : null}
                 </div>
                 <span
-                  className={`inline-flex flex-col items-center rounded-lg px-2 py-1 text-center leading-tight ${growthRowThemes[index].total}`}
+                  className={`inline-flex flex-col items-center rounded-lg px-2 py-0.5 text-center leading-tight ${growthRowThemes[index].total}`}
                 >
                   <span className="text-xs font-bold">
                     {stage.total} {gf.unit}
@@ -263,18 +263,18 @@ function GrowthTable({ gf, note, heading, variant }) {
                 </span>
               </div>
 
-              <div className="mt-2 space-y-0.5 text-[0.8rem] leading-5 text-slate-600">
+              <div className="mt-1 space-y-0.5 text-[0.8rem] leading-[1.1rem] text-slate-600">
                 {stage.explanation.map((line, lineIndex) => (
                   <p key={lineIndex}>{line}</p>
                 ))}
               </div>
 
-              <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2 text-[0.8rem]">
+              <div className="mt-1.5 flex items-center gap-2 border-t border-slate-100 pt-1.5 text-[0.8rem]">
                 <span className="font-semibold text-slate-500">
                   {gf.columns.newborns}
                 </span>
                 <span
-                  className={`ml-auto inline-flex h-7 min-w-7 items-center justify-center rounded-full px-2 text-[0.8rem] font-bold ${growthRowThemes[index].chip}`}
+                  className={`ml-auto inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-[0.75rem] font-bold ${growthRowThemes[index].chip}`}
                 >
                   {stage.newborns}
                 </span>
@@ -288,7 +288,7 @@ function GrowthTable({ gf, note, heading, variant }) {
       </div>
 
       {note ? (
-        <p className="border-t border-emerald-100 bg-emerald-50/50 px-5 py-3 text-[0.68rem] leading-5 text-slate-500">
+        <p className="border-t border-emerald-100 bg-emerald-50/50 px-4 py-2 text-[0.68rem] leading-4 text-slate-500">
           {note}
         </p>
       ) : null}
