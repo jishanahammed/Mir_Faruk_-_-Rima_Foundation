@@ -561,6 +561,16 @@ const siteCopy = {
       ],
     },
     chain: {
+      cardTitles: [
+        ["Donor Fi Sabilillah-donation", "til Modtager 1"],
+        ["Modtager 1 Fi Sabilillah-donation", "til Modtager 2"],
+        ["Modtager 2 Fi Sabilillah-donation", "til Modtager 3"],
+      ],
+      arrows: [
+        { label: "efter 2 år", image: "/arrow-2years.png", caption: ["Donor 1", "Fi Sabilillah-donation", "til Modtager 2"] },
+        { label: "efter 2 år", image: "/arrow-2years.png", caption: ["Modtager 2", "Fi Sabilillah-donation", "til Modtager 3"] },
+        { label: "vedvarende", image: "/arrow-continuous.png", caption: ["Én donation –", "en uendelig,", "evig virkning"] },
+      ],
       stepHeadings: [
         {
           title: "Trin 1",

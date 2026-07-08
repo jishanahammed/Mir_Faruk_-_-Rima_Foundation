@@ -559,6 +559,16 @@ const siteCopy = {
       ],
     },
     chain: {
+      cardTitles: [
+        ["Donor Fi Sabilillah", "donation to Receiver 1"],
+        ["Receiver 1 Fi Sabilillah", "donation to Receiver 2"],
+        ["Receiver 2 Fi Sabilillah", "donation to Receiver 3"],
+      ],
+      arrows: [
+        { label: "after 2 years", image: "/arrow-2years.png", caption: ["Donor 1", "Fi Sabilillah", "donation to", "Receiver 2"] },
+        { label: "after 2 years", image: "/arrow-2years.png", caption: ["Receiver 2", "Fi Sabilillah", "donation to", "Receiver 3"] },
+        { label: "continuous", image: "/arrow-continuous.png", caption: ["One Donation –", "An Endless", "Impact Forever"] },
+      ],
       stepHeadings: [
         {
           title: "Step 1",
