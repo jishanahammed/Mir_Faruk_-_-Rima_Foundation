@@ -509,7 +509,7 @@ const siteCopy = {
       "Rear goats, become self-reliant — move ahead on the path to greater profit in less time.",
   },
   donorImpact: {
-    title: "One Donation – An Endless Impact Forever",
+    title: "One Donation – An Endless Impact",
     subtitle: "A Shariah-compliant, Qard Hasanah-based self-reliance program",
     quote: {
       arabic: "مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
@@ -567,7 +567,7 @@ const siteCopy = {
       arrows: [
         { label: "after 2 years", image: "/arrow-2years.png", caption: ["Donor 1", "Fi Sabilillah", "donation to", "Receiver 2"] },
         { label: "after 2 years", image: "/arrow-2years.png", caption: ["Receiver 2", "Fi Sabilillah", "donation to", "Receiver 3"] },
-        { label: "continuous", image: "/arrow-continuous.png", caption: ["One Donation –", "An Endless", "Impact Forever"] },
+        { label: "continuous", image: "/arrow-continuous.png", caption: ["One Donation –", "An Endless Impact"] },
       ],
       stepHeadings: [
         {
