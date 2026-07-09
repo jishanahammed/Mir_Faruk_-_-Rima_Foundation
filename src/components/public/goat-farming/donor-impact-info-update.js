@@ -216,6 +216,7 @@ function GrowthTable({ gf, note, heading, variant }) {
                   {gf.unit}
                 </div>
               </td>
+
               <td className="px-4 py-5 text-center">
                 <span
                   className={`inline-flex min-w-[3.5rem] flex-col items-center rounded-2xl px-3 py-2.5 text-xl font-bold ${growthRowThemes[index].total}`}
@@ -288,9 +289,15 @@ function GrowthTable({ gf, note, heading, variant }) {
       </div>
 
       {note ? (
-        <p className="border-t border-emerald-100 bg-emerald-50/50 px-4 py-2 text-[0.68rem] leading-4 text-slate-500">
-          {note}
-        </p>
+        <div className="flex items-start gap-2 border-t border-emerald-100 bg-emerald-50/50 px-4 py-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/favicon.ico"
+            alt=""
+            className="h-10 w-10 shrink-0 self-center object-contain"
+          />
+          <p className="text-[0.68rem] leading-4 text-slate-500">{note}</p>
+        </div>
       ) : null}
     </div>
   );
