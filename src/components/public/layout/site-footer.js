@@ -36,9 +36,15 @@ export function SiteFooter() {
               </div>
             </div>
 
-            <p className="mt-6 text-sm leading-7 text-slate-300">
-              {footer.note}
-            </p>
+            {footer.legal ? (
+              <div className="mt-6 space-y-1">
+                {footer.legal.map((line, index) => (
+                  <p key={index} className="text-[0.72rem] leading-5 text-slate-400">
+                    {line}
+                  </p>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div>

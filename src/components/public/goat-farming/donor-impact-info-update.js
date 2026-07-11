@@ -318,7 +318,7 @@ function RedArrow({ label, caption }) {
       </span>
       <svg
         viewBox="0 0 220 84"
-        className="my-7 w-20 rotate-90 drop-shadow-[0_6px_12px_rgba(185,28,28,0.30)] sm:my-9 sm:w-28 lg:my-0 lg:rotate-0"
+        className="my-5 w-14 rotate-90 drop-shadow-[0_6px_12px_rgba(185,28,28,0.30)] sm:my-9 sm:w-28 lg:my-0 lg:rotate-0"
       >
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
@@ -348,15 +348,32 @@ function RedArrow({ label, caption }) {
           {label}
         </text>
       </svg>
-      {caption ? (
-        <p className="max-w-[11rem] text-center text-[0.7rem] font-bold leading-5 text-blue-700 sm:text-xs">
-          {(Array.isArray(caption) ? caption : [caption]).map((line, index) => (
-            <span key={index} className="block">
-              {line}
-            </span>
-          ))}
-        </p>
-      ) : null}
+      {caption
+        ? (() => {
+            const lines = Array.isArray(caption) ? caption : [caption];
+            // Mobile has room for wider text, so merge the lines into two.
+            const mid = Math.ceil(lines.length / 2);
+            const mobileLines =
+              lines.length > 2
+                ? [lines.slice(0, mid).join(" "), lines.slice(mid).join(" ")]
+                : lines;
+
+            return (
+              <p className="max-w-[14rem] text-center text-[0.7rem] font-bold leading-5 text-blue-700 sm:text-xs lg:max-w-[11rem]">
+                {mobileLines.map((line, index) => (
+                  <span key={`m-${index}`} className="block lg:hidden">
+                    {line}
+                  </span>
+                ))}
+                {lines.map((line, index) => (
+                  <span key={`d-${index}`} className="hidden lg:block">
+                    {line}
+                  </span>
+                ))}
+              </p>
+            );
+          })()
+        : null}
     </div>
   );
 }

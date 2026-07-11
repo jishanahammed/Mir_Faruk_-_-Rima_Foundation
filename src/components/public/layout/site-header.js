@@ -59,12 +59,14 @@ export function SiteHeader() {
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isProgrammesOpen, setIsProgrammesOpen] = useState(false);
   const [isMobileLanguageOpen, setIsMobileLanguageOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
   const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
 
   const { header, members, registration } = copy;
   const aboutDropdown = header.about;
+  const programmesDropdown = header.programmes;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,6 +88,7 @@ export function SiteHeader() {
     setIsRegistrationOpen(false);
     setIsProfileOpen(false);
     setIsAboutOpen(false);
+    setIsProgrammesOpen(false);
     setIsMobileLanguageOpen(false);
   }, [locale, pathname]);
 
@@ -97,6 +100,7 @@ export function SiteHeader() {
         setIsRegistrationOpen(false);
         setIsProfileOpen(false);
         setIsAboutOpen(false);
+        setIsProgrammesOpen(false);
         setIsMobileLanguageOpen(false);
       }
     }
@@ -108,6 +112,7 @@ export function SiteHeader() {
         setIsRegistrationOpen(false);
         setIsProfileOpen(false);
         setIsAboutOpen(false);
+        setIsProgrammesOpen(false);
         setIsMobileLanguageOpen(false);
       }
     }
@@ -130,6 +135,9 @@ export function SiteHeader() {
   const isRegistrationActive = pathname.startsWith("/register");
   const isLoginActive = pathname === "/login";
   const isAboutActive = pathname.startsWith("/about");
+  const isProgrammesActive =
+    pathname.startsWith("/our-work") ||
+    pathname.startsWith("/donor-impact-info-update");
   const { leadingItems, trailingItems: [aboutNavItem, ...remainingTrailingItems] } = splitPrimaryNavItems(header.navItems);
   const selectedLanguage =
     languageOptions.find((language) => language.code === locale) ??
@@ -174,24 +182,77 @@ export function SiteHeader() {
                   : "border border-cyan-100 bg-white/92 text-slate-700 shadow-lg shadow-cyan-100/50 backdrop-blur-md"
                   }`}
               >
-                {leadingItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    aria-current={pathname === item.href ? "page" : undefined}
-                    className={`rounded-full px-4 py-2 transition ${pathname === item.href
-                      ? "border border-cyan-300 bg-white/70 text-cyan-800 shadow-sm shadow-cyan-100"
-                      : "hover:bg-cyan-50 hover:text-cyan-700"
-                      }`}
-                    onClick={() => {
-                      setIsMembersOpen(false);
-                      setIsRegistrationOpen(false);
-                      setIsProfileOpen(false);
-                    }}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {leadingItems.map((item) =>
+                  item.href === "/our-work" ? (
+                    <div key={item.href} className="relative">
+                      <button
+                        type="button"
+                        className={`flex items-center gap-2 rounded-full px-4 py-2 transition ${isProgrammesActive
+                          ? "border border-cyan-300 bg-white/70 text-cyan-800 shadow-sm shadow-cyan-100"
+                          : "hover:bg-cyan-50 hover:text-cyan-700"
+                          }`}
+                        aria-expanded={isProgrammesOpen}
+                        aria-controls="programmes-menu"
+                        aria-current={isProgrammesActive ? "page" : undefined}
+                        onClick={() => {
+                          setIsProgrammesOpen(!isProgrammesOpen);
+                          setIsMembersOpen(false);
+                          setIsRegistrationOpen(false);
+                          setIsAboutOpen(false);
+                          setIsProfileOpen(false);
+                        }}
+                      >
+                        {programmesDropdown.menuLabel}
+                        <span
+                          className={`mt-[-0.15rem] block h-2.5 w-2.5 rotate-45 border-b border-r border-current transition ${isProgrammesOpen ? "-translate-y-px" : "translate-y-0"
+                            }`}
+                          aria-hidden="true"
+                        />
+                      </button>
+
+                      {isProgrammesOpen ? (
+                        <div
+                          id="programmes-menu"
+                          className="absolute left-0 top-[calc(100%+0.75rem)] w-72 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-200/80"
+                        >
+                          {programmesDropdown.items.map((menuItem) => (
+                            <Link
+                              key={menuItem.id}
+                              href={menuItem.href}
+                              className={`block rounded-2xl px-4 py-3 transition ${pathname === menuItem.href
+                                ? "border border-cyan-300 bg-white text-cyan-800"
+                                : "hover:bg-cyan-50"
+                                }`}
+                              onClick={() => setIsProgrammesOpen(false)}
+                            >
+                              <p className="text-sm font-semibold text-slate-900">
+                                {menuItem.title}
+                              </p>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={pathname === item.href ? "page" : undefined}
+                      className={`rounded-full px-4 py-2 transition ${pathname === item.href
+                        ? "border border-cyan-300 bg-white/70 text-cyan-800 shadow-sm shadow-cyan-100"
+                        : "hover:bg-cyan-50 hover:text-cyan-700"
+                        }`}
+                      onClick={() => {
+                        setIsMembersOpen(false);
+                        setIsRegistrationOpen(false);
+                        setIsProgrammesOpen(false);
+                        setIsProfileOpen(false);
+                      }}
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                )}
 
                 <div className="relative">
                   <button
@@ -615,27 +676,85 @@ export function SiteHeader() {
                 }`}
             >
               <div className="mx-auto flex w-full max-w-7xl flex-col gap-3">
-                {leadingItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    aria-current={pathname === item.href ? "page" : undefined}
-                    className={`rounded-2xl px-4 py-3 text-sm font-medium ${pathname === item.href
-                      ? "border border-cyan-300 bg-white text-cyan-800"
-                      : isPinned
-                        ? "border border-slate-200 bg-slate-50 text-slate-700"
-                        : "border border-cyan-100 bg-slate-50 text-slate-700"
-                      }`}
-                    onClick={() => {
-                      setIsMobileOpen(false);
-                      setIsMembersOpen(false);
-                      setIsRegistrationOpen(false);
-                      setIsProfileOpen(false);
-                    }}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {leadingItems.map((item) =>
+                  item.href === "/our-work" ? (
+                    <div
+                      key={item.href}
+                      className={`rounded-3xl p-3 ${isPinned
+                        ? "border border-slate-200 bg-slate-50"
+                        : "border border-cyan-100 bg-slate-50"
+                        }`}
+                    >
+                      <button
+                        type="button"
+                        className={`flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-sm font-semibold ${isProgrammesActive
+                          ? "border border-cyan-300 bg-white text-cyan-800"
+                          : "text-slate-900"
+                          }`}
+                        aria-expanded={isProgrammesOpen}
+                        aria-current={isProgrammesActive ? "page" : undefined}
+                        onClick={() => {
+                          setIsProgrammesOpen(!isProgrammesOpen);
+                          setIsMembersOpen(false);
+                          setIsRegistrationOpen(false);
+                          setIsAboutOpen(false);
+                          setIsProfileOpen(false);
+                        }}
+                      >
+                        <span>{programmesDropdown.menuLabel}</span>
+                        <span
+                          className={`mt-[-0.15rem] block h-2.5 w-2.5 rotate-45 border-b border-r border-current transition ${isProgrammesOpen ? "-translate-y-px" : "translate-y-0"
+                            }`}
+                          aria-hidden="true"
+                        />
+                      </button>
+
+                      {isProgrammesOpen ? (
+                        <div className="mt-2 space-y-2">
+                          {programmesDropdown.items.map((menuItem) => (
+                            <Link
+                              key={menuItem.id}
+                              href={menuItem.href}
+                              className={`block rounded-2xl px-4 py-3 ${pathname === menuItem.href
+                                ? "border border-cyan-300 bg-white text-cyan-800"
+                                : "bg-white"
+                                }`}
+                              onClick={() => {
+                                setIsProgrammesOpen(false);
+                                setIsMobileOpen(false);
+                              }}
+                            >
+                              <p className="text-sm font-semibold text-slate-900">
+                                {menuItem.title}
+                              </p>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={pathname === item.href ? "page" : undefined}
+                      className={`rounded-2xl px-4 py-3 text-sm font-medium ${pathname === item.href
+                        ? "border border-cyan-300 bg-white text-cyan-800"
+                        : isPinned
+                          ? "border border-slate-200 bg-slate-50 text-slate-700"
+                          : "border border-cyan-100 bg-slate-50 text-slate-700"
+                        }`}
+                      onClick={() => {
+                        setIsMobileOpen(false);
+                        setIsMembersOpen(false);
+                        setIsRegistrationOpen(false);
+                        setIsProgrammesOpen(false);
+                        setIsProfileOpen(false);
+                      }}
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                )}
 
                 <div
                   className={`rounded-3xl p-3 ${isPinned

@@ -19,10 +19,17 @@ const siteCopy = {
     loginLabel: "লগইন",
     navItems: [
       { label: "হোম", href: "/" },
-      { label: "আমাদের কার্যক্রম", href: "/our-work" },
+      { label: "কর্মসূচিসমূহ", href: "/our-work" },
       { label: "প্রকল্পসমূহ", href: "/projects" },
       { label: "পরিচিতি", href: "/about" },
     ],
+    programmes: {
+      menuLabel: "কর্মসূচিসমূহ",
+      items: [
+        { id: "our-work", href: "/our-work", title: "আমাদের কার্যক্রম" },
+        { id: "qard-hasanah-programme", href: "/donor-impact-info-update", title: "কর্জে হাসানা কর্মসূচি" },
+      ],
+    },
     about: {
       menuLabel: "পরিচিতি",
       items: [
@@ -323,6 +330,12 @@ const siteCopy = {
     registrationLabel: "রেজিস্ট্রেশন",
     contactLabel: "যোগাযোগ",
     note: "স্বচ্ছতা, জবাবদিহিতা ও দীর্ঘমেয়াদি কমিউনিটি সহায়তার জন্য নির্মিত একটি শরীয়াহ-সম্মত সামাজিক প্ল্যাটফর্ম।",
+    legal: [
+      "সোসাইটিজ রেজিস্ট্রেশন অ্যাক্ট, ১৮৬০ (১৮৬০ সালের ২১ নং আইন)-এর অধীনে নিবন্ধিত",
+      "নিবন্ধন নম্বর: S-15033/2026",
+      "নিবন্ধনের তারিখ: ০৭ জুলাই ২০২৬",
+      "রেজিস্ট্রার অব জয়েন্ট স্টক কোম্পানিজ অ্যান্ড ফার্মস (RJSC), বাংলাদেশ-এ নিবন্ধিত",
+    ],
   },
   projects: {
     eyebrow: "আমাদের প্রকল্প",

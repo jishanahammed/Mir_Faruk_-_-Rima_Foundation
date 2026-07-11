@@ -19,10 +19,17 @@ const siteCopy = {
     loginLabel: "Login",
     navItems: [
       { label: "Home", href: "/" },
-      { label: "Our Work", href: "/our-work" },
+      { label: "Programmes", href: "/our-work" },
       { label: "Projects", href: "/projects" },
       { label: "About Us", href: "/about" },
     ],
+    programmes: {
+      menuLabel: "Programmes",
+      items: [
+        { id: "our-work", href: "/our-work", title: "Our Work" },
+        { id: "qard-hasanah-programme", href: "/donor-impact-info-update", title: "Qard Hasanah Programme" },
+      ],
+    },
     about: {
       menuLabel: "About Us",
       items: [
@@ -321,6 +328,12 @@ const siteCopy = {
     registrationLabel: "Registration",
     contactLabel: "Contact",
     note: "Shariah-aligned social support platform designed for transparent, long-term community care.",
+    legal: [
+      "Registered under the Societies Registration Act, 1860 (Act XXI of 1860)",
+      "Registration No.: S-15033/2026",
+      "Registered on: 07 July 2026",
+      "Registered with the Registrar of Joint Stock Companies & Firms (RJSC), Bangladesh",
+    ],
   },
   projects: {
     eyebrow: "Our Projects",
