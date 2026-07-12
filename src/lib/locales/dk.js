@@ -332,10 +332,11 @@ const siteCopy = {
     note: "Sharia-tilpasset social støtteplatform designet til transparent og langsigtet omsorg i lokalsamfundet.",
     legal: [
       "Registreret i henhold til Societies Registration Act, 1860 (Act XXI of 1860)",
-      "Registreringsnr.: S-15033/2026",
+      "Registreringsnr.: S-15033",
       "Registreret den: 7. juli 2026",
       "Registreret hos Registrar of Joint Stock Companies & Firms (RJSC), Bangladesh",
     ],
+    legalShortRjsc: "Registreret hos (RJSC)",
   },
   projects: {
     eyebrow: "Vores Projekter",

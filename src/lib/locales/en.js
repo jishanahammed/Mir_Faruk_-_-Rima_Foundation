@@ -330,10 +330,11 @@ const siteCopy = {
     note: "Shariah-aligned social support platform designed for transparent, long-term community care.",
     legal: [
       "Registered under the Societies Registration Act, 1860 (Act XXI of 1860)",
-      "Registration No.: S-15033/2026",
+      "Registration No.: S-15033",
       "Registered on: 07 July 2026",
       "Registered with the Registrar of Joint Stock Companies & Firms (RJSC), Bangladesh",
     ],
+    legalShortRjsc: "Registered with (RJSC)",
   },
   projects: {
     eyebrow: "Our Projects",

@@ -36,15 +36,9 @@ export function SiteFooter() {
               </div>
             </div>
 
-            {footer.legal ? (
-              <div className="mt-6 space-y-1">
-                {footer.legal.map((line, index) => (
-                  <p key={index} className="text-[0.72rem] leading-5 text-slate-400">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            ) : null}
+            <p className="mt-6 text-sm leading-7 text-slate-300">
+              {footer.note}
+            </p>
           </div>
 
           <div>
@@ -129,11 +123,26 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            &copy; {year} {brand.name}
-          </p>
-          <p>{footer.note}</p>
+        <div className="mt-10 border-t border-white/10 pt-6 text-xs text-slate-400">
+          {/* Mobile: the block is centred on screen but its lines share one
+              left edge (w-fit + mx-auto + text-left). Desktop: split row. */}
+          <div className="mx-auto w-fit space-y-0.5 text-left sm:mx-0 sm:flex sm:w-full sm:items-center sm:justify-between sm:gap-3 sm:space-y-0">
+            <p className="leading-5">
+              {/* &copy; {year} {brand.name} */}
+              &copy;  {brand.name}
+            </p>
+            {footer.legal ? (
+              <p className="leading-5 sm:text-right">
+                <span className="block sm:inline">{footer.legal[1]}</span>
+                <span className="hidden sm:inline"> | </span>
+                {/* full text on desktop, short version on mobile */}
+                <span className="hidden sm:inline">{footer.legal[3]}</span>
+                <span className="block sm:hidden">{footer.legalShortRjsc}</span>
+              </p>
+            ) : (
+              <p>{footer.note}</p>
+            )}
+          </div>
         </div>
       </div>
     </footer>
