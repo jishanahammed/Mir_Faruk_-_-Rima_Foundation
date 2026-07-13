@@ -11,10 +11,10 @@ function pick(en, bn, dk, locale) {
 }
 
 const STATUS_CONFIG = {
-  active:    { label: "Active",    dot: "bg-emerald-400", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  running:   { label: "Running",   dot: "bg-cyan-400",    cls: "bg-cyan-50 text-cyan-700 border-cyan-200" },
-  completed: { label: "Completed", dot: "bg-violet-400",  cls: "bg-violet-50 text-violet-700 border-violet-200" },
-  draft:     { label: "Draft",     dot: "bg-slate-400",   cls: "bg-slate-50 text-slate-600 border-slate-200" },
+  active: { label: "Active", dot: "bg-emerald-400", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  running: { label: "Running", dot: "bg-cyan-400", cls: "bg-cyan-50 text-cyan-700 border-cyan-200" },
+  completed: { label: "Completed", dot: "bg-violet-400", cls: "bg-violet-50 text-violet-700 border-violet-200" },
+  draft: { label: "Draft", dot: "bg-slate-400", cls: "bg-slate-50 text-slate-600 border-slate-200" },
 };
 
 function fmt(n) {
@@ -73,9 +73,8 @@ function ImageGallery({ images, title }) {
         <div className="flex gap-2 overflow-x-auto p-3">
           {images.map((img, i) => (
             <button key={img.id} onClick={() => setActive(i)}
-              className={`h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
-                i === active ? "border-cyan-500" : "border-transparent opacity-55 hover:opacity-85"
-              }`}>
+              className={`h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${i === active ? "border-cyan-500" : "border-transparent opacity-55 hover:opacity-85"
+                }`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={img.imageUrl} alt={`Thumb ${i + 1}`} className="h-full w-full object-cover" />
             </button>
@@ -117,44 +116,44 @@ function SectionCard({ icon, title, children }) {
 
 /* ── Icons ─────────────────────────────────────────────────────────────────── */
 const Icons = {
-  code: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M8 9l-3 3 3 3M16 9l3 3-3 3M12 5l-2 14" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  category: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" strokeLinecap="round"/></svg>,
-  location: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8Z" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="10" r="3"/></svg>,
-  target: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
-  money: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  calendar: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18" strokeLinecap="round"/></svg>,
-  docs: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M4 6h16M4 11h16M4 16h10" strokeLinecap="round"/></svg>,
-  check: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" strokeLinecap="round"/></svg>,
-  map: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7Z" strokeLinecap="round" strokeLinejoin="round"/><path d="M9 4v13M15 7v13" strokeLinecap="round"/></svg>,
-  back: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4"><path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  images: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  code: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M8 9l-3 3 3 3M16 9l3 3-3 3M12 5l-2 14" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+  category: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" strokeLinecap="round" /></svg>,
+  location: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8Z" strokeLinecap="round" strokeLinejoin="round" /><circle cx="12" cy="10" r="3" /></svg>,
+  target: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>,
+  money: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+  calendar: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" strokeLinecap="round" /></svg>,
+  docs: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M4 6h16M4 11h16M4 16h10" strokeLinecap="round" /></svg>,
+  check: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" /><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" strokeLinecap="round" /></svg>,
+  map: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7Z" strokeLinecap="round" strokeLinejoin="round" /><path d="M9 4v13M15 7v13" strokeLinecap="round" /></svg>,
+  back: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4"><path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+  images: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" strokeLinecap="round" strokeLinejoin="round" /></svg>,
 };
 
 /* ── Main Component ────────────────────────────────────────────────────────── */
 export function ProjectDetailPage({ project, category, divisionName, districtName, upazilaName }) {
   const { locale } = useSiteLocale();
 
-  const title      = pick(project.projectTitleEn, project.projectTitleBn, project.projectTitleDk, locale);
-  const shortDesc  = pick(project.shortDescriptionEn, project.shortDescriptionBn, project.shortDescriptionDk, locale);
-  const fullDesc   = pick(project.fullDescriptionEn, project.fullDescriptionBn, project.fullDescriptionDk, locale);
-  const objective  = pick(project.objectiveEn, project.objectiveBn, project.objectiveDk, locale);
-  const location   = pick(project.projectLocationEn, project.projectLocationBn, project.projectLocationDk, locale);
+  const title = pick(project.projectTitleEn, project.projectTitleBn, project.projectTitleDk, locale);
+  const shortDesc = pick(project.shortDescriptionEn, project.shortDescriptionBn, project.shortDescriptionDk, locale);
+  const fullDesc = pick(project.fullDescriptionEn, project.fullDescriptionBn, project.fullDescriptionDk, locale);
+  const objective = pick(project.objectiveEn, project.objectiveBn, project.objectiveDk, locale);
+  const location = pick(project.projectLocationEn, project.projectLocationBn, project.projectLocationDk, locale);
   const categoryName = category
     ? pick(category.nameEn, category.nameBn, category.nameDk, locale)
     : project.categoryNameEn;
 
   const badge = STATUS_CONFIG[project.status] ?? STATUS_CONFIG.draft;
 
-  const estimated   = fmt(project.estimatedBudget);
-  const collected   = fmt(project.collectedAmount);
+  const estimated = fmt(project.estimatedBudget);
+  const collected = fmt(project.collectedAmount);
   const distributed = fmt(project.distributedAmount);
 
   const budgetPct = project.estimatedBudget && project.collectedAmount
     ? Math.min(100, Math.round((Number(project.collectedAmount) / Number(project.estimatedBudget)) * 100))
     : null;
 
-  const createdAt  = fmtDate(project.createdAt);
-  const updatedAt  = fmtDate(project.updatedAt);
+  const createdAt = fmtDate(project.createdAt);
+  const updatedAt = fmtDate(project.updatedAt);
 
   // Use gallery images; if none but thumbnailImage exists, show that
   const galleryImages = project.images?.length
@@ -165,7 +164,7 @@ export function ProjectDetailPage({ project, category, divisionName, districtNam
 
   const divName = divisionName ? pick(divisionName.nameEn, divisionName.nameBn, divisionName.nameDk, locale) : null;
   const distName = districtName ? pick(districtName.nameEn, districtName.nameBn, districtName.nameDk, locale) : null;
-  const upaName  = upazilaName  ? pick(upazilaName.nameEn,  upazilaName.nameBn,  upazilaName.nameDk,  locale) : null;
+  const upaName = upazilaName ? pick(upazilaName.nameEn, upazilaName.nameBn, upazilaName.nameDk, locale) : null;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -199,9 +198,9 @@ export function ProjectDetailPage({ project, category, divisionName, districtNam
                   <span className="rounded-full bg-white/10 px-3 py-0.5 text-[11px] font-semibold text-cyan-200">{categoryName}</span>
                 )}
               </div>
-              <h1 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">{title}</h1>
+              <h3 className="text-2xl font-extrabold leading-tight text-white sm:text-2xl lg:text-3xl">{title}</h3>
               {shortDesc && (
-                <p className="mt-3 max-w-3xl text-base leading-relaxed text-cyan-100/80">{shortDesc}</p>
+                <p className="mt-3 max-w-3xl whitespace-pre-line text-base font-bold leading-relaxed text-cyan-100/80">{shortDesc}</p>
               )}
               {/* Quick stats row */}
               <div className="mt-5 flex flex-wrap gap-4">
@@ -266,15 +265,15 @@ export function ProjectDetailPage({ project, category, divisionName, districtNam
                 <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">Project Details</h2>
               </div>
               <div className="px-5">
-                <InfoRow icon={Icons.code}     label="Project Code"       value={project.projectCode} mono />
-                <InfoRow icon={Icons.category} label="Category"           value={categoryName} />
-                <InfoRow icon={Icons.location} label="Location"           value={location} />
-                <InfoRow icon={Icons.target}   label="Target Beneficiary" value={project.targetBeneficiary} />
+                <InfoRow icon={Icons.code} label="Project Code" value={project.projectCode} mono />
+                <InfoRow icon={Icons.category} label="Category" value={categoryName} />
+                <InfoRow icon={Icons.location} label="Location" value={location} />
+                <InfoRow icon={Icons.target} label="Target Beneficiary" value={project.targetBeneficiary} />
                 <InfoRow icon={Icons.map} label="Division" value={divName} />
                 <InfoRow icon={Icons.map} label="District" value={distName} />
-                <InfoRow icon={Icons.map} label="Upazila"  value={upaName} />
-                <InfoRow icon={Icons.calendar} label="Created"  value={createdAt} />
-                <InfoRow icon={Icons.calendar} label="Updated"  value={updatedAt} />
+                <InfoRow icon={Icons.map} label="Upazila" value={upaName} />
+                <InfoRow icon={Icons.calendar} label="Created" value={createdAt} />
+                <InfoRow icon={Icons.calendar} label="Updated" value={updatedAt} />
               </div>
             </div>
 

@@ -9,6 +9,12 @@ export function SiteFooter() {
   const { brand, contact, footer, header, members, registration } = copy;
   const year = new Date().getFullYear();
 
+  // Brand name shown on two lines: everything before the last word, then the
+  // last word ("Foundation" / "ফাউন্ডেশন" / "Fonden") on its own line.
+  const brandNameWords = brand.name.split(" ");
+  const brandNameLast = brandNameWords.pop();
+  const brandNameFirst = brandNameWords.join(" ");
+
   return (
     <footer className="relative overflow-hidden bg-[linear-gradient(135deg,_#083344_0%,_#0f172a_52%,_#134e4a_100%)] text-white">
       <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,_transparent,_rgba(34,211,238,0.45),_transparent)]" />
@@ -30,7 +36,8 @@ export function SiteFooter() {
               </span>
               <div>
                 <p className="text-lg font-semibold leading-7 text-white">
-                  {brand.name}
+                  <span className="block">{brandNameFirst}</span>
+                  <span className="block">{brandNameLast}</span>
                 </p>
 
               </div>
@@ -124,12 +131,18 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 border-t border-white/10 pt-6 text-xs text-slate-400">
-          {/* Mobile: the block is centred on screen but its lines share one
-              left edge (w-fit + mx-auto + text-left). Desktop: split row. */}
-          <div className="mx-auto w-fit space-y-0.5 text-left sm:mx-0 sm:flex sm:w-full sm:items-center sm:justify-between sm:gap-3 sm:space-y-0">
+          {/* Mobile: centred lines. Desktop: split row (left / right). */}
+          <div className="space-y-0.5 text-center sm:flex sm:w-full sm:items-center sm:justify-between sm:gap-3 sm:space-y-0 sm:text-left">
             <p className="leading-5">
               {/* &copy; {year} {brand.name} */}
-              &copy;  {brand.name}
+              {/* On mobile the © hangs outside the name so the name itself
+                  centres on the same axis as the lines below. */}
+              <span className="relative sm:static">
+                <span className="absolute right-full pr-1 sm:static sm:pr-0">
+                  &copy;{" "}
+                </span>
+                {brand.name}
+              </span>
             </p>
             {footer.legal ? (
               <p className="leading-5 sm:text-right">

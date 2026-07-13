@@ -91,7 +91,7 @@ function ProjectCard({ project, locale }) {
 
         {/* Short description — up to 4 lines */}
         {desc && (
-          <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-slate-500">{desc}</p>
+          <p className="mt-2 line-clamp-4 whitespace-pre-line text-sm leading-relaxed text-slate-500">{desc}</p>
         )}
 
         {/* Meta footer */}

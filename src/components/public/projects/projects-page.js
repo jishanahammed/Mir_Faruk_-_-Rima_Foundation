@@ -209,7 +209,9 @@ export function ProjectsPage({ categories = [] }) {
           <>
             <div className="mb-3 text-center">
               <h2 className="text-2xl font-extrabold text-slate-900">{projects.title}</h2>
-              <p className="mt-2 text-sm text-slate-500">{projects.description}</p>
+              <p className="mx-auto mt-2 max-w-2xl whitespace-pre-line px-2 text-sm leading-relaxed text-slate-500 sm:text-base">
+                {projects.description}
+              </p>
             </div>
             <div className="mb-8 flex justify-center">
               <span className="h-px w-16 bg-slate-200" />
