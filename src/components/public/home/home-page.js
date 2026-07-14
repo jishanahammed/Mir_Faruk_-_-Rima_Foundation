@@ -11,7 +11,7 @@ export function HomePage() {
       <CeoBani />
       <AboutSection />
       <RegistrationSection />
-      <ContactSection />
+      {/* <ContactSection /> */}
     </>
   );
 }
