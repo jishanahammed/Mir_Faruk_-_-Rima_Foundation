@@ -48,7 +48,10 @@ export function HomeMobile() {
             metrics={hero.metrics}
           />
 
-          <LearnMoreButton href={hero.secondaryCta.href} className="w-full">
+          <LearnMoreButton
+            href={hero.secondaryCta.href}
+            className="w-full border-2! border-cyan-400! mt-6"
+          >
             {hero.secondaryCta.label}
           </LearnMoreButton>
         </div>
@@ -56,7 +59,7 @@ export function HomeMobile() {
 
       <AboutSection className="pt-6" />
 
-      <section className="px-5 pb-12 pt-2">
+      <section className="px-5 pb-0 pt-12">
         <RegistrationButton href={hero.primaryCta.href} className="w-full">
           {hero.primaryCta.label}
         </RegistrationButton>
