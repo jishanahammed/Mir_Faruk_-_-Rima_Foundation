@@ -2,14 +2,14 @@
 
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
-export function AboutSection() {
+export function AboutSection({ className = "" }) {
   const { copy } = useSiteLocale();
   const { about } = copy;
 
   return (
     <section
       id="about-us"
-      className="relative overflow-hidden bg-[linear-gradient(180deg,_#f8fafc_0%,_#ffffff_54%,_#ecfeff_100%)] px-6 py-24 lg:px-8"
+      className={`relative overflow-hidden bg-[linear-gradient(180deg,_#f8fafc_0%,_#ffffff_54%,_#ecfeff_100%)] px-6 py-24 lg:px-8 ${className}`}
     >
       <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,_transparent,_rgba(8,145,178,0.35),_transparent)]" />
       <div className="absolute inset-0 bg-[linear-gradient(115deg,_rgba(255,255,255,0)_0%,_rgba(6,182,212,0.08)_46%,_rgba(245,158,11,0.07)_100%)]" />
