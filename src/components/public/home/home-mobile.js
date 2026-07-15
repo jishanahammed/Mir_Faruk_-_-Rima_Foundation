@@ -1,5 +1,6 @@
 "use client";
 
+import { DonorImpactInfoUpdatePage } from "@/components/public/goat-farming/donor-impact-info-update";
 import { AboutSection } from "@/components/public/home/about-section";
 import { CeoBani } from "@/components/public/home/ceo-bani";
 import { HighlightCard } from "@/components/public/home/highlight-card";
@@ -39,6 +40,8 @@ export function HomeMobile() {
             text={hero.highlightLine}
             tags={hero.trustTags}
           />
+
+          <DonorImpactInfoUpdatePage />
 
           <SupportModelPanel
             label={hero.panelLabel}
