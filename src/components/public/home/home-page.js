@@ -1,6 +1,7 @@
 "use client";
 
 import { AboutSection } from "@/components/public/home/about-section";
+import { BankInfo } from "@/components/public/home/bank-info";
 import { CeoBani } from "@/components/public/home/ceo-bani";
 import { ContactSection } from "@/components/public/home/contact-section";
 import { Hero } from "@/components/public/home/hero";
@@ -21,6 +22,7 @@ export function HomePage() {
       <CeoBani />
       <AboutSection />
       <RegistrationSection />
+      <BankInfo />
       {/* <ContactSection /> */}
     </>
   );

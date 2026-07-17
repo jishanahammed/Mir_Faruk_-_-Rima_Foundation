@@ -2,6 +2,7 @@
 
 import { DonorImpactInfoUpdatePage } from "@/components/public/goat-farming/donor-impact-info-update";
 import { AboutSection } from "@/components/public/home/about-section";
+import { BankInfo } from "@/components/public/home/bank-info";
 import { CeoBani } from "@/components/public/home/ceo-bani";
 import { HighlightCard } from "@/components/public/home/highlight-card";
 import { RegistrationSection } from "@/components/public/home/registration-section";
@@ -69,6 +70,8 @@ export function HomeMobile() {
       </section>
 
       <RegistrationSection />
+
+      <BankInfo />
     </>
   );
 }
