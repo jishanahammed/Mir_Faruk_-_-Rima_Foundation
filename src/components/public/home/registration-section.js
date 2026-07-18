@@ -67,6 +67,7 @@ export function RegistrationSection() {
         language={copy.htmlLang}
         onClose={() => setIsDonorModalOpen(false)}
       />
+
     </>
   );
 }

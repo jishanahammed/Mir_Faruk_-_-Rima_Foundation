@@ -32,6 +32,9 @@ const donorFormCopy = {
       contactTelephone: "Contact Telephone Number",
       password: "Password",
       confirmPassword: "Confirm Password",
+      isPublic: "Show my donor profile publicly",
+      isPublicHint:
+        "If enabled, your name may appear in the foundation's public donor list. Uncheck to keep your donation private.",
       terms: "I agree to the Terms & Conditions",
     },
     placeholders: {
@@ -87,6 +90,9 @@ const donorFormCopy = {
       contactTelephone: "যোগাযোগের ব্যক্তির টেলিফোন নম্বর",
       password: "পাসওয়ার্ড",
       confirmPassword: "পাসওয়ার্ড নিশ্চিত করুন",
+      isPublic: "আমার দাতা প্রোফাইল প্রকাশ্যে দেখান",
+      isPublicHint:
+        "সক্রিয় থাকলে আপনার নাম ফাউন্ডেশনের প্রকাশ্য দাতা তালিকায় দেখা যেতে পারে। গোপন রাখতে টিক তুলে দিন।",
       terms: "আমি শর্তাবলীতে সম্মত",
     },
     placeholders: {
@@ -142,6 +148,9 @@ const donorFormCopy = {
       contactTelephone: "Kontaktpersonens telefonnummer",
       password: "Adgangskode",
       confirmPassword: "Bekraeft adgangskode",
+      isPublic: "Vis min donorprofil offentligt",
+      isPublicHint:
+        "Hvis aktiveret kan dit navn vises paa fondens offentlige donorliste. Fjern markeringen for at holde din donation privat.",
       terms: "Jeg accepterer vilkaar og betingelser",
     },
     placeholders: {
@@ -185,6 +194,7 @@ const initialFormState = {
   contactTelephone: "",
   password: "",
   confirmPassword: "",
+  isPublic: true,
   terms: false,
 };
 
@@ -444,6 +454,7 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
           Password: form.password,
           ConfirmPassword: form.confirmPassword,
           AgreeToTerms: Boolean(form.terms),
+          IsPublic: Boolean(form.isPublic),
         },
         { timeout: 35000 },
       );
@@ -772,6 +783,23 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
               />
             </Field>
           </div>
+
+          <label className="mt-5 flex items-start gap-3 rounded-2xl border border-cyan-100 bg-cyan-50/70 p-4 text-sm font-semibold leading-6 text-slate-700">
+            <input
+              name="isPublic"
+              type="checkbox"
+              disabled={isSubmitting}
+              checked={form.isPublic}
+              onChange={updateField("isPublic")}
+              className="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-700 accent-cyan-700"
+            />
+            <span>
+              {copy.fields.isPublic}
+              <span className="mt-1 block text-xs font-medium leading-5 text-slate-500">
+                {copy.fields.isPublicHint}
+              </span>
+            </span>
+          </label>
 
           <label
             className={`mt-5 flex items-start gap-3 rounded-2xl border p-4 text-sm font-semibold leading-6 ${validationErrors.terms
