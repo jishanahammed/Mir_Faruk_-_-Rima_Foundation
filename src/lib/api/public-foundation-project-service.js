@@ -70,6 +70,16 @@ export async function getPublicProjectsByCategory(categoryId) {
   }
 }
 
+export async function getAllPublicProjects() {
+  try {
+    const payload = await apiGet("FoundationProjects/public");
+    const items = Array.isArray(payload) ? payload : [];
+    return items.map(normalizeProject).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 export async function getPublicProjectById(id) {
   try {
     const p = await apiGet(`FoundationProjects/public/${encodeURIComponent(id)}`);

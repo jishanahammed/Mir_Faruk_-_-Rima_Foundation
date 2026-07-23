@@ -69,7 +69,7 @@ const siteCopy = {
     highlightLine:
       "At opbygge et medfølende, selvhjulpent og ansvarligt samfund er vores vigtigste mål.",
     primaryCta: {
-      label: "Se registrering",
+      label: "Donorregistrering",
       href: "/register",
     },
     secondaryCta: {

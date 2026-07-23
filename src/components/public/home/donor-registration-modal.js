@@ -35,6 +35,8 @@ const donorFormCopy = {
       isPublic: "Show my donor profile publicly",
       isPublicHint:
         "If enabled, your name may appear in the foundation's public donor list. Uncheck to keep your donation private.",
+      yesLabel: "Yes",
+      noLabel: "No",
       terms: "I agree to the Terms & Conditions",
     },
     placeholders: {
@@ -93,6 +95,8 @@ const donorFormCopy = {
       isPublic: "আমার দাতা প্রোফাইল প্রকাশ্যে দেখান",
       isPublicHint:
         "সক্রিয় থাকলে আপনার নাম ফাউন্ডেশনের প্রকাশ্য দাতা তালিকায় দেখা যেতে পারে। গোপন রাখতে টিক তুলে দিন।",
+      yesLabel: "হ্যাঁ",
+      noLabel: "না",
       terms: "আমি শর্তাবলীতে সম্মত",
     },
     placeholders: {
@@ -151,6 +155,8 @@ const donorFormCopy = {
       isPublic: "Vis min donorprofil offentligt",
       isPublicHint:
         "Hvis aktiveret kan dit navn vises paa fondens offentlige donorliste. Fjern markeringen for at holde din donation privat.",
+      yesLabel: "Ja",
+      noLabel: "Nej",
       terms: "Jeg accepterer vilkaar og betingelser",
     },
     placeholders: {
@@ -194,7 +200,7 @@ const initialFormState = {
   contactTelephone: "",
   password: "",
   confirmPassword: "",
-  isPublic: true,
+  isPublic: null,
   terms: false,
 };
 
@@ -215,6 +221,7 @@ const validationCopy = {
     passwordInvalid: "Use at least 6 characters.",
     confirmPasswordRequired: "Confirm password is required.",
     confirmPasswordInvalid: "Password and confirm password do not match.",
+    isPublicRequired: "Please choose whether to show your donor profile publicly.",
     termsRequired: "Please agree to the Terms & Conditions.",
   },
   bn: {
@@ -233,6 +240,7 @@ const validationCopy = {
     passwordInvalid: "অন্তত ৬ অক্ষর ব্যবহার করুন।",
     confirmPasswordRequired: "কনফার্ম পাসওয়ার্ড প্রয়োজন।",
     confirmPasswordInvalid: "পাসওয়ার্ড মিলছে না।",
+    isPublicRequired: "আপনার দাতা প্রোফাইল প্রকাশ্যে দেখানো হবে কিনা তা নির্বাচন করুন।",
     termsRequired: "শর্তাবলীতে সম্মতি দিন।",
   },
   da: {
@@ -251,6 +259,7 @@ const validationCopy = {
     passwordInvalid: "Brug mindst 6 tegn.",
     confirmPasswordRequired: "Bekraeft adgangskode er paakraevet.",
     confirmPasswordInvalid: "Adgangskoderne stemmer ikke overens.",
+    isPublicRequired: "Vaelg venligst om din donorprofil skal vises offentligt.",
     termsRequired: "Accepter venligst vilkaar og betingelser.",
   },
 };
@@ -342,6 +351,10 @@ function validateForm(form, language) {
     errors.confirmPassword = messages.confirmPasswordInvalid;
   }
 
+  if (form.isPublic !== true && form.isPublic !== false) {
+    errors.isPublic = messages.isPublicRequired;
+  }
+
   if (!form.terms) {
     errors.terms = messages.termsRequired;
   }
@@ -419,6 +432,20 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
     setForm((current) => ({
       ...current,
       [field]: value,
+    }));
+  };
+
+  const setIsPublicField = (value) => {
+    setValidationErrors((current) => {
+      const nextErrors = { ...current };
+      delete nextErrors.isPublic;
+      return nextErrors;
+    });
+    setSubmitError("");
+    setSubmitMessage("");
+    setForm((current) => ({
+      ...current,
+      isPublic: value,
     }));
   };
 
@@ -684,7 +711,7 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
               <p className="mt-1 text-sm leading-6 text-slate-600">
                 {copy.fields.contactSectionHint}
               </p>
-              <div className="mt-4 grid gap-4 sm:grid-cols-3">
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <Field
                   id="donor-contact-full-name"
                   label={copy.fields.contactFullName}
@@ -784,22 +811,49 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
             </Field>
           </div>
 
-          <label className="mt-5 flex items-start gap-3 rounded-2xl border border-cyan-100 bg-cyan-50/70 p-4 text-sm font-semibold leading-6 text-slate-700">
-            <input
-              name="isPublic"
-              type="checkbox"
-              disabled={isSubmitting}
-              checked={form.isPublic}
-              onChange={updateField("isPublic")}
-              className="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-700 accent-cyan-700"
-            />
-            <span>
+          <div
+            className={`mt-5 rounded-2xl border p-4 text-sm font-semibold leading-6 ${validationErrors.isPublic
+              ? "border-red-200 bg-red-50 text-red-700"
+              : "border-cyan-100 bg-cyan-50/70 text-slate-700"
+              }`}
+          >
+            <p>
               {copy.fields.isPublic}
-              <span className="mt-1 block text-xs font-medium leading-5 text-slate-500">
-                {copy.fields.isPublicHint}
-              </span>
-            </span>
-          </label>
+              <span className="ml-1 text-red-500">*</span>
+            </p>
+            <p className="mt-1 text-xs font-medium leading-5 text-slate-500">
+              {copy.fields.isPublicHint}
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2">
+              <label className="flex items-center gap-2">
+                <input
+                  name="isPublic"
+                  type="radio"
+                  disabled={isSubmitting}
+                  checked={form.isPublic === true}
+                  onChange={() => setIsPublicField(true)}
+                  className="h-4 w-4 border-slate-300 text-cyan-700 accent-cyan-700"
+                />
+                <span>{copy.fields.yesLabel}</span>
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  name="isPublic"
+                  type="radio"
+                  disabled={isSubmitting}
+                  checked={form.isPublic === false}
+                  onChange={() => setIsPublicField(false)}
+                  className="h-4 w-4 border-slate-300 text-cyan-700 accent-cyan-700"
+                />
+                <span>{copy.fields.noLabel}</span>
+              </label>
+            </div>
+            {validationErrors.isPublic ? (
+              <p className="mt-2 text-xs font-semibold leading-5 text-red-600">
+                {validationErrors.isPublic}
+              </p>
+            ) : null}
+          </div>
 
           <label
             className={`mt-5 flex items-start gap-3 rounded-2xl border p-4 text-sm font-semibold leading-6 ${validationErrors.terms

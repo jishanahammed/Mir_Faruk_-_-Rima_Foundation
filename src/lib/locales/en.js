@@ -69,7 +69,7 @@ const siteCopy = {
     highlightLine:
       "Building a compassionate, self-reliant, and responsible society is our central mission.",
     primaryCta: {
-      label: "Explore Registration",
+      label: "Donor Registration",
       href: "/register",
     },
     secondaryCta: {

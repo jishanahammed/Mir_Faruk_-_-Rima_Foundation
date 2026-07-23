@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { DonorRegistrationModal } from "@/components/public/home/donor-registration-modal";
 import { HighlightCard } from "@/components/public/home/highlight-card";
 import { SupportModelPanel } from "@/components/public/home/support-model-panel";
 import { LearnMoreButton, RegistrationButton } from "@/components/public/ui/cta-buttons";
@@ -8,6 +10,7 @@ import { useSiteLocale } from "@/components/public/providers/locale-provider";
 export function Hero() {
   const { copy } = useSiteLocale();
   const { brand, hero } = copy;
+  const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
   const isBangla = copy.htmlLang === "bn";
   const foundationNameMatch = brand.name.match(/^(.*)\s+(Foundation|Fonden)$/);
   const brandNameParts = brand.name.trim().split(/\s+/);
@@ -83,7 +86,7 @@ export function Hero() {
               />
 
               <div className="flex flex-col gap-4 sm:flex-row">
-                <RegistrationButton href={hero.primaryCta.href}>
+                <RegistrationButton onClick={() => setIsDonorModalOpen(true)}>
                   {hero.primaryCta.label}
                 </RegistrationButton>
                 <LearnMoreButton href={hero.secondaryCta.href}>
@@ -112,6 +115,12 @@ export function Hero() {
           </div>
         </div>
       </div>
+
+      <DonorRegistrationModal
+        isOpen={isDonorModalOpen}
+        language={copy.htmlLang}
+        onClose={() => setIsDonorModalOpen(false)}
+      />
     </section>
   );
 }

@@ -18,7 +18,9 @@ import {
 const navItems = [
   { label: "Dashboard", href: "/doner", icon: "dashboard" },
   { label: "Payment History", href: "/doner/payment-history", icon: "payment" },
+  { label: "Donation Statement", href: "/doner/donation-statement", icon: "statement" },
   { label: "Profile Update", href: "/doner/profile", icon: "profile" },
+  { label: "Change Password", href: "/doner/change-password", icon: "lock" },
 ];
 
 const routeTitles = {
@@ -30,9 +32,17 @@ const routeTitles = {
     eyebrow: "My Donations",
     title: "Payment history",
   },
+  "/doner/donation-statement": {
+    eyebrow: "My Account",
+    title: "Donation statement",
+  },
   "/doner/profile": {
     eyebrow: "My Account",
     title: "Profile update",
+  },
+  "/doner/change-password": {
+    eyebrow: "My Account",
+    title: "Change password",
   },
 };
 
@@ -64,6 +74,25 @@ function Icon({ name }) {
       <svg {...common}>
         <path d="M19 20a7 7 0 0 0-14 0" strokeLinecap="round" />
         <circle cx="12" cy="8" r="4" />
+      </svg>
+    );
+  }
+
+  if (name === "statement") {
+    return (
+      <svg {...common}>
+        <path d="M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M14 3v4h4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M9 12h6M9 15.5h6M9 8.5h2" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (name === "lock") {
+    return (
+      <svg {...common}>
+        <rect x="5" y="11" width="14" height="9" rx="2" />
+        <path d="M8 11V8a4 4 0 0 1 8 0v3" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     );
   }
@@ -154,11 +183,16 @@ function Sidebar({ user, onNavigate }) {
       </nav>
 
       <div className="border-t border-slate-200 p-4">
-        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
-          <p className="truncate text-sm font-bold text-slate-950">{user.name}</p>
-          <p className="mt-1 truncate text-xs font-semibold text-emerald-800">
-            {user.role}
-          </p>
+        <div className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-900 text-base font-black text-white">
+            {user.initials ?? "DN"}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-base font-black text-slate-950">{user.name}</p>
+            <p className="mt-1 truncate text-sm font-semibold text-emerald-800">
+              {user.role}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -283,13 +317,13 @@ export function DonorShell({ children, user }) {
                 Public Site
               </Link>
               <LogoutButton />
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-900 text-xs font-black text-white">
+              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-2.5">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-900 text-base font-black text-white">
                   {user.initials ?? "DN"}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-950">{user.name}</p>
-                  <p className="text-xs text-slate-500">{user.role}</p>
+                  <p className="text-base font-black text-slate-950">{user.name}</p>
+                  <p className="text-sm text-slate-500">{user.role}</p>
                 </div>
               </div>
             </div>

@@ -15,7 +15,9 @@ function normalizeEndpoint(endpoint) {
     return value;
   }
 
-  const normalizedPath = value
+  const [pathPart, queryPart] = value.split(/\?(.*)/s);
+
+  const normalizedPath = pathPart
     .replace(/^\/+/, "")
     .replace(/\\/g, "/")
     .split("/")
@@ -23,7 +25,7 @@ function normalizeEndpoint(endpoint) {
     .map((segment) => segment.toLowerCase())
     .join("/");
 
-  return `/api/${normalizedPath}`;
+  return queryPart ? `/api/${normalizedPath}?${queryPart}` : `/api/${normalizedPath}`;
 }
 
 function buildEndpoint(endpoint, id) {

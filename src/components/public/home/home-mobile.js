@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { DonorImpactInfoUpdatePage } from "@/components/public/goat-farming/donor-impact-info-update";
 import { AboutSection } from "@/components/public/home/about-section";
 import { BankInfo } from "@/components/public/home/bank-info";
 import { CeoBani } from "@/components/public/home/ceo-bani";
+import { DonorRegistrationModal } from "@/components/public/home/donor-registration-modal";
 import { HighlightCard } from "@/components/public/home/highlight-card";
 import { RegistrationSection } from "@/components/public/home/registration-section";
 import { SupportModelPanel } from "@/components/public/home/support-model-panel";
@@ -17,6 +19,7 @@ import { useSiteLocale } from "@/components/public/providers/locale-provider";
 export function HomeMobile() {
   const { copy } = useSiteLocale();
   const { hero } = copy;
+  const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
 
   return (
     <>
@@ -64,7 +67,7 @@ export function HomeMobile() {
       <AboutSection className="pt-6" />
 
       <section className="px-5 pb-0 pt-12">
-        <RegistrationButton href={hero.primaryCta.href} className="w-full">
+        <RegistrationButton onClick={() => setIsDonorModalOpen(true)} className="w-full">
           {hero.primaryCta.label}
         </RegistrationButton>
       </section>
@@ -72,6 +75,12 @@ export function HomeMobile() {
       <RegistrationSection />
 
       <BankInfo />
+
+      <DonorRegistrationModal
+        isOpen={isDonorModalOpen}
+        language={copy.htmlLang}
+        onClose={() => setIsDonorModalOpen(false)}
+      />
     </>
   );
 }

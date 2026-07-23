@@ -323,6 +323,37 @@ export async function getDonorPaymentHistoryList(user, filters = {}) {
   };
 }
 
+const STATEMENT_FETCH_PAGE_SIZE = 100;
+const STATEMENT_FETCH_MAX_PAGES = 200;
+
+export async function getAllDonorPaymentHistory(user) {
+  const donor = await getCurrentDonorProfile(user);
+  const config = await getDonorAuthConfig();
+  const items = [];
+  let pageNumber = 1;
+
+  for (; pageNumber <= STATEMENT_FETCH_MAX_PAGES; pageNumber += 1) {
+    const payload = await apiPost(
+      "DonorPaymentHistories/me/paged",
+      buildPaymentFilterPayload({ page: pageNumber, pageSize: STATEMENT_FETCH_PAGE_SIZE }, donor, user),
+      config,
+    );
+
+    const pageItems = pickValue(payload, "items", "Items", []);
+    const normalized = Array.isArray(pageItems)
+      ? pageItems.map(normalizePaymentHistory).filter(Boolean)
+      : [];
+    items.push(...normalized);
+
+    const hasNextPage = Boolean(pickValue(payload, "hasNextPage", "HasNextPage", false));
+    if (!hasNextPage || normalized.length === 0) {
+      break;
+    }
+  }
+
+  return { donor, items };
+}
+
 export async function getDonorPaymentHistoryById(user, id) {
   const donor = await getCurrentDonorProfile(user);
   const payment = normalizePaymentHistory(

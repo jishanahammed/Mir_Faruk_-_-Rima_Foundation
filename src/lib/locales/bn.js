@@ -69,7 +69,7 @@ const siteCopy = {
     highlightLine:
       "একটি সহানুভূতিশীল, স্বনির্ভর ও দায়িত্বশীল সমাজ গঠনই আমাদের প্রধান উদ্দেশ্য।",
     primaryCta: {
-      label: "রেজিস্ট্রেশন দেখুন",
+      label: "দাতা নিবন্ধন",
       href: "/register",
     },
     secondaryCta: {

@@ -560,9 +560,16 @@ export function SiteHeader() {
                   </div>
                 ) : null}
               </div>
+
+              <Link
+                href="/donate"
+                className="rounded-full bg-[linear-gradient(135deg,#0e7490,#06b6d4_50%,#0d9488)] px-6 py-2.5 text-sm font-extrabold text-white! shadow-lg shadow-cyan-500/40 ring-2 ring-cyan-300/60 transition hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/50 hover:brightness-110"
+              >
+                Donate
+              </Link>
             </div>
 
-            <div className="flex items-center gap-2 lg:hidden">
+            <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden">
               <div className="relative">
                 <button
                   type="button"
@@ -575,7 +582,7 @@ export function SiteHeader() {
                     setIsMobileOpen(false);
                     setIsProfileOpen(false);
                   }}
-                  className={`flex h-11 items-center gap-1.5 rounded-2xl px-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${isPinned
+                  className={`flex h-11 items-center gap-1.5 rounded-2xl px-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 sm:px-2.5 ${isPinned
                     ? "border border-slate-200 bg-slate-50 text-slate-700 hover:bg-cyan-50"
                     : "border border-cyan-100 bg-white/92 text-slate-700 shadow-lg shadow-cyan-100/50 hover:bg-cyan-50"
                     }`}
@@ -587,7 +594,7 @@ export function SiteHeader() {
                     height={24}
                     className="h-6 w-6 rounded-full object-cover"
                   />
-                  <span>{selectedLanguage.label}</span>
+                  <span className="hidden sm:inline">{selectedLanguage.label}</span>
                   <span
                     className={`mt-[-0.15rem] block h-2 w-2 rotate-45 border-b border-r border-current transition ${isMobileLanguageOpen ? "-translate-y-px" : "translate-y-0"
                       }`}
@@ -633,6 +640,13 @@ export function SiteHeader() {
                   </div>
                 ) : null}
               </div>
+
+              <Link
+                href="/donate"
+                className="flex h-11 items-center rounded-2xl bg-[linear-gradient(135deg,#0e7490,#06b6d4_50%,#0d9488)] px-3 text-sm font-extrabold text-white! shadow-lg shadow-cyan-500/40 ring-2 ring-cyan-300/60 sm:px-4"
+              >
+                Donate
+              </Link>
 
               <button
                 type="button"

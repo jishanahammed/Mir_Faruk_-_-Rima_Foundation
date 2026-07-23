@@ -86,6 +86,29 @@ export async function refreshAccessToken({ userId, refreshToken }) {
   };
 }
 
+export async function forgotPassword({ email }) {
+  const payload = await apiPost("Auth/forgot-password", { Email: email });
+
+  return {
+    message: payload?.message ?? "If an account exists for this email address, a verification code has been sent.",
+    raw: payload,
+  };
+}
+
+export async function resetPassword({ email, otp, newPassword, confirmPassword }) {
+  const payload = await apiPost("Auth/reset-password", {
+    Email: email,
+    Otp: otp,
+    NewPassword: newPassword,
+    ConfirmPassword: confirmPassword,
+  });
+
+  return {
+    message: payload?.message ?? "Your password has been reset successfully.",
+    raw: payload,
+  };
+}
+
 export function getAuth(endpoint, config) {
   return apiGet(endpoint, config);
 }

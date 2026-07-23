@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
+import { apiGet } from "@/lib/api/browser-api-service";
 
 const stepKeys = ["basic", "assistance", "guarantor", "documents"];
 
@@ -16,6 +17,12 @@ const beneficiaryFormCopy = {
     selectPrefix: "Select",
     optionalLabel: "Optional",
     selectedLabel: "Selected:",
+    selectDivisionFirst: "select division first",
+    selectDistrictFirst: "select district first",
+    selectDivisionFirstOption: "— Select Division First —",
+    selectDistrictFirstOption: "— Select District First —",
+    noDistrictsFound: "No districts found",
+    noUpazilasFound: "No upazilas found",
     backToRegistration: "Back to Registration",
     back: "Back",
     continue: "Save & Continue",
@@ -57,6 +64,7 @@ const beneficiaryFormCopy = {
       email: "Email Address",
       presentAddress: "Present Address",
       permanentAddress: "Permanent Address",
+      division: "Division",
       district: "District",
       upazila: "Upazila / Thana",
       unionWard: "Union / Ward",
@@ -81,6 +89,7 @@ const beneficiaryFormCopy = {
       guarantorRelation: "Relationship with Beneficiary",
       guarantorPresentAddress: "Present Address",
       guarantorPermanentAddress: "Permanent Address",
+      guarantorDivision: "Division",
       guarantorDistrict: "District",
       guarantorUpazila: "Upazila / Thana",
       knownDuration: "How long do you know the beneficiary?",
@@ -137,6 +146,12 @@ const beneficiaryFormCopy = {
     selectPrefix: "নির্বাচন করুন",
     optionalLabel: "ঐচ্ছিক",
     selectedLabel: "নির্বাচিত:",
+    selectDivisionFirst: "প্রথমে বিভাগ নির্বাচন করুন",
+    selectDistrictFirst: "প্রথমে জেলা নির্বাচন করুন",
+    selectDivisionFirstOption: "— প্রথমে বিভাগ নির্বাচন করুন —",
+    selectDistrictFirstOption: "— প্রথমে জেলা নির্বাচন করুন —",
+    noDistrictsFound: "কোনো জেলা পাওয়া যায়নি",
+    noUpazilasFound: "কোনো উপজেলা পাওয়া যায়নি",
     backToRegistration: "রেজিস্ট্রেশনে ফিরে যান",
     back: "পেছনে",
     continue: "সংরক্ষণ করে এগিয়ে যান",
@@ -178,6 +193,7 @@ const beneficiaryFormCopy = {
       email: "ইমেইল ঠিকানা",
       presentAddress: "বর্তমান ঠিকানা",
       permanentAddress: "স্থায়ী ঠিকানা",
+      division: "বিভাগ",
       district: "জেলা",
       upazila: "উপজেলা / থানা",
       unionWard: "ইউনিয়ন / ওয়ার্ড",
@@ -202,6 +218,7 @@ const beneficiaryFormCopy = {
       guarantorRelation: "সহায়তা গ্রহণকারীর সাথে সম্পর্ক",
       guarantorPresentAddress: "বর্তমান ঠিকানা",
       guarantorPermanentAddress: "স্থায়ী ঠিকানা",
+      guarantorDivision: "বিভাগ",
       guarantorDistrict: "জেলা",
       guarantorUpazila: "উপজেলা / থানা",
       knownDuration: "আপনি কতদিন ধরে সহায়তা গ্রহণকারীকে চেনেন?",
@@ -253,6 +270,12 @@ const beneficiaryFormCopy = {
     selectPrefix: "Vaelg",
     optionalLabel: "Valgfrit",
     selectedLabel: "Valgt:",
+    selectDivisionFirst: "vaelg division foerst",
+    selectDistrictFirst: "vaelg distrikt foerst",
+    selectDivisionFirstOption: "— Vaelg division foerst —",
+    selectDistrictFirstOption: "— Vaelg distrikt foerst —",
+    noDistrictsFound: "Ingen distrikter fundet",
+    noUpazilasFound: "Ingen upazilaer fundet",
     backToRegistration: "Tilbage til registrering",
     back: "Tilbage",
     continue: "Gem og fortsaet",
@@ -294,6 +317,7 @@ const beneficiaryFormCopy = {
       email: "E-mailadresse",
       presentAddress: "Nuvaerende adresse",
       permanentAddress: "Permanent adresse",
+      division: "Division",
       district: "Distrikt",
       upazila: "Upazila / Thana",
       unionWard: "Union / Ward",
@@ -318,6 +342,7 @@ const beneficiaryFormCopy = {
       guarantorRelation: "Relation til modtager",
       guarantorPresentAddress: "Nuvaerende adresse",
       guarantorPermanentAddress: "Permanent adresse",
+      guarantorDivision: "Division",
       guarantorDistrict: "Distrikt",
       guarantorUpazila: "Upazila / Thana",
       knownDuration: "Hvor laenge har du kendt modtageren?",
@@ -371,7 +396,11 @@ const initialFormState = {
   email: "",
   presentAddress: "",
   permanentAddress: "",
+  divisionId: "",
+  division: "",
+  districtId: "",
   district: "",
+  upazilaId: "",
   upazila: "",
   unionWard: "",
   villageArea: "",
@@ -394,7 +423,11 @@ const initialFormState = {
   guarantorRelation: "",
   guarantorPresentAddress: "",
   guarantorPermanentAddress: "",
+  guarantorDivisionId: "",
+  guarantorDivision: "",
+  guarantorDistrictId: "",
   guarantorDistrict: "",
+  guarantorUpazilaId: "",
   guarantorUpazila: "",
   knownDuration: "",
   confirmsInfo: "",
@@ -425,8 +458,9 @@ const requiredByStep = {
     "mobile",
     "presentAddress",
     "permanentAddress",
-    "district",
-    "upazila",
+    "divisionId",
+    "districtId",
+    "upazilaId",
     "unionWard",
     "villageArea",
     "maritalStatus",
@@ -451,8 +485,9 @@ const requiredByStep = {
     "guarantorRelation",
     "guarantorPresentAddress",
     "guarantorPermanentAddress",
-    "guarantorDistrict",
-    "guarantorUpazila",
+    "guarantorDivisionId",
+    "guarantorDistrictId",
+    "guarantorUpazilaId",
     "knownDuration",
     "confirmsInfo",
     "supportsVerification",
@@ -566,6 +601,250 @@ function SelectInput({ id, form, errors, onChange, text }) {
   );
 }
 
+function useLocationOptions() {
+  const [divisions, setDivisions] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    apiGet("Locations/divisions")
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          setDivisions(data);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setDivisions([]);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return divisions;
+}
+
+function useDistrictOptions(divisionId) {
+  const [districts, setDistricts] = useState([]);
+
+  useEffect(() => {
+    if (!divisionId) {
+      setDistricts([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    apiGet(`Locations/districts?divisionId=${divisionId}`)
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          setDistricts(data);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setDistricts([]);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [divisionId]);
+
+  return districts;
+}
+
+function useUpazilaOptions(districtId) {
+  const [upazilas, setUpazilas] = useState([]);
+
+  useEffect(() => {
+    if (!districtId) {
+      setUpazilas([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    apiGet(`Locations/upazilas?districtId=${districtId}`)
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          setUpazilas(data);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setUpazilas([]);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [districtId]);
+
+  return upazilas;
+}
+
+function locationName(item, htmlLang) {
+  if (!item) return "";
+  if (htmlLang === "bn") return item.nameBn || item.nameEn;
+  if (htmlLang === "da") return item.nameDk || item.nameEn;
+  return item.nameEn;
+}
+
+function LocationCascadeFields({ prefix, form, errors, onChange, text, divisions, htmlLang }) {
+  const divisionIdField = prefix ? `${prefix}DivisionId` : "divisionId";
+  const divisionField = prefix ? `${prefix}Division` : "division";
+  const districtIdField = prefix ? `${prefix}DistrictId` : "districtId";
+  const districtField = prefix ? `${prefix}District` : "district";
+  const upazilaIdField = prefix ? `${prefix}UpazilaId` : "upazilaId";
+  const upazilaField = prefix ? `${prefix}Upazila` : "upazila";
+
+  const districts = useDistrictOptions(form[divisionIdField]);
+  const upazilas = useUpazilaOptions(form[districtIdField]);
+
+  const handleDivisionChange = (event) => {
+    const divisionId = event.target.value;
+    const selected = divisions.find((item) => String(item.id) === divisionId);
+
+    onChange(divisionIdField)({ target: { type: "text", value: divisionId } });
+    onChange(divisionField)({
+      target: { type: "text", value: selected ? locationName(selected, htmlLang) : "" },
+    });
+    onChange(districtIdField)({ target: { type: "text", value: "" } });
+    onChange(districtField)({ target: { type: "text", value: "" } });
+    onChange(upazilaIdField)({ target: { type: "text", value: "" } });
+    onChange(upazilaField)({ target: { type: "text", value: "" } });
+  };
+
+  const handleDistrictChange = (event) => {
+    const districtId = event.target.value;
+    const selected = districts.find((item) => String(item.id) === districtId);
+
+    onChange(districtIdField)({ target: { type: "text", value: districtId } });
+    onChange(districtField)({
+      target: { type: "text", value: selected ? locationName(selected, htmlLang) : "" },
+    });
+    onChange(upazilaIdField)({ target: { type: "text", value: "" } });
+    onChange(upazilaField)({ target: { type: "text", value: "" } });
+  };
+
+  const handleUpazilaChange = (event) => {
+    const upazilaId = event.target.value;
+    const selected = upazilas.find((item) => String(item.id) === upazilaId);
+
+    onChange(upazilaIdField)({ target: { type: "text", value: upazilaId } });
+    onChange(upazilaField)({
+      target: { type: "text", value: selected ? locationName(selected, htmlLang) : "" },
+    });
+  };
+
+  return (
+    <>
+      <Field
+        id={divisionIdField}
+        label={text.labels[divisionField]}
+        error={errors[divisionIdField]}
+      >
+        <select
+          id={divisionIdField}
+          name={divisionIdField}
+          value={form[divisionIdField]}
+          onChange={handleDivisionChange}
+          className={inputClass(Boolean(errors[divisionIdField]))}
+        >
+          <option value="">
+            {text.selectPrefix} {text.labels[divisionField]}
+          </option>
+          {divisions.map((item) => (
+            <option key={item.id} value={item.id}>
+              {locationName(item, htmlLang)}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      <Field
+        id={districtIdField}
+        label={
+          <>
+            {text.labels[districtField]}
+            {!form[divisionIdField] ? (
+              <span className="ml-1 text-[11px] font-normal text-slate-400">
+                ({text.selectDivisionFirst})
+              </span>
+            ) : null}
+          </>
+        }
+        error={errors[districtIdField]}
+      >
+        <select
+          id={districtIdField}
+          name={districtIdField}
+          value={form[districtIdField]}
+          onChange={handleDistrictChange}
+          disabled={!form[divisionIdField]}
+          className={inputClass(Boolean(errors[districtIdField]))}
+        >
+          <option value="">
+            {form[divisionIdField]
+              ? districts.length === 0
+                ? text.noDistrictsFound
+                : `${text.selectPrefix} ${text.labels[districtField]}`
+              : text.selectDivisionFirstOption}
+          </option>
+          {districts.map((item) => (
+            <option key={item.id} value={item.id}>
+              {locationName(item, htmlLang)}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      <Field
+        id={upazilaIdField}
+        label={
+          <>
+            {text.labels[upazilaField]}
+            {!form[districtIdField] ? (
+              <span className="ml-1 text-[11px] font-normal text-slate-400">
+                ({text.selectDistrictFirst})
+              </span>
+            ) : null}
+          </>
+        }
+        error={errors[upazilaIdField]}
+      >
+        <select
+          id={upazilaIdField}
+          name={upazilaIdField}
+          value={form[upazilaIdField]}
+          onChange={handleUpazilaChange}
+          disabled={!form[districtIdField]}
+          className={inputClass(Boolean(errors[upazilaIdField]))}
+        >
+          <option value="">
+            {form[districtIdField]
+              ? upazilas.length === 0
+                ? text.noUpazilasFound
+                : `${text.selectPrefix} ${text.labels[upazilaField]}`
+              : text.selectDistrictFirstOption}
+          </option>
+          {upazilas.map((item) => (
+            <option key={item.id} value={item.id}>
+              {locationName(item, htmlLang)}
+            </option>
+          ))}
+        </select>
+      </Field>
+    </>
+  );
+}
+
 function CheckboxField({ id, form, errors, onChange, text }) {
   return (
     <label
@@ -612,6 +891,15 @@ function FileInput({ id, form, errors, onChange, text }) {
   );
 }
 
+const locationIdLabelKeys = {
+  divisionId: "division",
+  districtId: "district",
+  upazilaId: "upazila",
+  guarantorDivisionId: "guarantorDivision",
+  guarantorDistrictId: "guarantorDistrict",
+  guarantorUpazilaId: "guarantorUpazila",
+};
+
 function validateStep(form, stepIndex, text) {
   const errors = {};
 
@@ -624,7 +912,8 @@ function validateStep(form, stepIndex, text) {
     }
 
     if (!form[field] || (typeof form[field] === "string" && !form[field].trim())) {
-      errors[field] = `${text.labels[field]} ${text.requiredMessage}`;
+      const labelKey = locationIdLabelKeys[field] ?? field;
+      errors[field] = `${text.labels[labelKey]} ${text.requiredMessage}`;
     }
   });
 
@@ -663,6 +952,7 @@ export function BeneficiaryRegistrationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const progress = useMemo(() => ((activeStep + 1) / steps.length) * 100, [activeStep]);
+  const divisions = useLocationOptions();
 
   const updateField = (field) => (event) => {
     const value =
@@ -854,8 +1144,14 @@ export function BeneficiaryRegistrationForm() {
               />
               <TextArea id="presentAddress" {...fieldProps} />
               <TextArea id="permanentAddress" {...fieldProps} />
-              <TextInput id="district" {...fieldProps} />
-              <TextInput id="upazila" {...fieldProps} />
+              <LocationCascadeFields
+                form={form}
+                errors={errors}
+                onChange={updateField}
+                text={text}
+                divisions={divisions}
+                htmlLang={siteCopy.htmlLang}
+              />
               <TextInput id="unionWard" {...fieldProps} />
               <TextInput id="villageArea" {...fieldProps} />
               <SelectInput id="maritalStatus" {...fieldProps} />
@@ -897,8 +1193,15 @@ export function BeneficiaryRegistrationForm() {
               <TextInput id="knownDuration" {...fieldProps} placeholder={text.hints.knownDuration} />
               <TextArea id="guarantorPresentAddress" {...fieldProps} />
               <TextArea id="guarantorPermanentAddress" {...fieldProps} />
-              <TextInput id="guarantorDistrict" {...fieldProps} />
-              <TextInput id="guarantorUpazila" {...fieldProps} />
+              <LocationCascadeFields
+                prefix="guarantor"
+                form={form}
+                errors={errors}
+                onChange={updateField}
+                text={text}
+                divisions={divisions}
+                htmlLang={siteCopy.htmlLang}
+              />
               <SelectInput id="confirmsInfo" {...fieldProps} />
               <SelectInput id="supportsVerification" {...fieldProps} />
               <div className="sm:col-span-2">
