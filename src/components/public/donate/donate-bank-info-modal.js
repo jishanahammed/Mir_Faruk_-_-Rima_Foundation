@@ -51,31 +51,61 @@ function CopyButton({ value }) {
   );
 }
 
-function DetailRow({ item }) {
+function DetailRow({ item, highlight = false }) {
   return (
     <div
-      className={`flex items-center justify-between gap-2 bg-white px-4 py-3 sm:gap-3 sm:px-6 sm:py-3.5 ${
+      className={`flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-6 sm:py-3.5 ${
         item.fullWidth ? "sm:col-span-2" : ""
-      }`}
+      } ${highlight ? "bg-cyan-50/60" : "bg-white"}`}
     >
       <div className="min-w-0">
         <dt className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-slate-400 sm:text-[0.65rem] sm:tracking-[0.2em]">
           {item.label}
         </dt>
         <dd
-          className={`mt-1 truncate font-semibold text-slate-900 ${
+          className={`mt-1 break-all font-semibold text-slate-900 ${
             item.mono
               ? "font-mono text-[0.82rem] tracking-wide sm:text-[0.95rem]"
-              : item.nowrap
-                ? "whitespace-nowrap text-[0.7rem] tracking-tight sm:text-[0.95rem] sm:tracking-normal"
-                : "text-[0.82rem] sm:text-sm"
+              : "text-[0.82rem] sm:text-sm"
           }`}
         >
           {item.value}
         </dd>
       </div>
-      {item.copyable ? <CopyButton value={item.value} /> : null}
+      {item.copyable ? (
+        <div className="self-start sm:shrink-0 sm:self-auto">
+          <CopyButton value={item.value} />
+        </div>
+      ) : null}
     </div>
+  );
+}
+
+function SectionHeading({ icon, children }) {
+  return (
+    <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-100 text-cyan-700">
+        {icon}
+      </span>
+      {children}
+    </p>
+  );
+}
+
+function BankIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden="true">
+      <path d="M3 21h18M4 21V10M20 21V10M2 10l10-6 10 6M6 10v11M10 10v11M14 10v11M18 10v11" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden="true">
+      <rect x="7" y="2" width="10" height="20" rx="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M11 18h2" strokeLinecap="round" />
+    </svg>
   );
 }
 
@@ -154,16 +184,18 @@ export function DonateBankInfoModal({ isOpen, onClose, project }) {
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-7 sm:py-6">
-          <div className="rounded-2xl border border-cyan-100 bg-cyan-50/70 p-4 text-sm leading-6 text-slate-700">
-            Use your registered mobile number as the <strong>Donation Reference ID</strong> when
-            sending your contribution via bank transfer or mobile banking, so we can accurately
-            record it against your account.
+          <div className="flex gap-3 rounded-2xl border border-cyan-100 bg-cyan-50/70 p-4 text-sm leading-6 text-slate-700">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white">
+              1
+            </span>
+            <p>
+              Use your registered mobile number as the <strong>Donation Reference ID</strong> when
+              sending your contribution, so we can accurately record it against your account.
+            </p>
           </div>
 
           <div className="mt-6">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">
-              Bank Transfer
-            </p>
+            <SectionHeading icon={<BankIcon />}>Bank Transfer</SectionHeading>
             <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
               <div className="relative flex flex-wrap items-center justify-between gap-3 bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-4 py-4 sm:flex-nowrap sm:gap-4 sm:px-6">
                 <Image
@@ -179,36 +211,39 @@ export function DonateBankInfoModal({ isOpen, onClose, project }) {
               </div>
               <dl className="grid gap-px bg-slate-100 sm:grid-cols-2">
                 {BANK_DETAILS.map((item) => (
-                  <DetailRow key={item.label} item={item} />
+                  <DetailRow key={item.label} item={item} highlight={item.label === "Account No"} />
                 ))}
               </dl>
             </div>
           </div>
 
           <div className="mt-6">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">
-              Mobile Banking
-            </p>
+            <SectionHeading icon={<PhoneIcon />}>Mobile Banking</SectionHeading>
             <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
               <dl className="grid gap-px bg-slate-100">
                 {MOBILE_BANKING.map((item) => (
-                  <DetailRow key={item.label} item={item} />
+                  <DetailRow key={item.label} item={item} highlight />
                 ))}
               </dl>
             </div>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
-            After sending your donation, our team will record the transaction and email you a
-            confirmation. Need help? Contact{" "}
-            <a href="mailto:support@farukrimafoundation.org" className="font-semibold text-cyan-700 hover:text-cyan-900">
-              support@farukrimafoundation.org
-            </a>{" "}
-            or call{" "}
-            <a href="tel:+8801771528299" className="font-semibold text-cyan-700 hover:text-cyan-900">
-              +88 01771-528299
-            </a>
-            .
+          <div className="mt-6 flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-300 text-xs font-bold text-slate-700">
+              2
+            </span>
+            <p>
+              After sending your donation, our team will record the transaction and email you a
+              confirmation. Need help? Contact{" "}
+              <a href="mailto:support@farukrimafoundation.org" className="font-semibold text-cyan-700 hover:text-cyan-900">
+                support@farukrimafoundation.org
+              </a>{" "}
+              or call{" "}
+              <a href="tel:+8801771528299" className="font-semibold text-cyan-700 hover:text-cyan-900">
+                +88 01771-528299
+              </a>
+              .
+            </p>
           </div>
 
           <button

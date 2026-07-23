@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 import { DonateBankInfoModal } from "@/components/public/donate/donate-bank-info-modal";
+
+const HERO_SLIDES = ["/d-1.png", "/d-2.png"];
 
 function pick(en, bn, dk, locale) {
   if (locale === "BN") return bn || en;
@@ -165,33 +168,113 @@ function EmptyState() {
   );
 }
 
+function HeroSlider() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((current) => (current + 1) % HERO_SLIDES.length);
+    }, 4500);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="relative w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl shadow-slate-950/40">
+      <Image
+        src={HERO_SLIDES[0]}
+        alt=""
+        width={1400}
+        height={800}
+        className="invisible h-auto w-full"
+        aria-hidden="true"
+      />
+
+      {HERO_SLIDES.map((src, index) => (
+        <div
+          key={src}
+          className={`absolute inset-0 transition-opacity duration-700 ${
+            index === activeIndex ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <Image
+            src={src}
+            alt=""
+            width={1400}
+            height={1050}
+            className="h-full w-full object-cover"
+            priority={index === 0}
+          />
+        </div>
+      ))}
+
+      <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+        {HERO_SLIDES.map((src, index) => (
+          <button
+            key={src}
+            type="button"
+            aria-label={`Show slide ${index + 1}`}
+            onClick={() => setActiveIndex(index)}
+            className={`h-1.5 rounded-full transition-all ${
+              index === activeIndex ? "w-6 bg-white" : "w-1.5 bg-white/50"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function DonatePage({ projects = [] }) {
   const { locale } = useSiteLocale();
   const [modalProject, setModalProject] = useState(null);
+  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-4 py-6 sm:px-6 sm:py-7 lg:px-8">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
           <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full border border-cyan-500/20" />
           <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full border border-cyan-400/15" />
           <div className="absolute bottom-0 left-0 h-64 w-64 -translate-x-1/2 translate-y-1/2 rounded-full border border-cyan-600/20" />
         </div>
-        <div className="relative mx-auto max-w-4xl text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-cyan-300">
-            <HeartIcon />
-            Give With Purpose
-          </span>
-          <h1 className="mt-5 text-4xl font-extrabold leading-tight text-white sm:text-5xl">
-            Donate to an Active Project
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-cyan-100/80 sm:text-base">
-            Every contribution is directed to a specific, transparently tracked project — see exactly where your donation goes.
-          </p>
+
+        <div className="relative mx-auto grid max-w-7xl items-center gap-6 lg:grid-cols-2">
+          <div className="text-center lg:text-left">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-cyan-300">
+              <HeartIcon />
+              Give With Purpose
+            </span>
+            <h1 className="mt-3 text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
+              Donate to an Active Project
+            </h1>
+            <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-cyan-100/80 lg:mx-0">
+              Every contribution is directed to a specific, transparently tracked project — see exactly where your donation goes.
+            </p>
+
+            <div className="mt-4 flex justify-center lg:justify-start">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalProject(null);
+                  setIsDonateModalOpen(true);
+                }}
+                className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-extrabold text-cyan-800 shadow-lg shadow-cyan-950/30 ring-2 ring-white/60 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-950/40"
+              >
+                <HeartIcon />
+                Donate Now
+                <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="w-full max-w-xl justify-self-center lg:max-w-none lg:justify-self-auto">
+            <HeroSlider />
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section id="projects" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         {projects.length === 0 ? (
           <EmptyState />
         ) : (
@@ -201,7 +284,10 @@ export function DonatePage({ projects = [] }) {
                 key={project.id}
                 project={project}
                 locale={locale}
-                onDonate={(title) => setModalProject(title)}
+                onDonate={(title) => {
+                  setModalProject(title);
+                  setIsDonateModalOpen(true);
+                }}
               />
             ))}
           </div>
@@ -209,9 +295,9 @@ export function DonatePage({ projects = [] }) {
       </section>
 
       <DonateBankInfoModal
-        isOpen={Boolean(modalProject)}
+        isOpen={isDonateModalOpen}
         project={modalProject}
-        onClose={() => setModalProject(null)}
+        onClose={() => setIsDonateModalOpen(false)}
       />
     </div>
   );

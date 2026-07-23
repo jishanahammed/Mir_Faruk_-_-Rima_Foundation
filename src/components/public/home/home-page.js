@@ -9,19 +9,21 @@ import { RegistrationSection } from "@/components/public/home/registration-secti
 import { HomeMobile } from "@/components/public/home/home-mobile";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 
-export function HomePage() {
+export function HomePage({ featuredProjects }) {
   const isMobile = useIsMobile();
 
   if (isMobile) {
-    return <HomeMobile />;
+    return <HomeMobile featuredProjects={featuredProjects} />;
   }
 
   return (
     <>
       <Hero />
       <CeoBani />
+
       <AboutSection />
       <RegistrationSection />
+      {featuredProjects}
       <BankInfo />
       {/* <ContactSection /> */}
     </>
