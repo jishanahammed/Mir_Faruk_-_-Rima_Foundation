@@ -100,7 +100,7 @@ function FeaturedProjectCard({ project, locale, onDonate }) {
         </Link>
 
         {desc && (
-          <p className="mt-2 line-clamp-2 text-center whitespace-pre-line text-sm font-medium leading-relaxed text-slate-600">
+          <p className="mt-2 text-center whitespace-pre-line text-sm font-medium leading-relaxed text-slate-600">
             {desc}
           </p>
         )}
