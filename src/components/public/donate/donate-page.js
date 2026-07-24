@@ -103,20 +103,20 @@ function DonateProjectCard({ project, locale, onDonate }) {
         <span className={`absolute right-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold shadow-sm backdrop-blur-sm ${badge.cls}`}>
           {badge.label}
         </span>
-        <span className="absolute left-3 top-3 rounded-lg bg-black/55 px-2.5 py-1 font-mono text-[11px] font-bold tracking-wide text-white backdrop-blur-sm">
+        {/* <span className="absolute left-3 top-3 rounded-lg bg-black/55 px-2.5 py-1 font-mono text-[11px] font-bold tracking-wide text-white backdrop-blur-sm">
           {project.projectCode}
-        </span>
+        </span> */}
       </Link>
 
       <div className="flex flex-1 flex-col p-6">
         <Link href={`/projects/${project.projectCategoryId}/${project.id}`}>
-          <h3 className="bg-[linear-gradient(90deg,#0f766e,#0891b2)] bg-clip-text text-lg font-extrabold leading-snug text-transparent transition-opacity group-hover:opacity-80">
+          <h3 className="bg-[linear-gradient(90deg,#0f766e,#0891b2)] text-center bg-clip-text text-lg font-extrabold leading-snug text-transparent transition-opacity group-hover:opacity-80">
             {title}
           </h3>
         </Link>
 
         {desc && (
-          <p className="mt-2 line-clamp-3 whitespace-pre-line text-sm font-medium leading-relaxed text-slate-600">
+          <p className="mt-2 line-clamp-3 text-center whitespace-pre-line text-sm font-medium leading-relaxed text-slate-600">
             {desc}
           </p>
         )}
@@ -193,9 +193,8 @@ function HeroSlider() {
       {HERO_SLIDES.map((src, index) => (
         <div
           key={src}
-          className={`absolute inset-0 transition-opacity duration-700 ${
-            index === activeIndex ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute inset-0 transition-opacity duration-700 ${index === activeIndex ? "opacity-100" : "opacity-0"
+            }`}
         >
           <Image
             src={src}
@@ -215,9 +214,8 @@ function HeroSlider() {
             type="button"
             aria-label={`Show slide ${index + 1}`}
             onClick={() => setActiveIndex(index)}
-            className={`h-1.5 rounded-full transition-all ${
-              index === activeIndex ? "w-6 bg-white" : "w-1.5 bg-white/50"
-            }`}
+            className={`h-1.5 rounded-full transition-all ${index === activeIndex ? "w-6 bg-white" : "w-1.5 bg-white/50"
+              }`}
           />
         ))}
       </div>
