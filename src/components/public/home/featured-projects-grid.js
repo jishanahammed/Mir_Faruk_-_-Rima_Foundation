@@ -94,13 +94,13 @@ function FeaturedProjectCard({ project, locale, onDonate }) {
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <Link href={detailHref}>
-          <h3 className="bg-[linear-gradient(90deg,#0f766e,#0891b2)] bg-clip-text text-base font-extrabold leading-snug text-transparent transition-opacity group-hover:opacity-80 sm:text-lg">
+          <h3 className="text-center bg-[linear-gradient(90deg,#0f766e,#0891b2)] bg-clip-text text-base font-extrabold leading-snug text-transparent transition-opacity group-hover:opacity-80 sm:text-lg">
             {title}
           </h3>
         </Link>
 
         {desc && (
-          <p className="mt-2 line-clamp-2 whitespace-pre-line text-sm font-medium leading-relaxed text-slate-600">
+          <p className="mt-2 line-clamp-2 text-center whitespace-pre-line text-sm font-medium leading-relaxed text-slate-600">
             {desc}
           </p>
         )}
