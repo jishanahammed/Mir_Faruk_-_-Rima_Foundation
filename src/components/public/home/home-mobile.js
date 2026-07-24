@@ -5,8 +5,10 @@ import { DonorImpactInfoUpdatePage } from "@/components/public/goat-farming/dono
 import { AboutSection } from "@/components/public/home/about-section";
 import { BankInfo } from "@/components/public/home/bank-info";
 import { CeoBani } from "@/components/public/home/ceo-bani";
+import { DonateBankInfoModal } from "@/components/public/donate/donate-bank-info-modal";
 import { DonorRegistrationModal } from "@/components/public/home/donor-registration-modal";
 import { HighlightCard } from "@/components/public/home/highlight-card";
+import { QardHasanahBanner } from "@/components/public/home/qard-hasanah-banner";
 import { RegistrationSection } from "@/components/public/home/registration-section";
 import { SupportModelPanel } from "@/components/public/home/support-model-panel";
 import { TopHero } from "@/components/public/home/top-hero";
@@ -20,6 +22,7 @@ export function HomeMobile({ featuredProjects }) {
   const { copy } = useSiteLocale();
   const { hero } = copy;
   const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
+  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
 
   return (
     <>
@@ -64,6 +67,8 @@ export function HomeMobile({ featuredProjects }) {
         </div>
       </section>
 
+      <QardHasanahBanner onCtaClick={() => setIsDonateModalOpen(true)} />
+
       {featuredProjects}
 
       <AboutSection className="pt-6" />
@@ -82,6 +87,12 @@ export function HomeMobile({ featuredProjects }) {
         isOpen={isDonorModalOpen}
         language={copy.htmlLang}
         onClose={() => setIsDonorModalOpen(false)}
+      />
+
+      <DonateBankInfoModal
+        isOpen={isDonateModalOpen}
+        project={null}
+        onClose={() => setIsDonateModalOpen(false)}
       />
     </>
   );

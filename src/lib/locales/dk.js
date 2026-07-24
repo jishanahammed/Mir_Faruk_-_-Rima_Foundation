@@ -721,6 +721,38 @@ const siteCopy = {
       ],
     },
   },
+  qardHasanahBanner: {
+    eyebrow: "Qard Hasanah Fi Sabilillah",
+    yourWord: "Din",
+    amount: "20.000",
+    amountUnit: "Taka",
+    title: "Qard Hasanah",
+    subtitle: "Kan aendre en families fremtid",
+    pledgeText: "Giv 2 modergeder til en familie for kun 20.000 Taka",
+    quote: [
+      "Hjaelp nogen i dag,",
+      "og i morgen vil de",
+      "raekke en haand ud til en anden.",
+    ],
+    processHeading: "Én donation skaber forandring i et liv og et samfund",
+    steps: [
+      { icon: "🤲", title: "Din Donation", description: "Din 20.000 Taka Qard Hasanah" },
+      { icon: "🐐", title: "2 Modergeder Gives", description: "2 modergeder overdrages til en trængende familie" },
+      { icon: "👨‍👩‍👦", title: "Indkomst & Selvforsyning", description: "At opdraette gederne bliver en indkomstkilde, som goer familien selvforsynende" },
+      { icon: "💚", title: "Hjaelper en ny familie", description: "En dag vil de stotte en anden familie og selv blive donor" },
+    ],
+    ctaEyebrow: "Deltag i dag",
+    ctaAmount: "20.000",
+    ctaTitle: "Taka kan hjaelpe en familie med at blive selvforsynende",
+    ctaButtonLabel: "Doner nu",
+    trustItems: [
+      { icon: "🛡️", title: "Qard Hasanah", description: "Helt rentefrit" },
+      { icon: "🤝", title: "Gennemsigtighed & Ansvarlighed", description: "Din donation naar de rigtige mennesker" },
+      { icon: "🌱", title: "En vedvarende stroem af belonning", description: "Én donation, en fortsat kilde til Sawab" },
+    ],
+    hadith: "Allah hjaelper tjeneren, sa laenge tjeneren hjaelper andre.",
+    hadithSource: "(Sahih Muslim: 2699)",
+  },
 };
 
 export default siteCopy;

@@ -719,6 +719,38 @@ const siteCopy = {
       ],
     },
   },
+  qardHasanahBanner: {
+    eyebrow: "Qard Hasanah Fi Sabilillah",
+    yourWord: "Your",
+    amount: "20,000",
+    amountUnit: "Taka",
+    title: "Qard Hasanah",
+    subtitle: "Can change the future of a family",
+    pledgeText: "Provide 2 mother goats to a family for just 20,000 Taka",
+    quote: [
+      "Help someone today,",
+      "and tomorrow they will",
+      "extend a hand to help another.",
+    ],
+    processHeading: "One donation brings change to a life and a society",
+    steps: [
+      { icon: "🤲", title: "Your Donation", description: "Your 20,000 Taka Qard Hasanah" },
+      { icon: "🐐", title: "2 Mother Goats Given", description: "2 mother goats are handed over to a family in need" },
+      { icon: "👨‍👩‍👦", title: "Income & Self-Reliance", description: "Raising the goats becomes a source of income, making the family self-reliant" },
+      { icon: "💚", title: "Helping Someone New", description: "One day they will support another family, becoming a donor themselves" },
+    ],
+    ctaEyebrow: "Join Today",
+    ctaAmount: "20,000",
+    ctaTitle: "Taka can help a family become self-reliant",
+    ctaButtonLabel: "Donate Now",
+    trustItems: [
+      { icon: "🛡️", title: "Qard Hasanah", description: "Completely interest-free" },
+      { icon: "🤝", title: "Transparency & Accountability", description: "Your donation reaches the right people" },
+      { icon: "🌱", title: "A Continuous Stream of Reward", description: "One donation, an ongoing source of Sawab" },
+    ],
+    hadith: "Allah helps the servant as long as the servant helps others.",
+    hadithSource: "(Sahih Muslim: 2699)",
+  },
 };
 
 export default siteCopy;

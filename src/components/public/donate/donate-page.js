@@ -5,8 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 import { DonateBankInfoModal } from "@/components/public/donate/donate-bank-info-modal";
+import { QardHasanahBanner } from "@/components/public/home/qard-hasanah-banner";
 
-const HERO_SLIDES = ["/d-1.png", "/d-2.png"];
+const HERO_SLIDES = ["/d-1.png", "/d-2.png", "/d-3.png"];
 
 function pick(en, bn, dk, locale) {
   if (locale === "BN") return bn || en;
@@ -180,16 +181,7 @@ function HeroSlider() {
   }, []);
 
   return (
-    <div className="relative w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl shadow-slate-950/40">
-      <Image
-        src={HERO_SLIDES[0]}
-        alt=""
-        width={1400}
-        height={800}
-        className="invisible h-auto w-full"
-        aria-hidden="true"
-      />
-
+    <div className="relative aspect-1400/1050 w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl shadow-slate-950/40">
       {HERO_SLIDES.map((src, index) => (
         <div
           key={src}
@@ -291,6 +283,8 @@ export function DonatePage({ projects = [] }) {
           </div>
         )}
       </section>
+
+      <QardHasanahBanner onCtaClick={() => setIsDonateModalOpen(true)} />
 
       <DonateBankInfoModal
         isOpen={isDonateModalOpen}
