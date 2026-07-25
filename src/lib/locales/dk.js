@@ -753,6 +753,24 @@ const siteCopy = {
     hadith: "Allah hjaelper tjeneren, sa laenge tjeneren hjaelper andre.",
     hadithSource: "(Sahih Muslim: 2699)",
   },
+  donateHero: {
+    badge: "Giv med formål",
+    title: "Doner til et aktivt projekt",
+    subtitle: "Hvert bidrag gaar direkte til et specifikt, gennemsigtigt sporet projekt — se praecis hvor din donation ender.",
+    ctaLabel: "Doner nu",
+  },
+  featuredProjects: {
+    badge: "Aktive Projekter",
+    title: "Projekter du kan stotte i dag",
+    subtitle: "Hver donation gaar direkte til et specifikt, gennemsigtigt sporet projekt.",
+    viewAllLabel: "Se alle projekter",
+    donateNowLabel: "Doner nu",
+    statusLabels: {
+      active: "Aktiv",
+      running: "I gang",
+      completed: "Afsluttet",
+    },
+  },
 };
 
 export default siteCopy;

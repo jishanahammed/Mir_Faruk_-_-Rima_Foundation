@@ -216,7 +216,8 @@ function HeroSlider() {
 }
 
 export function DonatePage({ projects = [] }) {
-  const { locale } = useSiteLocale();
+  const { locale, copy } = useSiteLocale();
+  const donateHero = copy.donateHero;
   const [modalProject, setModalProject] = useState(null);
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
 
@@ -233,13 +234,13 @@ export function DonatePage({ projects = [] }) {
           <div className="text-center lg:text-left">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-cyan-300">
               <HeartIcon />
-              Give With Purpose
+              {donateHero.badge}
             </span>
             <h1 className="mt-3 text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
-              Donate to an Active Project
+              {donateHero.title}
             </h1>
             <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-cyan-100/80 lg:mx-0">
-              Every contribution is directed to a specific, transparently tracked project — see exactly where your donation goes.
+              {donateHero.subtitle}
             </p>
 
             <div className="mt-4 flex justify-center lg:justify-start">
@@ -252,7 +253,7 @@ export function DonatePage({ projects = [] }) {
                 className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-extrabold text-cyan-800 shadow-lg shadow-cyan-950/30 ring-2 ring-white/60 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-950/40"
               >
                 <HeartIcon />
-                Donate Now
+                {donateHero.ctaLabel}
                 <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
               </button>
             </div>

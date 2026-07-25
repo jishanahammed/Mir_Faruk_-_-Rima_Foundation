@@ -3,26 +3,28 @@
 import Image from "next/image";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
-function StepArrow() {
+function StepCard({ icon, title, description, index, isLast }) {
   return (
-    <span
-      className="hidden shrink-0 self-center text-2xl font-bold text-cyan-400 lg:block"
-      aria-hidden="true"
-    >
-      &rarr;
-    </span>
-  );
-}
-
-function StepCircle({ icon, title, description, index }) {
-  return (
-    <div className="flex w-full flex-col items-center gap-1.5 text-center lg:w-32">
+    <div className="relative flex w-full flex-col items-center gap-1.5 rounded-2xl border border-cyan-100 bg-[linear-gradient(160deg,#0f172a,#155e75)] px-3 py-3 text-center lg:border-none lg:bg-none lg:p-0">
       <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-cyan-300/70 bg-white text-lg shadow-sm">
         {icon}
       </span>
-      <span className="rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-2.5 py-0.5 text-[0.65rem] font-bold text-white">
-        {index + 1}. {title}
-      </span>
+
+      <div className="relative flex min-h-9 w-full items-center justify-center">
+        <span className="flex min-h-9 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-2.5 py-0.5 text-center text-[0.65rem] font-bold leading-4 text-white">
+          {index + 1}. {title}
+        </span>
+
+        {!isLast ? (
+          <span
+            className="absolute left-full top-1/2 hidden w-8 -translate-y-1/2 items-center justify-center text-2xl font-bold text-cyan-400 lg:flex"
+            aria-hidden="true"
+          >
+            &rarr;
+          </span>
+        ) : null}
+      </div>
+
       <p className="text-[0.65rem] leading-4 text-cyan-50/90">{description}</p>
     </div>
   );
@@ -98,18 +100,16 @@ export function QardHasanahBanner({ onCtaClick }) {
             {qh.processHeading}
           </p>
 
-          <div className="mt-3 flex flex-col items-center gap-4 lg:flex-row lg:items-start lg:justify-center lg:gap-2">
+          <div className="mt-3 flex flex-col items-center gap-4 lg:flex-row lg:items-start lg:justify-center lg:gap-10">
             {qh.steps.map((step, index) => (
-              <div key={step.title} className="flex items-center gap-2 lg:contents">
-                <div className="rounded-2xl border border-cyan-100 bg-[linear-gradient(160deg,#0f172a,#155e75)] px-3 py-3 lg:border-none lg:bg-none lg:p-0">
-                  <StepCircle
-                    icon={step.icon}
-                    title={step.title}
-                    description={step.description}
-                    index={index}
-                  />
-                </div>
-                {index < qh.steps.length - 1 ? <StepArrow /> : null}
+              <div key={step.title} className="w-full max-w-xs lg:w-32 lg:max-w-none">
+                <StepCard
+                  icon={step.icon}
+                  title={step.title}
+                  description={step.description}
+                  index={index}
+                  isLast={index === qh.steps.length - 1}
+                />
               </div>
             ))}
           </div>

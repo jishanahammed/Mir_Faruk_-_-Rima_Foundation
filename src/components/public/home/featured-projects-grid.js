@@ -11,10 +11,10 @@ function pick(en, bn, dk, locale) {
   return en;
 }
 
-const STATUS_BADGE = {
-  active: { label: "Active", cls: "bg-emerald-100 text-emerald-700" },
-  running: { label: "Running", cls: "bg-cyan-100 text-cyan-700" },
-  completed: { label: "Completed", cls: "bg-violet-100 text-violet-700" },
+const STATUS_BADGE_CLASS = {
+  active: "bg-emerald-100 text-emerald-700",
+  running: "bg-cyan-100 text-cyan-700",
+  completed: "bg-violet-100 text-violet-700",
 };
 
 function LocationIcon() {
@@ -59,11 +59,15 @@ function ProgressBar({ collected, target }) {
   );
 }
 
-function FeaturedProjectCard({ project, locale, onDonate }) {
+function FeaturedProjectCard({ project, locale, fp, onDonate }) {
   const title = pick(project.projectTitleEn, project.projectTitleBn, project.projectTitleDk, locale);
   const desc = pick(project.shortDescriptionEn, project.shortDescriptionBn, project.shortDescriptionDk, locale);
   const location = pick(project.projectLocationEn, project.projectLocationBn, project.projectLocationDk, locale);
-  const badge = STATUS_BADGE[project.status] ?? STATUS_BADGE.active;
+  const statusKey = STATUS_BADGE_CLASS[project.status] ? project.status : "active";
+  const badge = {
+    label: fp.statusLabels[statusKey],
+    cls: STATUS_BADGE_CLASS[statusKey],
+  };
   const thumb = project.images?.[0]?.imageUrl ?? null;
   const detailHref = `/projects/${project.projectCategoryId}/${project.id}`;
 
@@ -123,7 +127,7 @@ function FeaturedProjectCard({ project, locale, onDonate }) {
           className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-transparent bg-[linear-gradient(135deg,#0f766e,#0891b2)] px-5 py-2.5 text-sm font-bold text-white! shadow-md shadow-cyan-200/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-300/70 active:translate-y-0"
         >
           <HeartIcon />
-          Donate Now
+          {fp.donateNowLabel}
         </button>
       </div>
     </article>
@@ -131,7 +135,8 @@ function FeaturedProjectCard({ project, locale, onDonate }) {
 }
 
 export function FeaturedProjectsGrid({ projects }) {
-  const { locale } = useSiteLocale();
+  const { locale, copy } = useSiteLocale();
+  const fp = copy.featuredProjects;
   const [modalProject, setModalProject] = useState(null);
 
   return (
@@ -142,6 +147,7 @@ export function FeaturedProjectsGrid({ projects }) {
             key={project.id}
             project={project}
             locale={locale}
+            fp={fp}
             onDonate={(title) => setModalProject(title)}
           />
         ))}

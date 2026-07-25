@@ -174,7 +174,7 @@ export function ProjectsPage({ categories = [] }) {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero header */}
-      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-4 py-24 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-4 py-16 sm:px-6 lg:px-8">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
           <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full border border-cyan-500/20" />
           <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full border border-cyan-400/15" />
@@ -190,14 +190,7 @@ export function ProjectsPage({ categories = [] }) {
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-cyan-100/80">
             {projects.heroSubtitle}
           </p>
-          {categories.length > 0 && (
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-white/10 px-4 py-2">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400" />
-              <span className="text-sm font-semibold text-white">
-                {categories.length} {projects.categoryLabel}
-              </span>
-            </div>
-          )}
+
         </div>
       </section>
 

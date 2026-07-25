@@ -751,6 +751,24 @@ const siteCopy = {
     hadith: "Allah helps the servant as long as the servant helps others.",
     hadithSource: "(Sahih Muslim: 2699)",
   },
+  donateHero: {
+    badge: "Give With Purpose",
+    title: "Donate to an Active Project",
+    subtitle: "Every contribution is directed to a specific, transparently tracked project — see exactly where your donation goes.",
+    ctaLabel: "Donate Now",
+  },
+  featuredProjects: {
+    badge: "Active Projects",
+    title: "Projects You Can Support Today",
+    subtitle: "Every donation goes directly toward a specific, transparently tracked project.",
+    viewAllLabel: "View All Projects",
+    donateNowLabel: "Donate Now",
+    statusLabels: {
+      active: "Active",
+      running: "Running",
+      completed: "Completed",
+    },
+  },
 };
 
 export default siteCopy;
