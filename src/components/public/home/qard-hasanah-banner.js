@@ -1,31 +1,30 @@
 "use client";
 
+import { Fragment } from "react";
 import Image from "next/image";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
 function StepCard({ icon, title, description, index, isLast }) {
   return (
-    <div className="relative flex w-full flex-col items-center gap-1.5 rounded-2xl border border-cyan-100 bg-[linear-gradient(160deg,#0f172a,#155e75)] px-3 py-3 text-center lg:border-none lg:bg-none lg:p-0">
-      <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-cyan-300/70 bg-white text-lg shadow-sm">
+    <div className="relative flex h-full w-full flex-col items-center gap-3 rounded-3xl border border-cyan-100 bg-white p-6 text-center shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
+      <span className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-cyan-300/70 bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-xl shadow-md">
         {icon}
       </span>
 
-      <div className="relative flex min-h-9 w-full items-center justify-center">
-        <span className="flex min-h-9 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-2.5 py-0.5 text-center text-[0.65rem] font-bold leading-4 text-white">
-          {index + 1}. {title}
+      <span className="flex min-h-7 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-1 py-2 text-center text-sm font-bold leading-5 text-white">
+        {index + 1}. {title}
+      </span>
+
+      <p className="text-sm leading-6 text-slate-600">{description}</p>
+
+      {!isLast ? (
+        <span
+          className="absolute left-full top-1/2 z-10 hidden w-12 -translate-y-1/2 items-center justify-center text-2xl font-bold text-cyan-400 lg:flex"
+          aria-hidden="true"
+        >
+          &rarr;
         </span>
-
-        {!isLast ? (
-          <span
-            className="absolute left-full top-1/2 hidden w-8 -translate-y-1/2 items-center justify-center text-2xl font-bold text-cyan-400 lg:flex"
-            aria-hidden="true"
-          >
-            &rarr;
-          </span>
-        ) : null}
-      </div>
-
-      <p className="text-[0.65rem] leading-4 text-cyan-50/90">{description}</p>
+      ) : null}
     </div>
   );
 }
@@ -95,23 +94,36 @@ export function QardHasanahBanner({ onCtaClick }) {
 
         {/* Process steps */}
         <div className=" sm:px-4">
-          <p className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-4 py-1.5 text-center text-[0.7rem] font-bold text-white sm:text-xs">
+          <p className="inline-flex mb-2 w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-4 py-4 text-center text-[0.7rem] font-bold text-white sm:text-xs">
             <span aria-hidden="true">🔄</span>
             {qh.processHeading}
           </p>
 
-          <div className="mt-3 flex flex-col items-center gap-4 lg:flex-row lg:items-start lg:justify-center lg:gap-10">
-            {qh.steps.map((step, index) => (
-              <div key={step.title} className="w-full max-w-xs lg:w-32 lg:max-w-none">
-                <StepCard
-                  icon={step.icon}
-                  title={step.title}
-                  description={step.description}
-                  index={index}
-                  isLast={index === qh.steps.length - 1}
-                />
-              </div>
-            ))}
+          <div className="mt-5 mb-7 flex flex-col items-center gap-3 lg:flex-row lg:items-stretch lg:justify-center lg:gap-12">
+            {qh.steps.map((step, index) => {
+              const isLast = index === qh.steps.length - 1;
+              return (
+                <Fragment key={step.title}>
+                  <div className="w-full max-w-sm lg:max-w-none lg:flex-1">
+                    <StepCard
+                      icon={step.icon}
+                      title={step.title}
+                      description={step.description}
+                      index={index}
+                      isLast={isLast}
+                    />
+                  </div>
+                  {!isLast ? (
+                    <span
+                      className="text-2xl font-bold leading-none text-cyan-400 lg:hidden"
+                      aria-hidden="true"
+                    >
+                      &darr;
+                    </span>
+                  ) : null}
+                </Fragment>
+              );
+            })}
           </div>
         </div>
 
