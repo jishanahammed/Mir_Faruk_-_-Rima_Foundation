@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 import { DonateBankInfoModal } from "@/components/public/donate/donate-bank-info-modal";
+
+// Site's brand gradient (teal-700 → cyan-700), used consistently across
+// hero CTAs, the donate page, and here — no per-card color rotation.
+const BRAND_GLOW = "from-teal-700 to-cyan-700";
 
 function pick(en, bn, dk, locale) {
   if (locale === "BN") return bn || en;
@@ -72,9 +76,13 @@ function FeaturedProjectCard({ project, locale, fp, onDonate }) {
   const detailHref = `/projects/${project.projectCategoryId}/${project.id}`;
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-3xl border-2 border-cyan-100 bg-white shadow-sm ring-1 ring-cyan-50 transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-400 hover:shadow-2xl hover:shadow-cyan-900/20 hover:ring-cyan-200">
-      <Link href={detailHref} className="relative block h-44 overflow-hidden bg-linear-to-br from-cyan-50 to-slate-100 sm:h-48">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border-2 border-transparent bg-white bg-clip-padding shadow-[0_18px_50px_rgba(15,23,42,0.10)] ring-1 ring-slate-100 transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-400 hover:shadow-[0_0_0_4px_rgba(8,145,178,0.15),0_28px_70px_rgba(8,145,178,0.25)] hover:ring-cyan-200">
+      <Link
+        href={detailHref}
+        className={`relative block h-48 overflow-hidden bg-linear-to-br ${BRAND_GLOW} sm:h-52`}
+      >
         {thumb ? (
+          // Full-bleed photo banner, edge-to-edge.
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={thumb}
@@ -83,14 +91,16 @@ function FeaturedProjectCard({ project, locale, fp, onDonate }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="h-14 w-14 text-slate-300" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="h-14 w-14 text-white/70" aria-hidden="true">
               <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" strokeLinecap="round" strokeLinejoin="round" />
               <rect x="9" y="3" width="6" height="4" rx="1" />
               <path d="M9 12h6M9 16h4" strokeLinecap="round" />
             </svg>
           </div>
         )}
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/45 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
         <span className={`absolute right-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold shadow-sm backdrop-blur-sm ${badge.cls}`}>
           {badge.label}
         </span>
@@ -98,7 +108,7 @@ function FeaturedProjectCard({ project, locale, fp, onDonate }) {
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <Link href={detailHref}>
-          <h3 className="text-center bg-[linear-gradient(90deg,#0f766e,#0891b2)] bg-clip-text text-base font-extrabold leading-snug text-transparent transition-opacity group-hover:opacity-80 sm:text-lg">
+          <h3 className="text-center text-base font-extrabold leading-snug text-slate-900 transition-opacity group-hover:opacity-80 sm:text-lg">
             {title}
           </h3>
         </Link>
@@ -124,7 +134,7 @@ function FeaturedProjectCard({ project, locale, fp, onDonate }) {
         <button
           type="button"
           onClick={() => onDonate(title)}
-          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-transparent bg-[linear-gradient(135deg,#0f766e,#0891b2)] px-5 py-2.5 text-sm font-bold text-white! shadow-md shadow-cyan-200/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-300/70 active:translate-y-0"
+          className={`mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-transparent bg-linear-to-r ${BRAND_GLOW} px-5 py-2.5 text-sm font-bold text-white! shadow-md shadow-cyan-200/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-300/70 active:translate-y-0`}
         >
           <HeartIcon />
           {fp.donateNowLabel}
@@ -138,10 +148,78 @@ export function FeaturedProjectsGrid({ projects }) {
   const { locale, copy } = useSiteLocale();
   const fp = copy.featuredProjects;
   const [modalProject, setModalProject] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const trackRef = useRef(null);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let frame = null;
+    const handleScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        const cardWidth = track.scrollWidth / projects.length;
+        const index = Math.round(track.scrollLeft / cardWidth);
+        setActiveIndex(Math.min(projects.length - 1, Math.max(0, index)));
+      });
+    };
+
+    track.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      track.removeEventListener("scroll", handleScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [projects.length]);
+
+  const scrollToIndex = (index) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cardWidth = track.scrollWidth / projects.length;
+    track.scrollTo({ left: cardWidth * index, behavior: "smooth" });
+  };
 
   return (
     <>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Mobile: swipeable, snap-scrolling carousel with dot pagination */}
+      <div className="mt-10 sm:hidden">
+        <div
+          ref={trackRef}
+          className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-1 pb-2 scrollbar-none [-ms-overflow-style:none]"
+        >
+          {projects.map((project) => (
+            <div key={project.id} className="w-[86%] shrink-0 snap-center">
+              <FeaturedProjectCard
+                project={project}
+                locale={locale}
+                fp={fp}
+                onDonate={(title) => setModalProject(title)}
+              />
+            </div>
+          ))}
+        </div>
+
+        {projects.length > 1 ? (
+          <div className="mt-4 flex items-center justify-center gap-2">
+            {projects.map((project, index) => (
+              <button
+                key={project.id}
+                type="button"
+                aria-label={`Show project ${index + 1}`}
+                onClick={() => scrollToIndex(index)}
+                className={`h-2 rounded-full transition-all ${index === activeIndex
+                  ? `w-6 bg-linear-to-r ${BRAND_GLOW}`
+                  : "w-2 bg-slate-300"
+                  }`}
+              />
+            ))}
+          </div>
+        ) : null}
+      </div>
+
+      {/* Tablet/desktop: standard grid */}
+      <div className="mt-10 hidden gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
           <FeaturedProjectCard
             key={project.id}
