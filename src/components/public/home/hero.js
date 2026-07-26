@@ -83,6 +83,7 @@ export function Hero() {
                 label={hero.highlightLabel}
                 text={hero.highlightLine}
                 tags={hero.trustTags}
+                tagDetails={hero.trustTagDetails}
               />
 
               <div className="flex flex-col gap-4 sm:flex-row">

@@ -2,6 +2,12 @@
 
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
+const HIGHLIGHT_THEMES = [
+  { icon: "🕌", glow: "from-teal-400 to-emerald-500", ring: "ring-teal-100" },
+  { icon: "🌱", glow: "from-cyan-400 to-sky-500", ring: "ring-cyan-100" },
+  { icon: "🔍", glow: "from-amber-400 to-orange-500", ring: "ring-amber-100" },
+];
+
 export function AboutSection({ className = "" }) {
   const { copy } = useSiteLocale();
   const { about } = copy;
@@ -30,39 +36,42 @@ export function AboutSection({ className = "" }) {
             </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-            {about.highlights.map((item, index) => (
-              <div
-                key={item.title}
-                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cyan-700 text-xs font-semibold text-white">
-                  0{index + 1}
-                </span>
-                <span className="text-sm font-semibold leading-6 text-slate-800">
-                  {item.title}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className="grid gap-5 md:grid-cols-3">
-          {about.highlights.map((item) => (
-            <article
-              key={item.title}
-              className="group relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-cyan-200 hover:shadow-[0_24px_80px_rgba(8,145,178,0.14)]"
-            >
-              <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,_#0f766e,_#06b6d4,_#f59e0b)] opacity-80" />
+          {about.highlights.map((item, index) => {
+            const theme = HIGHLIGHT_THEMES[index % HIGHLIGHT_THEMES.length];
+            return (
+              <article
+                key={item.title}
+                className="group relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] transition-all duration-300 ease-out hover:-translate-y-2 hover:border-transparent hover:shadow-[0_28px_90px_rgba(8,145,178,0.22)]"
+              >
+                <div className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-teal-500 via-cyan-500 to-amber-500 opacity-90" />
 
-              <h3 className="text-lg font-semibold leading-7 text-slate-950">
-                {item.title}
-              </h3>
-              <p className="mt-4 text-sm leading-7 text-slate-600">
-                {item.description}
-              </p>
-            </article>
-          ))}
+                <div
+                  className={`pointer-events-none absolute -top-10 -right-10 h-32 w-32 rounded-full bg-linear-to-br ${theme.glow} opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-20`}
+                  aria-hidden="true"
+                />
+
+                <span
+                  className={`relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br ${theme.glow} text-2xl shadow-lg ring-4 ${theme.ring} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                >
+                  <span aria-hidden="true">{theme.icon}</span>
+                </span>
+
+                <h3 className="relative mt-5 text-lg font-bold leading-7 text-slate-950">
+                  {item.title}
+                </h3>
+                <div
+                  className={`relative mt-2 h-1 w-10 rounded-full bg-linear-to-r ${theme.glow} transition-all duration-300 group-hover:w-16`}
+                  aria-hidden="true"
+                />
+                <p className="relative mt-4 text-sm leading-7 text-slate-600">
+                  {item.description}
+                </p>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

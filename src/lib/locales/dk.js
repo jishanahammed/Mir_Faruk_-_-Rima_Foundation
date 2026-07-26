@@ -77,6 +77,14 @@ const siteCopy = {
       href: "/about",
     },
     trustTags: ["Fi Sabilillah", "Qard Hasanah", "Transparent drift"],
+    trustTagDetails: {
+      "Fi Sabilillah":
+        "Donationer modtages og videreformidles som fi sabilillah — givet alene for Allahs skyld uden forventning om verdslig modydelse — så alle bidrag går til reelle humanitære og sociale behov.",
+      "Qard Hasanah":
+        "Modtagere får støtte struktureret som qard hasanah, et rentefrit velgørende lån efter sharia-principper, så familier kan opbygge husdyrbaseret indkomst og betale tilbage, så samme midler kan hjælpe den næste familie.",
+      "Transparent drift":
+        "Hver donation, udbetaling og resultat registreres og deles åbent med donorer gennem løbende opfølgning og teknologibaseret rapportering, så tilliden opbygges gennem synlig ansvarlighed frem for at blive antaget.",
+    },
     panelLabel: "Bæredygtig støttemodel",
     panelTitle: "Støtte, der beskytter værdighed, opbygger handlekraft og styrker ansvarlighed.",
     panelText:
@@ -642,6 +650,38 @@ const siteCopy = {
       giveDesc: "Giver mindst 2 eller flere modergeder",
       afterLabel: "Efter 2 år",
       infinity: "Og sådan fortsætter det, generation efter generation… en endeløs strøm af godhed.",
+      stages: [
+        {
+          icon: "🤲",
+          title: "Fi Sabilillah-donation",
+          description:
+            "En donor giver alene for Allahs skyld — fi sabilillah — uden forventning om tilbagebetaling eller verdslig modydelse, hvilket sætter kredsløbet af godhed i gang.",
+        },
+        {
+          icon: "👨‍👩‍👧",
+          title: "Qard Hasanah-baseret støtte",
+          description:
+            "Donationen når frem til en verificeret, trængende familie som qard hasanah — et rentefrit, sharia-kompatibelt velgørende lån struktureret omkring 2 eller flere modergeder.",
+        },
+        {
+          icon: "🏠",
+          title: "Opbygning af selvhjulpne familier",
+          description:
+            "Med løbende opfølgning og veterinær støtte opfostrer familien gederne til en voksende flok og omdanner støtten til en bæredygtig indkomstkilde for husstanden.",
+        },
+        {
+          icon: "🔄",
+          title: "En vedvarende støttecyklus",
+          description:
+            "Når familien er selvhjulpen, tilbagebetaler den qard hasanah ved at give 2 eller flere modergeder videre til den næste trængende familie, så støtten fortsætter fremad.",
+        },
+        {
+          icon: "💚",
+          title: "Sadaqah Jariyah, der fortsætter",
+          description:
+            "Hver overdragelse bliver et nyt udgangspunkt, så donorens oprindelige bidrag fortsat skaber gavn og løbende belønning — en sadaqah jariyah uden en ende.",
+        },
+      ],
     },
     example: {
       heading: "Et eksempel",

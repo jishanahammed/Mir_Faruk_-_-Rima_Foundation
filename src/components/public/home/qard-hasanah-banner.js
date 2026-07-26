@@ -1,21 +1,40 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import Image from "next/image";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
-function StepCard({ icon, title, description, index, isLast }) {
+const STEP_GLOWS = [
+  "from-teal-400 to-emerald-500",
+  "from-cyan-400 to-sky-500",
+  "from-amber-400 to-orange-500",
+  "from-fuchsia-400 to-pink-500",
+  "from-violet-400 to-indigo-500",
+  "from-rose-400 to-red-500",
+];
+
+function StepCard({ icon, title, description, index, isLast, onOpen }) {
   return (
-    <div className="relative flex h-full w-full flex-col items-center gap-3 rounded-3xl border border-cyan-100 bg-white p-6 text-center shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
-      <span className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-cyan-300/70 bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-xl shadow-md">
-        {icon}
-      </span>
+    <div className="relative h-full w-full">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="group flex h-full w-full flex-col items-center gap-3 rounded-3xl border border-cyan-100 bg-white p-6 text-center shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300 hover:shadow-[0_18px_40px_rgba(8,145,178,0.18)]"
+      >
+        <span className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-cyan-300/70 bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-xl shadow-md transition-transform duration-300 group-hover:scale-110">
+          {icon}
+        </span>
 
-      <span className="flex min-h-7 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-1 py-2 text-center text-sm font-bold leading-5 text-white">
-        {index + 1}. {title}
-      </span>
+        <span className="flex min-h-7 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-1 py-2 text-center text-sm font-bold leading-5 text-white">
+          {index + 1}. {title}
+        </span>
 
-      <p className="text-sm leading-6 text-slate-600">{description}</p>
+        <p className="text-sm leading-6 text-slate-600">{description}</p>
+
+        <span className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-cyan-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          Tap for details <span aria-hidden="true">&rarr;</span>
+        </span>
+      </button>
 
       {!isLast ? (
         <span
@@ -29,9 +48,71 @@ function StepCard({ icon, title, description, index, isLast }) {
   );
 }
 
+function StepDetailModal({ step, index, onClose }) {
+  if (!step) return null;
+  const glow = STEP_GLOWS[index % STEP_GLOWS.length];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-[0_25px_80px_-15px_rgba(0,0,0,0.35)] ring-1 ring-black/5 animate-[popIn_0.25s_cubic-bezier(0.34,1.56,0.64,1)]"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className={`h-1.5 w-full bg-linear-to-r ${glow}`} aria-hidden="true" />
+
+        <div
+          className={`absolute -top-16 -right-16 h-40 w-40 rounded-full bg-linear-to-br ${glow} opacity-20 blur-2xl`}
+          aria-hidden="true"
+        />
+
+        <div className="relative p-7">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
+          >
+            ✕
+          </button>
+
+          <div
+            className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br ${glow} text-2xl shadow-lg ring-4 ring-white`}
+          >
+            <span aria-hidden="true">{step.icon}</span>
+          </div>
+
+          <p className="mt-4 text-xs font-bold uppercase tracking-widest text-cyan-600">
+            Step {index + 1}
+          </p>
+          <h3 className="mt-1 text-xl font-bold tracking-tight text-slate-900">
+            {step.title}
+          </h3>
+          <div className={`mt-2 h-1 w-12 rounded-full bg-linear-to-r ${glow}`} aria-hidden="true" />
+
+          <p className="mt-4 text-sm leading-7 text-slate-600">{step.description}</p>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className={`mt-6 w-full rounded-xl bg-linear-to-r ${glow} px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:opacity-90`}
+          >
+            Got it
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function QardHasanahBanner({ onCtaClick }) {
   const { copy } = useSiteLocale();
   const qh = copy.qardHasanahBanner;
+  const [activeStepIndex, setActiveStepIndex] = useState(null);
 
   if (!qh) {
     return null;
@@ -111,6 +192,7 @@ export function QardHasanahBanner({ onCtaClick }) {
                       description={step.description}
                       index={index}
                       isLast={isLast}
+                      onOpen={() => setActiveStepIndex(index)}
                     />
                   </div>
                   {!isLast ? (
@@ -170,6 +252,14 @@ export function QardHasanahBanner({ onCtaClick }) {
           <p className="mt-0.5 text-[0.65rem] font-semibold text-cyan-700">{qh.hadithSource}</p>
         </div>
       </div>
+
+      {activeStepIndex !== null ? (
+        <StepDetailModal
+          step={qh.steps[activeStepIndex]}
+          index={activeStepIndex}
+          onClose={() => setActiveStepIndex(null)}
+        />
+      ) : null}
     </section>
   );
 }

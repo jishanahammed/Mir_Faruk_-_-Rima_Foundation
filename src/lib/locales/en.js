@@ -77,6 +77,14 @@ const siteCopy = {
       href: "/about",
     },
     trustTags: ["Fi Sabilillah", "Qard Hasanah", "Transparent Management"],
+    trustTagDetails: {
+      "Fi Sabilillah":
+        "Donations are accepted and channeled as fi sabilillah — given purely in the way of Allah, without expectation of worldly return — so every contribution is directed toward genuine humanitarian and social welfare needs.",
+      "Qard Hasanah":
+        "Beneficiaries receive support structured as qard hasanah, an interest-free benevolent loan under Shariah principles, so families can build livestock-based income and repay in a way that lets the same fund help the next household.",
+      "Transparent Management":
+        "Every donation, disbursement, and outcome is tracked and shared openly with donors through regular monitoring and technology-enabled reporting, so trust is earned through visible accountability rather than assumed.",
+    },
     panelLabel: "Sustainable Support Model",
     panelTitle: "Support designed to protect dignity, build capability, and strengthen accountability.",
     panelText:
@@ -640,6 +648,38 @@ const siteCopy = {
       giveDesc: "Gives at least 2 or more mother goats",
       afterLabel: "After 2 years",
       infinity: "And so it continues, generation after generation… an endless stream of good.",
+      stages: [
+        {
+          icon: "🤲",
+          title: "Fi Sabilillah Donation",
+          description:
+            "A donor gives purely in the way of Allah — fi sabilillah — with no expectation of repayment or worldly return, setting the cycle of good in motion.",
+        },
+        {
+          icon: "👨‍👩‍👧",
+          title: "Qard Hasanah-Based Support",
+          description:
+            "The donation reaches a verified, in-need family as qard hasanah — an interest-free, Shariah-compliant benevolent loan structured around 2 or more mother goats.",
+        },
+        {
+          icon: "🏠",
+          title: "Building Self-Reliant Families",
+          description:
+            "With regular monitoring and veterinary support, the family raises the goats into a growing herd, turning assistance into a sustainable source of household income.",
+        },
+        {
+          icon: "🔄",
+          title: "A Continuous Cycle of Support",
+          description:
+            "Once self-reliant, the family repays the qard hasanah by passing on 2 or more mother goats to the next in-need family, keeping the same support moving forward.",
+        },
+        {
+          icon: "💚",
+          title: "Sadaqah Jariyah That Keeps Going",
+          description:
+            "Each handover becomes a new starting point, so the original donor's contribution keeps generating benefit and ongoing reward — a sadaqah jariyah without an end.",
+        },
+      ],
     },
     example: {
       heading: "An Example",

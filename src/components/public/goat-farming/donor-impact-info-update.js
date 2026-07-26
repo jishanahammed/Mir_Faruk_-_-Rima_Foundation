@@ -1,7 +1,76 @@
 "use client";
 
-import { Fragment, useId } from "react";
+import { Fragment, useId, useState } from "react";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
+
+const FEATURE_GLOWS = [
+  "from-teal-400 to-emerald-500",
+  "from-cyan-400 to-sky-500",
+  "from-amber-400 to-orange-500",
+  "from-fuchsia-400 to-pink-500",
+  "from-emerald-400 to-teal-600",
+];
+
+function FeatureDetailModal({ feature, index, onClose }) {
+  if (!feature) return null;
+  const glow = FEATURE_GLOWS[index % FEATURE_GLOWS.length];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-[0_25px_80px_-15px_rgba(0,0,0,0.35)] ring-1 ring-black/5 animate-[popIn_0.25s_cubic-bezier(0.34,1.56,0.64,1)]"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className={`h-1.5 w-full bg-linear-to-r ${glow}`} aria-hidden="true" />
+
+        <div
+          className={`absolute -top-16 -right-16 h-40 w-40 rounded-full bg-linear-to-br ${glow} opacity-20 blur-2xl`}
+          aria-hidden="true"
+        />
+
+        <div className="relative p-7">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
+          >
+            ✕
+          </button>
+
+          <div
+            className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br ${glow} text-2xl shadow-lg ring-4 ring-white`}
+          >
+            <span aria-hidden="true">{feature.icon}</span>
+          </div>
+
+          <p className="mt-4 text-xs font-bold uppercase tracking-widest text-emerald-600">
+            Step {index + 1}
+          </p>
+          <h3 className="mt-1 text-xl font-bold tracking-tight text-slate-900">
+            {feature.title}
+          </h3>
+          <div className={`mt-2 h-1 w-12 rounded-full bg-linear-to-r ${glow}`} aria-hidden="true" />
+
+          <p className="mt-4 text-sm leading-7 text-slate-600">{feature.description}</p>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className={`mt-6 w-full rounded-xl bg-linear-to-r ${glow} px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:opacity-90`}
+          >
+            Got it
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function SectionHeading({ children }) {
   return (
@@ -350,29 +419,29 @@ function RedArrow({ label, caption }) {
       </svg>
       {caption
         ? (() => {
-            const lines = Array.isArray(caption) ? caption : [caption];
-            // Mobile has room for wider text, so merge the lines into two.
-            const mid = Math.ceil(lines.length / 2);
-            const mobileLines =
-              lines.length > 2
-                ? [lines.slice(0, mid).join(" "), lines.slice(mid).join(" ")]
-                : lines;
+          const lines = Array.isArray(caption) ? caption : [caption];
+          // Mobile has room for wider text, so merge the lines into two.
+          const mid = Math.ceil(lines.length / 2);
+          const mobileLines =
+            lines.length > 2
+              ? [lines.slice(0, mid).join(" "), lines.slice(mid).join(" ")]
+              : lines;
 
-            return (
-              <p className="max-w-[14rem] text-center text-[0.7rem] font-bold leading-5 text-blue-700 sm:text-xs lg:max-w-[11rem]">
-                {mobileLines.map((line, index) => (
-                  <span key={`m-${index}`} className="block lg:hidden">
-                    {line}
-                  </span>
-                ))}
-                {lines.map((line, index) => (
-                  <span key={`d-${index}`} className="hidden lg:block">
-                    {line}
-                  </span>
-                ))}
-              </p>
-            );
-          })()
+          return (
+            <p className="max-w-[14rem] text-center text-[0.7rem] font-bold leading-5 text-blue-700 sm:text-xs lg:max-w-[11rem]">
+              {mobileLines.map((line, index) => (
+                <span key={`m-${index}`} className="block lg:hidden">
+                  {line}
+                </span>
+              ))}
+              {lines.map((line, index) => (
+                <span key={`d-${index}`} className="hidden lg:block">
+                  {line}
+                </span>
+              ))}
+            </p>
+          );
+        })()
         : null}
     </div>
   );
@@ -383,6 +452,9 @@ export function DonorImpactInfoUpdatePage() {
   const di = copy.donorImpact;
   // Growth table reuses the goat-farming chart copy so the numbers stay in sync.
   const gf = copy.goatFarming;
+  const [activeFeatureIndex, setActiveFeatureIndex] = useState(null);
+  // Reuses the fuller cycle-stage descriptions for the feature strip's modal.
+  const featureDetails = di.cycle?.stages ?? [];
 
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(180deg,_#f4fbf4_0%,_#ffffff_35%,_#f4fffb_100%)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
@@ -454,14 +526,21 @@ export function DonorImpactInfoUpdatePage() {
 
           {/* Feature strip */}
           <div className="flex flex-wrap items-stretch justify-center gap-2 border-t border-emerald-100 bg-emerald-50/60 px-4 py-4 sm:gap-3 sm:px-8">
-            {di.features.map((feature) => (
-              <span
+            {di.features.map((feature, index) => (
+              <button
                 key={feature.label}
-                className="flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[0.68rem] font-semibold text-slate-700 shadow-sm sm:text-xs"
+                type="button"
+                onClick={() => setActiveFeatureIndex(index)}
+                className="group flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[0.68rem] font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[0_10px_24px_rgba(6,95,70,0.18)] sm:text-xs"
               >
-                <span aria-hidden="true">{feature.icon}</span>
+                <span
+                  className="text-sm transition-transform duration-300 group-hover:scale-110"
+                  aria-hidden="true"
+                >
+                  {feature.icon}
+                </span>
                 {feature.label}
-              </span>
+              </button>
             ))}
           </div>
         </header>
@@ -658,6 +737,20 @@ export function DonorImpactInfoUpdatePage() {
           </span>
         </div>
       </div>
+
+      {activeFeatureIndex !== null ? (
+        <FeatureDetailModal
+          feature={{
+            icon: di.features[activeFeatureIndex]?.icon,
+            title: di.features[activeFeatureIndex]?.label,
+            description:
+              featureDetails[activeFeatureIndex]?.description ??
+              di.features[activeFeatureIndex]?.label,
+          }}
+          index={activeFeatureIndex}
+          onClose={() => setActiveFeatureIndex(null)}
+        />
+      ) : null}
     </section>
   );
 }

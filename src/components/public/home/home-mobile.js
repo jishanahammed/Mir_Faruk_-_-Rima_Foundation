@@ -46,6 +46,7 @@ export function HomeMobile({ featuredProjects }) {
             label={hero.highlightLabel}
             text={hero.highlightLine}
             tags={hero.trustTags}
+            tagDetails={hero.trustTagDetails}
           />
 
           <DonorImpactInfoUpdatePage />
