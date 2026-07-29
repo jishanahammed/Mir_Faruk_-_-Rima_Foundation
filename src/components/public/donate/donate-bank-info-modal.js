@@ -179,8 +179,7 @@ function AssistanceItem({ item, locale }) {
   );
 }
 
-function AssistancePanel({ projectId }) {
-  const { locale } = useSiteLocale();
+function useProjectAssistances(projectId) {
   const [assistances, setAssistances] = useState(null);
 
   useEffect(() => {
@@ -200,34 +199,73 @@ function AssistancePanel({ projectId }) {
     };
   }, [projectId]);
 
-  if (!projectId) return null;
+  return assistances;
+}
+
+function AssistanceList({ assistances, locale }) {
+  if (assistances === null) {
+    return (
+      <div className="space-y-3">
+        {[0, 1].map((i) => (
+          <div key={i} className="h-24 animate-pulse rounded-2xl bg-slate-200/70" />
+        ))}
+      </div>
+    );
+  }
+
+  if (assistances.length === 0) {
+    return (
+      <p className="text-xs leading-5 text-slate-400">
+        No specific assistance items are listed for this project yet.
+      </p>
+    );
+  }
 
   return (
-    <div className="min-h-0 w-full shrink-0 overflow-y-auto border-t border-slate-100 bg-slate-50/60 px-4 py-5 sm:w-[19rem] sm:border-l sm:border-t-0 sm:px-5 sm:py-6">
-      <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-100 text-cyan-700">
-          <HandHeartIcon />
-        </span>
-        Project Assistance
-      </p>
+    <div className="space-y-3">
+      {assistances.map((item) => (
+        <AssistanceItem key={item.id} item={item} locale={locale} />
+      ))}
+    </div>
+  );
+}
 
-      {assistances === null ? (
-        <div className="mt-4 space-y-3">
-          {[0, 1].map((i) => (
-            <div key={i} className="h-24 animate-pulse rounded-2xl bg-slate-200/70" />
-          ))}
+function AssistanceHeading() {
+  return (
+    <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-100 text-cyan-700">
+        <HandHeartIcon />
+      </span>
+      Project Assistance
+    </p>
+  );
+}
+
+// Mobile: rendered inline in the main scroll column, after bank info. Desktop (sm+): its
+// own scrollable side panel. Same data/hook, two layouts via the `variant` prop.
+function AssistanceSection({ projectId, variant }) {
+  const { locale } = useSiteLocale();
+  const assistances = useProjectAssistances(projectId);
+
+  if (!projectId) return null;
+
+  if (variant === "inline") {
+    return (
+      <div className="mt-6 sm:hidden">
+        <AssistanceHeading />
+        <div className="mt-4">
+          <AssistanceList assistances={assistances} locale={locale} />
         </div>
-      ) : assistances.length === 0 ? (
-        <p className="mt-4 text-xs leading-5 text-slate-400">
-          No specific assistance items are listed for this project yet.
-        </p>
-      ) : (
-        <div className="mt-4 space-y-3">
-          {assistances.map((item) => (
-            <AssistanceItem key={item.id} item={item} locale={locale} />
-          ))}
-        </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="hidden min-h-0 w-76 shrink-0 overflow-y-auto border-l border-slate-100 bg-slate-50/60 px-5 py-6 sm:block">
+      <AssistanceHeading />
+      <div className="mt-4">
+        <AssistanceList assistances={assistances} locale={locale} />
+      </div>
     </div>
   );
 }
@@ -322,6 +360,8 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
               </p>
             </div>
 
+            <AssistanceSection projectId={projectId} variant="inline" />
+
             <div className="mt-6">
               <SectionHeading icon={<BankIcon />}>Bank Transfer</SectionHeading>
               <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
@@ -384,7 +424,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
           </div>
         </div>
 
-        <AssistancePanel projectId={projectId} />
+        <AssistanceSection projectId={projectId} variant="panel" />
       </div>
     </div>
   );
