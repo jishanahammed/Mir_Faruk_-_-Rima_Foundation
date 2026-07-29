@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useId, useState } from "react";
+import { Fragment, useEffect, useId, useRef, useState } from "react";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
 const FEATURE_GLOWS = [
@@ -134,27 +134,6 @@ function CheckItem({ children }) {
   );
 }
 
-function FlowArrow({ label }) {
-  return (
-    <div className="flex shrink-0 flex-col items-center justify-center gap-1 lg:flex-row lg:gap-2">
-      {label ? (
-        <span className="rounded-full bg-sky-700 px-2.5 py-1 text-[0.6rem] font-bold text-white">
-          {label}
-        </span>
-      ) : null}
-      <span className="text-2xl font-bold text-emerald-500 lg:hidden" aria-hidden="true">
-        ↓
-      </span>
-      <span
-        className="hidden text-2xl font-bold text-emerald-500 lg:block"
-        aria-hidden="true"
-      >
-        →
-      </span>
-    </div>
-  );
-}
-
 function FlowDown() {
   return (
     <span
@@ -192,28 +171,204 @@ function StepCard({ icon, heading, items }) {
   );
 }
 
-function CycleCard({ icon, title, description, highlight }) {
+// Slide card used inside the continuous-cycle slider. Bigger, richer than the
+// plain CycleCard: gradient badge for the step number, icon medallion, and a
+// highlighted "donor" variant that pops against the neutral receiver slides.
+function CycleSlideCard({ icon, title, description, step, highlight }) {
   return (
     <div
-      className={`flex w-full max-w-xs flex-col items-center gap-1.5 rounded-3xl border px-4 py-4 text-center shadow-sm lg:w-40 ${highlight
-        ? "border-emerald-200 bg-emerald-800 text-white"
+      className={`relative flex h-full flex-col items-center overflow-hidden rounded-[2rem] border px-6 py-8 text-center shadow-[0_18px_50px_rgba(6,95,70,0.10)] transition-transform duration-300 ${highlight
+        ? "border-emerald-300 bg-[linear-gradient(155deg,_#065f46,_#047857_60%,_#0d9488)] text-white"
         : "border-emerald-100 bg-white"
         }`}
     >
-      <span className="text-2xl" aria-hidden="true">
+      <span
+        className={`absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full text-[0.65rem] font-bold ${highlight
+          ? "bg-white/15 text-amber-200 ring-1 ring-white/30"
+          : "bg-emerald-100 text-emerald-700"
+          }`}
+        aria-hidden="true"
+      >
+        {step}
+      </span>
+
+      <span
+        className={`flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-md ${highlight
+          ? "bg-white/15 ring-2 ring-white/30"
+          : "bg-emerald-50 ring-2 ring-emerald-100"
+          }`}
+        aria-hidden="true"
+      >
         {icon}
       </span>
+
       <p
-        className={`text-sm font-bold ${highlight ? "text-white" : "text-slate-900"}`}
+        className={`mt-5 text-base font-bold ${highlight ? "text-white" : "text-slate-900"}`}
       >
         {title}
       </p>
+      <span
+        className={`mt-2 h-1 w-10 rounded-full ${highlight ? "bg-amber-300/80" : "bg-emerald-400/70"}`}
+        aria-hidden="true"
+      />
       <p
-        className={`text-[0.68rem] leading-5 ${highlight ? "text-emerald-100" : "text-slate-500"
-          }`}
+        className={`mt-3 text-[0.8rem] leading-6 ${highlight ? "text-emerald-50" : "text-slate-500"}`}
       >
         {description}
       </p>
+    </div>
+  );
+}
+
+// Continuous-cycle slider: shows one slide on mobile, up to three on larger
+// screens, with arrow controls + dot pagination. Loops around at both ends so
+// the "infinite cycle" concept is reinforced by the interaction itself.
+function useSlidesPerView() {
+  const [perView, setPerView] = useState(1);
+
+  useEffect(() => {
+    const compute = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) return 3;
+      if (width >= 640) return 2;
+      return 1;
+    };
+    const update = () => setPerView(compute());
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return perView;
+}
+
+function CycleSlider({ slides, autoPlayMs = 3500 }) {
+  const perView = useSlidesPerView();
+  const total = slides.length;
+  // Fixed, non-overlapping pages of `perView` cards each — e.g. 5 slides at
+  // 3-per-view is [1,2,3] then [4,5] (padded), never a sliding [2,3,4] mix.
+  const pageCount = Math.ceil(total / perView);
+
+  const [index, setIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    setIndex((current) => Math.min(current, pageCount - 1));
+  }, [pageCount]);
+
+  const goTo = (next) => setIndex(((next % pageCount) + pageCount) % pageCount);
+  const goPrev = () => goTo(index - 1);
+  const goNext = () => goTo(index + 1);
+
+  useEffect(() => {
+    if (isPaused || pageCount <= 1) return;
+    const timer = setInterval(() => {
+      setIndex((current) => (current + 1) % pageCount);
+    }, autoPlayMs);
+    return () => clearInterval(timer);
+  }, [isPaused, pageCount, autoPlayMs]);
+
+  const pages = Array.from({ length: pageCount }, (_, pageIndex) =>
+    slides.slice(pageIndex * perView, pageIndex * perView + perView)
+  );
+
+  // Touch/mouse drag-to-swipe: track horizontal delta, commit a page change
+  // once the drag passes a threshold, otherwise snap back.
+  const dragState = useRef(null);
+  const [dragOffsetPercent, setDragOffsetPercent] = useState(0);
+
+  const handleDragStart = (clientX) => {
+    setIsPaused(true);
+    dragState.current = { startX: clientX, width: 0 };
+  };
+  const handleDragMove = (clientX, containerWidth) => {
+    if (!dragState.current) return;
+    const deltaX = clientX - dragState.current.startX;
+    dragState.current.width = containerWidth;
+    setDragOffsetPercent((deltaX / containerWidth) * 100 / pageCount);
+  };
+  const handleDragEnd = () => {
+    if (!dragState.current) return;
+    const threshold = (100 / pageCount) * 0.15;
+    if (dragOffsetPercent < -threshold) goNext();
+    else if (dragOffsetPercent > threshold) goPrev();
+    dragState.current = null;
+    setDragOffsetPercent(0);
+    setIsPaused(false);
+  };
+
+  return (
+    <div
+      className="mt-6"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div className="relative">
+        {/* Viewport */}
+        <div
+          className="overflow-hidden py-2 touch-pan-y select-none"
+          onTouchStart={(event) => handleDragStart(event.touches[0].clientX)}
+          onTouchMove={(event) =>
+            handleDragMove(
+              event.touches[0].clientX,
+              event.currentTarget.getBoundingClientRect().width
+            )
+          }
+          onTouchEnd={handleDragEnd}
+          onMouseDown={(event) => handleDragStart(event.clientX)}
+          onMouseMove={(event) => {
+            if (dragState.current) {
+              handleDragMove(
+                event.clientX,
+                event.currentTarget.getBoundingClientRect().width
+              );
+            }
+          }}
+          onMouseUp={handleDragEnd}
+        >
+          <div
+            className={`flex ${dragState.current ? "" : "transition-transform duration-500 ease-out"}`}
+            style={{
+              width: `${pageCount * 100}%`,
+              transform: `translateX(-${index * (100 / pageCount) - dragOffsetPercent}%)`,
+            }}
+          >
+            {pages.map((page, pageIndex) => (
+              <div
+                key={pageIndex}
+                className="flex shrink-0"
+                style={{ width: `${100 / pageCount}%` }}
+              >
+                {page.map((slide, slideIndex) => (
+                  <div
+                    key={slideIndex}
+                    className="shrink-0 px-2.5 sm:px-3"
+                    style={{ width: `${100 / perView}%` }}
+                  >
+                    <CycleSlideCard {...slide} />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Dot pagination */}
+      <div className="mt-5 flex items-center justify-center gap-2">
+        {Array.from({ length: pageCount }).map((_, dotIndex) => (
+          <button
+            key={dotIndex}
+            type="button"
+            onClick={() => goTo(dotIndex)}
+            aria-label={`Go to slide ${dotIndex + 1}`}
+            className={`h-2 rounded-full transition-all duration-300 ${dotIndex === index
+              ? "w-6 bg-emerald-700"
+              : "w-2 bg-emerald-200 hover:bg-emerald-300"
+              }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -607,28 +762,24 @@ export function DonorImpactInfoUpdatePage() {
             {di.cycle.subheading}
           </p>
 
-          <div className="mt-6 flex flex-col items-center gap-3 lg:flex-row lg:flex-wrap lg:items-stretch lg:justify-center">
-            <CycleCard
-              icon="🤲"
-              title={di.cycle.donorTitle}
-              description={di.cycle.donorDesc}
-              highlight
-            />
-            {[1, 2, 3, 4].map((receiverNumber) => (
-              <Fragment key={receiverNumber}>
-                <FlowArrow
-                  label={receiverNumber > 1 ? di.cycle.afterLabel : undefined}
-                />
-                <CycleCard
-                  icon="🏠"
-                  title={`${di.cycle.receiverTitle} ${receiverNumber}`}
-                  description={
-                    receiverNumber === 1 ? di.cycle.receiveDesc : di.cycle.giveDesc
-                  }
-                />
-              </Fragment>
-            ))}
-          </div>
+          <CycleSlider
+            slides={[
+              {
+                icon: "🤲",
+                title: di.cycle.donorTitle,
+                description: di.cycle.donorDesc,
+                step: 1,
+                highlight: true,
+              },
+              ...[1, 2, 3, 4].map((receiverNumber) => ({
+                icon: "🏠",
+                title: `${di.cycle.receiverTitle} ${receiverNumber}`,
+                description:
+                  receiverNumber === 1 ? di.cycle.receiveDesc : di.cycle.giveDesc,
+                step: receiverNumber + 1,
+              })),
+            ]}
+          />
 
           <p className="mx-auto mt-6 max-w-2xl rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/70 px-4 py-3 text-center text-xs font-semibold leading-6 text-emerald-900 sm:text-sm">
             ♾️ {di.cycle.infinity}

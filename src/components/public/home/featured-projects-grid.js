@@ -133,7 +133,7 @@ function FeaturedProjectCard({ project, locale, fp, onDonate }) {
 
         <button
           type="button"
-          onClick={() => onDonate(title)}
+          onClick={() => onDonate({ id: project.id, title })}
           className={`mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-transparent bg-linear-to-r ${BRAND_GLOW} px-5 py-2.5 text-sm font-bold text-white! shadow-md shadow-cyan-200/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-300/70 active:translate-y-0`}
         >
           <HeartIcon />
@@ -194,7 +194,7 @@ export function FeaturedProjectsGrid({ projects }) {
                 project={project}
                 locale={locale}
                 fp={fp}
-                onDonate={(title) => setModalProject(title)}
+                onDonate={(info) => setModalProject(info)}
               />
             </div>
           ))}
@@ -226,14 +226,15 @@ export function FeaturedProjectsGrid({ projects }) {
             project={project}
             locale={locale}
             fp={fp}
-            onDonate={(title) => setModalProject(title)}
+            onDonate={(info) => setModalProject(info)}
           />
         ))}
       </div>
 
       <DonateBankInfoModal
         isOpen={Boolean(modalProject)}
-        project={modalProject}
+        project={modalProject?.title}
+        projectId={modalProject?.id}
         onClose={() => setModalProject(null)}
       />
     </>

@@ -16,16 +16,65 @@ import {
   shouldRefreshLoginSession,
 } from "@/lib/auth/auth-storage-service";
 
-const navItems = [
-  { label: "Dashboard", href: "/admin", icon: "dashboard" },
-  { label: "Donor List", href: "/admin/donors", icon: "users" },
-  { label: "Payment History", href: "/admin/donersPayment", icon: "payment" },
-  { label: "Beneficiary List", href: "/admin/beneficiaries", icon: "list" },
-  { label: "Board Members", href: "/admin/Board_Member_Page", icon: "board" },
-  { label: "Locations", href: "/admin/location-page", icon: "location" },
-  { label: "Project Category", href: "/admin/project-category", icon: "project" },
-  { label: "Foundation Projects", href: "/admin/Foundation_Projects", icon: "folder" },
+const navSections = [
+  {
+    section: "Dashboard",
+    items: [{ label: "Dashboard", href: "/admin", icon: "dashboard" }],
+  },
+  {
+    section: "Organization",
+    items: [
+      { label: "Board Members", href: "/admin/Board_Member_Page", icon: "board" },
+      { label: "Locations", href: "/admin/location-page", icon: "location" },
+      { label: "CEO Bani", href: "/admin/CeoBani", icon: "profile" }
+    ],
+  },
+
+  {
+    section: "Management",
+    items: [
+      { label: "Donor List", href: "/admin/donors", icon: "users" },
+      { label: "Beneficiary List", href: "/admin/beneficiaries", icon: "list" },
+      { label: "Payment History", href: "/admin/donersPayment", icon: "payment" },
+    ],
+  },
+
+
+  {
+    section: "Projects",
+    items: [
+      {
+        label: "Projects",
+        icon: "folder",
+        children: [
+          { label: "Project Category", href: "/admin/project-category", icon: "project" },
+          { label: "Foundation Projects", href: "/admin/Foundation_Projects", icon: "folder" },
+          { label: "Assistance Types", href: "/admin/assistance-type", icon: "project" },
+          { label: "Project Assistance", href: "/admin/project-assistance", icon: "folder" },
+        ],
+      },
+    ],
+  },
+  {
+    section: "Emergency",
+    items: [
+      {
+        label: "Emergency",
+        icon: "emergency",
+        children: [
+          { label: "Emergency Category", href: "/admin/Emergency_Category", icon: "project" },
+          { label: "Emergency Donation", href: "/admin/Emergency_Donation", icon: "emergency" },
+        ],
+      },
+    ],
+  },
+
+
 ];
+
+function flattenNavItems(sections) {
+  return sections.flatMap((s) => s.items.flatMap((item) => (item.children ? item.children : [item])));
+}
 
 const routeTitles = {
   "/admin": {
@@ -59,6 +108,26 @@ const routeTitles = {
   "/admin/Foundation_Projects": {
     eyebrow: "Projects",
     title: "Foundation Projects",
+  },
+  "/admin/assistance-type": {
+    eyebrow: "Projects",
+    title: "Assistance Types",
+  },
+  "/admin/project-assistance": {
+    eyebrow: "Projects",
+    title: "Project Assistance",
+  },
+  "/admin/Emergency_Donation": {
+    eyebrow: "Emergency",
+    title: "Emergency Donation Campaigns",
+  },
+  "/admin/Emergency_Category": {
+    eyebrow: "Emergency",
+    title: "Emergency Categories",
+  },
+  "/admin/CeoBani": {
+    eyebrow: "Content",
+    title: "CEO Bani",
   },
   "/admin/registrations": {
     eyebrow: "Review Queue",
@@ -205,6 +274,16 @@ function Icon({ name }) {
     );
   }
 
+  if (name === "emergency") {
+    return (
+      <svg {...common}>
+        <path d="M12 2 3 7v6c0 5 4 8.5 9 9 5-.5 9-4 9-9V7l-9-5Z" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 8v5" strokeLinecap="round" />
+        <path d="M12 16.5h.01" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
   if (name === "folder") {
     return (
       <svg {...common}>
@@ -230,6 +309,14 @@ function Icon({ name }) {
     );
   }
 
+  if (name === "chevron") {
+    return (
+      <svg {...common} className="h-4 w-4">
+        <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
   return (
     <svg {...common}>
       <path d="M4 5a1 1 0 0 1 1-1h5v7H4V5ZM14 4h5a1 1 0 0 1 1 1v4h-6V4ZM4 15h6v5H5a1 1 0 0 1-1-1v-4ZM14 13h6v6a1 1 0 0 1-1 1h-5v-7Z" />
@@ -237,7 +324,7 @@ function Icon({ name }) {
   );
 }
 
-function NavLink({ item, onNavigate }) {
+function NavLink({ item, onNavigate, indent = false }) {
   const pathname = usePathname();
   const isActive =
     item.href === "/admin" ? pathname === item.href : pathname.startsWith(item.href.split("?")[0]);
@@ -247,15 +334,60 @@ function NavLink({ item, onNavigate }) {
       href={item.href}
       aria-current={isActive ? "page" : undefined}
       onClick={onNavigate}
-      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-        isActive
-          ? "bg-cyan-50 text-cyan-800 ring-1 ring-cyan-200"
-          : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
-      }`}
+      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold transition ${indent ? "ml-4" : ""
+        } ${isActive
+          ? "bg-[linear-gradient(135deg,#4adfd452,#79cde1)] text-black shadow-sm shadow-cyan-200/60"
+          : "text-slate-600 hover:bg-cyan-50 hover:text-cyan-800"
+        }`}
     >
       <Icon name={item.icon} />
       <span>{item.label}</span>
     </Link>
+  );
+}
+
+function NavGroup({ group, onNavigate }) {
+  const pathname = usePathname();
+  const isChildActive = group.children.some((child) => pathname.startsWith(child.href));
+  const [isOpen, setIsOpen] = useState(isChildActive);
+
+  useEffect(() => {
+    if (isChildActive) {
+      setIsOpen(true);
+    }
+  }, [isChildActive]);
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setIsOpen((value) => !value)}
+        aria-expanded={isOpen}
+        className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold transition ${isChildActive
+          ? "bg-[linear-gradient(135deg,#4adfd452,#79cde1)] text-black shadow-sm shadow-cyan-200/60"
+          : "text-slate-600 hover:bg-cyan-50 hover:text-cyan-800"
+          }`}
+      >
+        <Icon name={group.icon} />
+        <span className="flex-1 text-left">{group.label}</span>
+        <span className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""} ${isChildActive ? "text-black/70" : "text-slate-400"}`}>
+          <Icon name="chevron" />
+        </span>
+      </button>
+
+      <div
+        className={`grid overflow-hidden transition-all duration-200 ease-in-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          }`}
+      >
+        <div className="min-h-0">
+          <div className="flex flex-col gap-0.5 py-0.5">
+            {group.children.map((child) => (
+              <NavLink key={child.href} item={child} onNavigate={onNavigate} indent />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -384,11 +516,10 @@ function SidebarContent({
   return (
     <div className="relative h-full overflow-hidden bg-white">
       <div
-        className={`absolute inset-0 transition-all duration-300 ease-in-out ${
-          isCollapsed
-            ? "translate-x-0 opacity-100"
-            : "-translate-x-2 opacity-0 pointer-events-none"
-        }`}
+        className={`absolute inset-0 transition-all duration-300 ease-in-out ${isCollapsed
+          ? "translate-x-0 opacity-100"
+          : "-translate-x-2 opacity-0 pointer-events-none"
+          }`}
       >
         <div className="flex h-full flex-col items-center bg-white px-3 py-5">
           <button
@@ -401,7 +532,7 @@ function SidebarContent({
           </button>
 
           <nav className="mt-5 flex flex-1 flex-col items-center gap-2">
-            {navItems.map((item) => {
+            {flattenNavItems(navSections).map((item) => {
               const isActive =
                 item.href === "/admin"
                   ? pathname === item.href
@@ -415,11 +546,10 @@ function SidebarContent({
                   aria-label={item.label}
                   aria-current={isActive ? "page" : undefined}
                   onClick={onNavigate}
-                  className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${
-                    isActive
-                      ? "border-cyan-200 bg-cyan-50 text-cyan-800 shadow-sm shadow-cyan-100/80"
-                      : "border-transparent text-slate-600 hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-800"
-                  }`}
+                  className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${isActive
+                    ? "border-cyan-200 bg-cyan-50 text-cyan-800 shadow-sm shadow-cyan-100/80"
+                    : "border-transparent text-slate-600 hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-800"
+                    }`}
                 >
                   <Icon name={item.icon} />
                 </Link>
@@ -434,11 +564,10 @@ function SidebarContent({
       </div>
 
       <div
-        className={`absolute inset-0 transition-all duration-300 ease-in-out ${
-          isCollapsed
-            ? "translate-x-3 opacity-0 pointer-events-none"
-            : "translate-x-0 opacity-100"
-        }`}
+        className={`absolute inset-0 transition-all duration-300 ease-in-out ${isCollapsed
+          ? "translate-x-3 opacity-0 pointer-events-none"
+          : "translate-x-0 opacity-100"
+          }`}
       >
         <div className="flex h-full flex-col bg-white">
           <div className="flex items-center justify-between gap-3 border-b-2 border-cyan-600 bg-[linear-gradient(135deg,#0f766e,#0891b2_52%,#155e75)] px-4 py-4 text-slate-700">
@@ -466,9 +595,27 @@ function SidebarContent({
             </button>
           </div>
 
-          <nav className="flex-1 space-y-2 px-4 py-5">
-            {navItems.map((item) => (
-              <NavLink key={item.href} item={item} onNavigate={onNavigate} />
+          <nav className="flex-1 overflow-y-auto px-4 py-5">
+            {navSections.map((section, index) => (
+              <div
+                key={section.section ?? `section-${index}`}
+                className={index > 0 ? "mt-4 border-t border-slate-100 pt-4" : ""}
+              >
+                {section.section && (
+                  <p className="mb-2 px-3 text-xs font-bold uppercase tracking-wider text-slate-400">
+                    {section.section}
+                  </p>
+                )}
+                <div className="flex flex-col gap-0.5">
+                  {section.items.map((item) =>
+                    item.children ? (
+                      <NavGroup key={item.label} group={item} onNavigate={onNavigate} />
+                    ) : (
+                      <NavLink key={item.href} item={item} onNavigate={onNavigate} />
+                    )
+                  )}
+                </div>
+              </div>
             ))}
           </nav>
 
@@ -539,9 +686,8 @@ export function AdminShell({ children, user = adminUser }) {
   return (
     <div className="min-h-screen bg-[#f5fbfc] text-slate-950">
       <aside
-        className={`fixed inset-y-0 left-0 z-30 hidden overflow-hidden border-r border-slate-200 bg-white shadow-sm shadow-cyan-950/5 transition-[width,box-shadow] duration-300 ease-in-out lg:block ${
-          isSidebarVisible ? "w-72" : "w-[76px]"
-        }`}
+        className={`fixed inset-y-0 left-0 z-30 hidden overflow-hidden border-r border-slate-200 bg-white shadow-sm shadow-cyan-950/5 transition-[width,box-shadow] duration-300 ease-in-out lg:block ${isSidebarVisible ? "w-72" : "w-[76px]"
+          }`}
       >
         <SidebarContent
           user={user}
@@ -573,9 +719,8 @@ export function AdminShell({ children, user = adminUser }) {
       </header>
 
       <div
-        className={`fixed inset-0 z-40 transition-opacity duration-300 ease-in-out lg:hidden ${
-          isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-        }`}
+        className={`fixed inset-0 z-40 transition-opacity duration-300 ease-in-out lg:hidden ${isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+          }`}
       >
         <button
           type="button"
@@ -584,18 +729,16 @@ export function AdminShell({ children, user = adminUser }) {
           onClick={() => setIsOpen(false)}
         />
         <aside
-          className={`relative h-full w-[min(20rem,86vw)] border-r border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-in-out ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`relative h-full w-[min(20rem,86vw)] border-r border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           <SidebarContent user={user} onNavigate={() => setIsOpen(false)} />
         </aside>
       </div>
 
       <main
-        className={`transition-[padding] duration-300 ${
-          isSidebarVisible ? "lg:pl-72" : "lg:pl-[76px]"
-        }`}
+        className={`transition-[padding] duration-300 ${isSidebarVisible ? "lg:pl-72" : "lg:pl-[76px]"
+          }`}
       >
         <div className="sticky top-0 z-20 hidden border-b border-cyan-100 bg-white/90 px-8 py-4 backdrop-blur lg:block">
           <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6">

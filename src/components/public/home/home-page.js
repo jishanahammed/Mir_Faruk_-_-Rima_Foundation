@@ -11,6 +11,7 @@ import { QardHasanahBanner } from "@/components/public/home/qard-hasanah-banner"
 import { RegistrationSection } from "@/components/public/home/registration-section";
 import { HomeMobile } from "@/components/public/home/home-mobile";
 import { useIsMobile } from "@/hooks/use-is-mobile";
+import { DonorImpactInfoUpdatePage } from "../goat-farming/donor-impact-info-update";
 
 export function HomePage({ featuredProjects }) {
   const isMobile = useIsMobile();
@@ -30,7 +31,9 @@ export function HomePage({ featuredProjects }) {
 
       <RegistrationSection />
       <QardHasanahBanner onCtaClick={() => setIsDonateModalOpen(true)} />
+
       {featuredProjects}
+      <DonorImpactInfoUpdatePage />
       <BankInfo />
       {/* <ContactSection /> */}
 
