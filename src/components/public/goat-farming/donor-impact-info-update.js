@@ -611,6 +611,45 @@ export function DonorImpactInfoUpdatePage() {
   // Reuses the fuller cycle-stage descriptions for the feature strip's modal.
   const featureDetails = di.cycle?.stages ?? [];
 
+  const [featureSlideIndex, setFeatureSlideIndex] = useState(0);
+  const [isFeaturePaused, setIsFeaturePaused] = useState(false);
+  const featureTrackRef = useRef(null);
+  const featureCount = di.features?.length ?? 0;
+
+  useEffect(() => {
+    const track = featureTrackRef.current;
+    if (!track) return undefined;
+
+    let frame = null;
+    const handleScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        const slideWidth = track.scrollWidth / featureCount;
+        const index = Math.round(track.scrollLeft / slideWidth);
+        setFeatureSlideIndex(Math.min(featureCount - 1, Math.max(0, index)));
+      });
+    };
+
+    track.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      track.removeEventListener("scroll", handleScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [featureCount]);
+
+  useEffect(() => {
+    if (featureCount <= 1 || isFeaturePaused) return undefined;
+    const id = setInterval(() => {
+      const track = featureTrackRef.current;
+      if (!track) return;
+      const slideWidth = track.scrollWidth / featureCount;
+      const nextIndex = (featureSlideIndex + 1) % featureCount;
+      track.scrollTo({ left: slideWidth * nextIndex, behavior: "smooth" });
+    }, 3000);
+    return () => clearInterval(id);
+  }, [featureCount, isFeaturePaused, featureSlideIndex]);
+
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(180deg,_#f4fbf4_0%,_#ffffff_35%,_#f4fffb_100%)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(16,122,87,0.10),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(245,158,11,0.10),_transparent_24%)]" />
@@ -679,24 +718,35 @@ export function DonorImpactInfoUpdatePage() {
             </figure>
           </div>
 
-          {/* Feature strip */}
-          <div className="flex flex-wrap items-stretch justify-center gap-2 border-t border-emerald-100 bg-emerald-50/60 px-4 py-4 sm:gap-3 sm:px-8">
-            {di.features.map((feature, index) => (
-              <button
-                key={feature.label}
-                type="button"
-                onClick={() => setActiveFeatureIndex(index)}
-                className="group flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[0.68rem] font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[0_10px_24px_rgba(6,95,70,0.18)] sm:text-xs"
-              >
-                <span
-                  className="text-sm transition-transform duration-300 group-hover:scale-110"
-                  aria-hidden="true"
+          {/* Feature strip — swipeable carousel: 1 item per view on mobile, 2 on sm+, auto-plays */}
+          <div className="border-t border-emerald-100 bg-emerald-50/60 px-4 py-4 sm:px-8">
+            <div
+              ref={featureTrackRef}
+              onTouchStart={() => setIsFeaturePaused(true)}
+              onTouchEnd={() => setIsFeaturePaused(false)}
+              className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-1 scrollbar-none [-ms-overflow-style:none]"
+            >
+              {di.features.map((feature, index) => (
+                <div
+                  key={feature.label}
+                  className="w-full shrink-0 snap-center sm:w-[calc(50%-0.375rem)]"
                 >
-                  {feature.icon}
-                </span>
-                {feature.label}
-              </button>
-            ))}
+                  <button
+                    type="button"
+                    onClick={() => setActiveFeatureIndex(index)}
+                    className="group flex w-full items-center justify-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[0.68rem] font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[0_10px_24px_rgba(6,95,70,0.18)] sm:text-xs"
+                  >
+                    <span
+                      className="text-sm transition-transform duration-300 group-hover:scale-110"
+                      aria-hidden="true"
+                    >
+                      {feature.icon}
+                    </span>
+                    {feature.label}
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </header>
 

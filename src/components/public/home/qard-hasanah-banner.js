@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
@@ -48,7 +48,7 @@ function StepCard({ icon, title, description, index, isLast, onOpen }) {
   );
 }
 
-function StepDetailModal({ step, index, onClose }) {
+function StepDetailModal({ step, index, onClose, eyebrow }) {
   if (!step) return null;
   const glow = STEP_GLOWS[index % STEP_GLOWS.length];
 
@@ -87,7 +87,7 @@ function StepDetailModal({ step, index, onClose }) {
           </div>
 
           <p className="mt-4 text-xs font-bold uppercase tracking-widest text-cyan-600">
-            Step {index + 1}
+            {eyebrow ?? `Step ${index + 1}`}
           </p>
           <h3 className="mt-1 text-xl font-bold tracking-tight text-slate-900">
             {step.title}
@@ -113,6 +113,45 @@ export function QardHasanahBanner({ onCtaClick }) {
   const { copy } = useSiteLocale();
   const qh = copy.qardHasanahBanner;
   const [activeStepIndex, setActiveStepIndex] = useState(null);
+  const [activeTrustIndex, setActiveTrustIndex] = useState(null);
+  const [trustSlideIndex, setTrustSlideIndex] = useState(0);
+  const [isTrustPaused, setIsTrustPaused] = useState(false);
+  const trustTrackRef = useRef(null);
+  const trustCount = qh?.trustItems?.length ?? 0;
+
+  useEffect(() => {
+    const track = trustTrackRef.current;
+    if (!track) return undefined;
+
+    let frame = null;
+    const handleScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        const cardWidth = track.scrollWidth / trustCount;
+        const index = Math.round(track.scrollLeft / cardWidth);
+        setTrustSlideIndex(Math.min(trustCount - 1, Math.max(0, index)));
+      });
+    };
+
+    track.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      track.removeEventListener("scroll", handleScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [trustCount]);
+
+  useEffect(() => {
+    if (trustCount <= 1 || isTrustPaused) return undefined;
+    const id = setInterval(() => {
+      const track = trustTrackRef.current;
+      if (!track) return;
+      const cardWidth = track.scrollWidth / trustCount;
+      const nextIndex = (trustSlideIndex + 1) % trustCount;
+      track.scrollTo({ left: cardWidth * nextIndex, behavior: "smooth" });
+    }, 3000);
+    return () => clearInterval(id);
+  }, [trustCount, isTrustPaused, trustSlideIndex]);
 
   if (!qh) {
     return null;
@@ -180,7 +219,7 @@ export function QardHasanahBanner({ onCtaClick }) {
             {qh.processHeading}
           </p>
 
-          <div className="mt-5 mb-7 flex flex-col items-center gap-3 lg:flex-row lg:items-stretch lg:justify-center lg:gap-12">
+          <div className="mt-5 mb-0 flex flex-col items-center gap-3 sm:mb-7 lg:flex-row lg:items-stretch lg:justify-center lg:gap-12">
             {qh.steps.map((step, index) => {
               const isLast = index === qh.steps.length - 1;
               return (
@@ -209,21 +248,64 @@ export function QardHasanahBanner({ onCtaClick }) {
           </div>
         </div>
 
-        {/* CTA + trust strip */}
-        <div className="-mt-10 grid gap-0 border-t border-cyan-100 lg:grid-cols-[1fr_1.2fr]">
-          <div className="flex flex-wrap items-center justify-center gap-2 bg-cyan-50/60 px-5 py-4 sm:gap-3 sm:px-8">
-            {qh.trustItems.map((item) => (
-              <span
+        {/* CTA + trust strip — mobile: stacked single column (order-controlled), sm+: two-column grid */}
+        <div className="mt-0 flex flex-col border-t border-cyan-100 sm:mt-6 sm:grid sm:grid-cols-[1fr_1.2fr]">
+          {/* Hadith footer — 1st on mobile via order, sits after the grid on sm+ (order-none) */}
+          <div className="order-1 border-t border-cyan-100 bg-white px-5 py-3 text-center sm:order-0 sm:col-span-2 sm:border-t-0 sm:px-8">
+            <p className="text-xs font-semibold italic leading-5 text-slate-800">
+              &ldquo;{qh.hadith}&rdquo;
+            </p>
+            <p className="mt-0.5 text-[0.65rem] font-semibold text-cyan-700">{qh.hadithSource}</p>
+          </div>
+
+          {/* Trust strip — 2nd on mobile: swipeable carousel; wrapped row from sm+ */}
+          <div className="order-2 bg-cyan-50/60 py-6 sm:order-0 sm:hidden">
+            <div
+              ref={trustTrackRef}
+              onTouchStart={() => setIsTrustPaused(true)}
+              onTouchEnd={() => setIsTrustPaused(false)}
+              className="flex w-full snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-none [-ms-overflow-style:none]"
+            >
+              {qh.trustItems.map((item, index) => (
+                <div
+                  key={item.title}
+                  className="flex basis-full shrink-0 grow-0 snap-center items-center justify-center px-6"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setActiveTrustIndex(index)}
+                    className="flex items-center gap-1.5 rounded-full border border-cyan-100 bg-white px-3 py-1.5 text-[0.68rem] font-semibold text-slate-700 shadow-sm"
+                  >
+                    <span aria-hidden="true">{item.icon}</span>
+                    {item.title}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* slider */}
+          <div className="order-2 hidden flex-wrap items-center justify-center gap-2 bg-cyan-50/60 px-5 py-4 sm:order-0 sm:flex sm:gap-2 sm:px-6 sm:py-4">
+            {qh.trustItems.map((item, index) => (
+              <button
                 key={item.title}
-                className="flex items-center gap-1.5 rounded-full border border-cyan-100 bg-white px-2.5 py-1 text-[0.62rem] font-semibold text-slate-700 shadow-sm"
+                type="button"
+                onClick={() => setActiveTrustIndex(index)}
+                className="group flex items-center gap-1.5 rounded-full border border-cyan-100 bg-white px-2.5 py-1 text-[0.62rem] font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-300 hover:shadow-md"
               >
                 <span aria-hidden="true">{item.icon}</span>
                 {item.title}
-              </span>
+                <span
+                  aria-hidden="true"
+                  className="text-cyan-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                >
+                  &rarr;
+                </span>
+              </button>
             ))}
           </div>
 
-          <div className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-5 py-5 text-center sm:px-8">
+          {/* CTA — 3rd on mobile */}
+          <div className="order-3 relative m-3 overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-5 py-6 text-center sm:order-0 sm:px-8 sm:py-5">
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-cyan-300">
               <span aria-hidden="true">🌱</span> {qh.ctaEyebrow}
             </p>
@@ -243,14 +325,6 @@ export function QardHasanahBanner({ onCtaClick }) {
             </button>
           </div>
         </div>
-
-        {/* Hadith footer */}
-        <div className="border-t border-cyan-100 bg-white px-5 py-3 text-center sm:px-8">
-          <p className="text-xs font-semibold italic leading-5 text-slate-800">
-            &ldquo;{qh.hadith}&rdquo;
-          </p>
-          <p className="mt-0.5 text-[0.65rem] font-semibold text-cyan-700">{qh.hadithSource}</p>
-        </div>
       </div>
 
       {activeStepIndex !== null ? (
@@ -258,6 +332,15 @@ export function QardHasanahBanner({ onCtaClick }) {
           step={qh.steps[activeStepIndex]}
           index={activeStepIndex}
           onClose={() => setActiveStepIndex(null)}
+        />
+      ) : null}
+
+      {activeTrustIndex !== null ? (
+        <StepDetailModal
+          step={qh.trustItems[activeTrustIndex]}
+          index={activeTrustIndex}
+          eyebrow="Our Promise"
+          onClose={() => setActiveTrustIndex(null)}
         />
       ) : null}
     </section>

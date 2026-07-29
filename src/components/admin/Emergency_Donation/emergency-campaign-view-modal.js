@@ -38,9 +38,8 @@ function Section({ title, children }) {
 
 function buildImageUrl(rawPath) {
   if (!rawPath) return null;
-  const clean = rawPath.replace(/^~\//, "");
-  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://localhost:7130").replace(/\/$/, "");
-  return `${base}/${clean}`;
+  const clean = rawPath.replace(/\\/g, "/").replace(/^~\//, "").replace(/^\/+/, "");
+  return `/api/asset?path=${encodeURIComponent(clean)}`;
 }
 
 function formatDate(v) {
