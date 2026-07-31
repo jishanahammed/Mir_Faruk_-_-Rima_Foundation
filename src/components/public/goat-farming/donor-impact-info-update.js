@@ -11,62 +11,57 @@ const FEATURE_GLOWS = [
   "from-emerald-400 to-teal-600",
 ];
 
-function FeatureDetailModal({ feature, index, onClose }) {
-  if (!feature) return null;
+// Carousel-slide version of the feature detail — same glow/medallion design that
+// was previously shown in a modal, now rendered inline as the slide's content.
+const FEATURE_BORDER_COLORS = [
+  "border-emerald-300",
+  "border-sky-300",
+  "border-amber-300",
+  "border-pink-300",
+  "border-teal-300",
+];
+
+// Solid text-color equivalents of FEATURE_GLOWS, used for the dot/ring indicators
+// so each dot matches its own slide's theme instead of one fixed color.
+const FEATURE_DOT_COLORS = [
+  { active: "text-emerald-600", inactive: "text-emerald-200" },
+  { active: "text-sky-600", inactive: "text-sky-200" },
+  { active: "text-amber-600", inactive: "text-amber-200" },
+  { active: "text-pink-600", inactive: "text-pink-200" },
+  { active: "text-teal-600", inactive: "text-teal-200" },
+];
+
+function FeatureSlideCard({ feature, index }) {
   const glow = FEATURE_GLOWS[index % FEATURE_GLOWS.length];
+  const borderColor = FEATURE_BORDER_COLORS[index % FEATURE_BORDER_COLORS.length];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]"
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose}
-    >
+    <div className={`relative h-full overflow-hidden rounded-2xl border-2 ${borderColor} bg-white shadow-[0_10px_30px_rgba(6,95,70,0.10)]`}>
+      <div className={`h-1.5 w-full bg-linear-to-r ${glow}`} aria-hidden="true" />
+
       <div
-        className="relative w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-[0_25px_80px_-15px_rgba(0,0,0,0.35)] ring-1 ring-black/5 animate-[popIn_0.25s_cubic-bezier(0.34,1.56,0.64,1)]"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className={`h-1.5 w-full bg-linear-to-r ${glow}`} aria-hidden="true" />
+        className={`pointer-events-none absolute -top-10 -right-10 hidden h-28 w-28 rounded-full bg-linear-to-br ${glow} opacity-20 blur-2xl sm:block`}
+        aria-hidden="true"
+      />
 
+      <div className="relative p-3 sm:p-5">
         <div
-          className={`absolute -top-16 -right-16 h-40 w-40 rounded-full bg-linear-to-br ${glow} opacity-20 blur-2xl`}
-          aria-hidden="true"
-        />
-
-        <div className="relative p-7">
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
-          >
-            ✕
-          </button>
-
-          <div
-            className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br ${glow} text-2xl shadow-lg ring-4 ring-white`}
-          >
-            <span aria-hidden="true">{feature.icon}</span>
-          </div>
-
-          <p className="mt-4 text-xs font-bold uppercase tracking-widest text-emerald-600">
-            Step {index + 1}
-          </p>
-          <h3 className="mt-1 text-xl font-bold tracking-tight text-slate-900">
-            {feature.title}
-          </h3>
-          <div className={`mt-2 h-1 w-12 rounded-full bg-linear-to-r ${glow}`} aria-hidden="true" />
-
-          <p className="mt-4 text-sm leading-7 text-slate-600">{feature.description}</p>
-
-          <button
-            type="button"
-            onClick={onClose}
-            className={`mt-6 w-full rounded-xl bg-linear-to-r ${glow} px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:opacity-90`}
-          >
-            Got it
-          </button>
+          className={`flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br ${glow} text-base shadow-lg ring-2 ring-white sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl sm:ring-4`}
+        >
+          <span aria-hidden="true">{feature.icon}</span>
         </div>
+
+        <p className="mt-3 hidden text-[0.65rem] font-bold uppercase tracking-widest text-emerald-600 sm:block">
+          Step {index + 1}
+        </p>
+        <h3 className="mt-2 text-sm font-bold tracking-tight text-slate-900 sm:mt-1 sm:text-base">
+          {feature.label}
+        </h3>
+        <div className={`mt-2 hidden h-1 w-10 rounded-full bg-linear-to-r ${glow} sm:block`} aria-hidden="true" />
+
+        <p className="mt-1.5 text-xs leading-5 text-slate-600 sm:mt-3 sm:leading-6">
+          {feature.description}
+        </p>
       </div>
     </div>
   );
@@ -607,14 +602,45 @@ export function DonorImpactInfoUpdatePage() {
   const di = copy.donorImpact;
   // Growth table reuses the goat-farming chart copy so the numbers stay in sync.
   const gf = copy.goatFarming;
-  const [activeFeatureIndex, setActiveFeatureIndex] = useState(null);
-  // Reuses the fuller cycle-stage descriptions for the feature strip's modal.
+  // Reuses the fuller cycle-stage descriptions for the feature strip's slide cards.
   const featureDetails = di.cycle?.stages ?? [];
 
   const [featureSlideIndex, setFeatureSlideIndex] = useState(0);
   const [isFeaturePaused, setIsFeaturePaused] = useState(false);
   const featureTrackRef = useRef(null);
   const featureCount = di.features?.length ?? 0;
+
+  // Mouse-drag-to-scroll support so desktop users can click-and-drag the
+  // carousel like a touch swipe, in addition to native touch scrolling.
+  const dragStateRef = useRef({ isDown: false, startX: 0, startScrollLeft: 0, moved: false });
+
+  function handlePointerDown(event) {
+    if (event.pointerType === "touch") return;
+    const track = featureTrackRef.current;
+    if (!track) return;
+    dragStateRef.current = {
+      isDown: true,
+      startX: event.clientX,
+      startScrollLeft: track.scrollLeft,
+      moved: false,
+    };
+    setIsFeaturePaused(true);
+  }
+
+  function handlePointerMove(event) {
+    const state = dragStateRef.current;
+    if (!state.isDown) return;
+    const track = featureTrackRef.current;
+    if (!track) return;
+    const delta = event.clientX - state.startX;
+    if (Math.abs(delta) > 3) state.moved = true;
+    track.scrollLeft = state.startScrollLeft - delta;
+  }
+
+  function endDrag() {
+    dragStateRef.current.isDown = false;
+    setIsFeaturePaused(false);
+  }
 
   useEffect(() => {
     const track = featureTrackRef.current;
@@ -724,29 +750,93 @@ export function DonorImpactInfoUpdatePage() {
               ref={featureTrackRef}
               onTouchStart={() => setIsFeaturePaused(true)}
               onTouchEnd={() => setIsFeaturePaused(false)}
-              className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-1 scrollbar-none [-ms-overflow-style:none]"
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={endDrag}
+              onPointerLeave={endDrag}
+              className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-1 scrollbar-none [-ms-overflow-style:none] cursor-grab active:cursor-grabbing"
             >
               {di.features.map((feature, index) => (
                 <div
                   key={feature.label}
                   className="w-full shrink-0 snap-center sm:w-[calc(50%-0.375rem)]"
                 >
-                  <button
-                    type="button"
-                    onClick={() => setActiveFeatureIndex(index)}
-                    className="group flex w-full items-center justify-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[0.68rem] font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[0_10px_24px_rgba(6,95,70,0.18)] sm:text-xs"
-                  >
-                    <span
-                      className="text-sm transition-transform duration-300 group-hover:scale-110"
-                      aria-hidden="true"
-                    >
-                      {feature.icon}
-                    </span>
-                    {feature.label}
-                  </button>
+                  <FeatureSlideCard
+                    feature={{
+                      icon: feature.icon,
+                      label: feature.label,
+                      description:
+                        featureDetails[index]?.description ?? feature.label,
+                    }}
+                    index={index}
+                  />
                 </div>
               ))}
             </div>
+
+            {featureCount > 1 ? (
+              <div className="mt-3 flex items-center justify-center gap-2">
+                {di.features.map((feature, index) => {
+                  const isActive = index === featureSlideIndex;
+                  const dotColor = FEATURE_DOT_COLORS[index % FEATURE_DOT_COLORS.length];
+                  const ringSize = 16;
+                  const strokeWidth = 2;
+                  const radius = (ringSize - strokeWidth) / 2;
+                  const circumference = 2 * Math.PI * radius;
+                  const arcLength = circumference * 0.28;
+
+                  return (
+                    <button
+                      key={feature.label}
+                      type="button"
+                      aria-label={`Show feature ${index + 1}`}
+                      onClick={() => {
+                        const track = featureTrackRef.current;
+                        if (!track) return;
+                        const slideWidth = track.scrollWidth / featureCount;
+                        track.scrollTo({ left: slideWidth * index, behavior: "smooth" });
+                      }}
+                      className={`relative flex items-center justify-center ${
+                        isActive ? dotColor.active : dotColor.inactive
+                      }`}
+                      style={{ width: ringSize, height: ringSize }}
+                    >
+                      <span className="absolute h-1.5 w-1.5 rounded-full bg-current" />
+                      {isActive ? (
+                        <svg width={ringSize} height={ringSize} className="absolute">
+                          {/* Static full ring — the spinning arc settles onto this once its lap finishes */}
+                          <circle
+                            cx={ringSize / 2}
+                            cy={ringSize / 2}
+                            r={radius}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={strokeWidth}
+                            className="opacity-30"
+                          />
+                          <circle
+                            key={featureSlideIndex}
+                            cx={ringSize / 2}
+                            cy={ringSize / 2}
+                            r={radius}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={strokeWidth}
+                            strokeLinecap="round"
+                            strokeDasharray={`${arcLength} ${circumference - arcLength}`}
+                            style={{
+                              transformOrigin: "50% 50%",
+                              animation: "feature-ring-spin 3s linear forwards",
+                              animationPlayState: isFeaturePaused ? "paused" : "running",
+                            }}
+                          />
+                        </svg>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
         </header>
 
@@ -938,20 +1028,6 @@ export function DonorImpactInfoUpdatePage() {
           </span>
         </div>
       </div>
-
-      {activeFeatureIndex !== null ? (
-        <FeatureDetailModal
-          feature={{
-            icon: di.features[activeFeatureIndex]?.icon,
-            title: di.features[activeFeatureIndex]?.label,
-            description:
-              featureDetails[activeFeatureIndex]?.description ??
-              di.features[activeFeatureIndex]?.label,
-          }}
-          index={activeFeatureIndex}
-          onClose={() => setActiveFeatureIndex(null)}
-        />
-      ) : null}
     </section>
   );
 }

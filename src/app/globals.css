@@ -98,3 +98,13 @@ a {
     transform: scale(1) translateY(0);
   }
 }
+
+@keyframes feature-ring-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
