@@ -244,34 +244,30 @@ function useSlidesPerView() {
 function CycleSlider({ slides, autoPlayMs = 3500 }) {
   const perView = useSlidesPerView();
   const total = slides.length;
-  // Fixed, non-overlapping pages of `perView` cards each — e.g. 5 slides at
-  // 3-per-view is [1,2,3] then [4,5] (padded), never a sliding [2,3,4] mix.
-  const pageCount = Math.ceil(total / perView);
+  // Sliding window: index steps by 1 slide at a time (not by full pages), so
+  // e.g. at 3-per-view the visible set moves [1,2,3] -> [2,3,4] -> [3,4,5].
+  const maxIndex = Math.max(0, total - perView);
 
   const [index, setIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    setIndex((current) => Math.min(current, pageCount - 1));
-  }, [pageCount]);
+    setIndex((current) => Math.min(current, maxIndex));
+  }, [maxIndex]);
 
-  const goTo = (next) => setIndex(((next % pageCount) + pageCount) % pageCount);
+  const goTo = (next) => setIndex(((next % (maxIndex + 1)) + (maxIndex + 1)) % (maxIndex + 1));
   const goPrev = () => goTo(index - 1);
   const goNext = () => goTo(index + 1);
 
   useEffect(() => {
-    if (isPaused || pageCount <= 1) return;
+    if (isPaused || maxIndex <= 0) return;
     const timer = setInterval(() => {
-      setIndex((current) => (current + 1) % pageCount);
+      setIndex((current) => (current + 1) % (maxIndex + 1));
     }, autoPlayMs);
     return () => clearInterval(timer);
-  }, [isPaused, pageCount, autoPlayMs]);
+  }, [isPaused, maxIndex, autoPlayMs]);
 
-  const pages = Array.from({ length: pageCount }, (_, pageIndex) =>
-    slides.slice(pageIndex * perView, pageIndex * perView + perView)
-  );
-
-  // Touch/mouse drag-to-swipe: track horizontal delta, commit a page change
+  // Touch/mouse drag-to-swipe: track horizontal delta, commit a slide change
   // once the drag passes a threshold, otherwise snap back.
   const dragState = useRef(null);
   const [dragOffsetPercent, setDragOffsetPercent] = useState(0);
@@ -284,11 +280,11 @@ function CycleSlider({ slides, autoPlayMs = 3500 }) {
     if (!dragState.current) return;
     const deltaX = clientX - dragState.current.startX;
     dragState.current.width = containerWidth;
-    setDragOffsetPercent((deltaX / containerWidth) * 100 / pageCount);
+    setDragOffsetPercent((deltaX / containerWidth) * 100 / total);
   };
   const handleDragEnd = () => {
     if (!dragState.current) return;
-    const threshold = (100 / pageCount) * 0.15;
+    const threshold = (100 / total) * 0.15;
     if (dragOffsetPercent < -threshold) goNext();
     else if (dragOffsetPercent > threshold) goPrev();
     dragState.current = null;
@@ -328,25 +324,17 @@ function CycleSlider({ slides, autoPlayMs = 3500 }) {
           <div
             className={`flex ${dragState.current ? "" : "transition-transform duration-500 ease-out"}`}
             style={{
-              width: `${pageCount * 100}%`,
-              transform: `translateX(-${index * (100 / pageCount) - dragOffsetPercent}%)`,
+              width: `${(total * 100) / perView}%`,
+              transform: `translateX(-${index * (100 / total) - dragOffsetPercent}%)`,
             }}
           >
-            {pages.map((page, pageIndex) => (
+            {slides.map((slide, slideIndex) => (
               <div
-                key={pageIndex}
-                className="flex shrink-0"
-                style={{ width: `${100 / pageCount}%` }}
+                key={slideIndex}
+                className="shrink-0 px-2.5 sm:px-3"
+                style={{ width: `${100 / total}%` }}
               >
-                {page.map((slide, slideIndex) => (
-                  <div
-                    key={slideIndex}
-                    className="shrink-0 px-2.5 sm:px-3"
-                    style={{ width: `${100 / perView}%` }}
-                  >
-                    <CycleSlideCard {...slide} />
-                  </div>
-                ))}
+                <CycleSlideCard {...slide} />
               </div>
             ))}
           </div>
@@ -355,7 +343,7 @@ function CycleSlider({ slides, autoPlayMs = 3500 }) {
 
       {/* Dot pagination */}
       <div className="mt-5 flex items-center justify-center gap-2">
-        {Array.from({ length: pageCount }).map((_, dotIndex) => (
+        {Array.from({ length: maxIndex + 1 }).map((_, dotIndex) => (
           <button
             key={dotIndex}
             type="button"
