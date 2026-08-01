@@ -996,27 +996,35 @@ export function DonorImpactInfoUpdatePage() {
         </div>
 
         {/* ── Belief banner ────────────────────────────────────────────── */}
-        <div className="rounded-[2rem] bg-[linear-gradient(135deg,_#064e3b,_#065f46_60%,_#047857)] px-6 py-8 text-center text-white shadow-xl shadow-emerald-950/10 sm:px-12">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">
-            {di.belief.heading}
-          </p>
-          <div className="mx-auto mt-4 max-w-3xl space-y-2">
-            {di.belief.lines.map((line, index) => (
-              <p
-                key={index}
-                className={
-                  index === di.belief.lines.length - 1
-                    ? "text-sm font-semibold leading-8 text-emerald-50 sm:text-base"
-                    : "text-sm leading-8 text-emerald-100"
-                }
+        <div className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-white px-6 py-4 text-center shadow-[0_18px_60px_rgba(6,95,70,0.08)] sm:px-10 sm:py-5">
+          <span
+            className="absolute inset-x-0 top-0 block h-1.5 bg-[linear-gradient(90deg,_#065f46,_#0d9488_45%,_#f59e0b)]"
+            aria-hidden="true"
+          />
+
+          <div className="relative">
+            <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-emerald-700">
+              <span
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-sm shadow-md ring-2 ring-emerald-50"
+                aria-hidden="true"
               >
-                {line}
-              </p>
-            ))}
+                🌱
+              </span>
+              {di.belief.heading}
+            </p>
+
+            <div className="mx-auto mt-3 max-w-3xl space-y-1">
+              {di.belief.lines.slice(0, -1).map((line, index) => (
+                <p key={index} className="text-sm leading-6 text-slate-600 sm:text-[0.95rem]">
+                  {line}
+                </p>
+              ))}
+            </div>
+
+            <p className="mx-auto mt-3 inline-block max-w-2xl rounded-full  px-5 py-2 text-base font-bold leading-6 text-emerald-900 sm:text-lg">
+              {di.belief.lines[di.belief.lines.length - 1]}
+            </p>
           </div>
-          <span className="mt-4 inline-block text-xl" aria-hidden="true">
-            🌱
-          </span>
         </div>
       </div>
     </section>

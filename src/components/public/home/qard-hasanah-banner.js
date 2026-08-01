@@ -54,7 +54,7 @@ function TrustStripCard({ item, index, fullWidth = false }) {
 
   return (
     <article
-      className={`overflow-hidden rounded-2xl border border-cyan-100 bg-white/95 shadow-[0_10px_24px_rgba(8,145,178,0.10)] ${fullWidth ? "w-full max-w-xs sm:max-w-sm" : "w-full max-w-[15rem]"
+      className={`overflow-hidden rounded-2xl border border-cyan-100 bg-white/95 shadow-[0_10px_24px_rgba(8,145,178,0.10)] ${fullWidth ? "w-full max-w-xs sm:max-w-sm" : "w-full max-w-[15rem] sm:max-w-xs"
         }`}
     >
       <div className={`h-1.5 w-full bg-linear-to-r ${glow}`} aria-hidden="true" />
@@ -187,7 +187,7 @@ export function QardHasanahBanner({ onCtaClick }) {
             {qh.processHeading}
           </p>
 
-          <div className="mt-5 mb-0 flex flex-col items-center gap-3 sm:mb-7 lg:flex-row lg:items-stretch lg:justify-center lg:gap-12">
+          <div className="mt-6 mb-0 flex flex-col items-center gap-3 sm:mb-0 lg:flex-row lg:items-stretch lg:justify-center lg:gap-12">
             {qh.steps.map((step, index) => {
               const isLast = index === qh.steps.length - 1;
               return (
@@ -216,12 +216,12 @@ export function QardHasanahBanner({ onCtaClick }) {
         </div>
 
         {/* CTA + trust strip — mobile: stacked single column (order-controlled), sm+: two-column grid */}
-        <div className="mt-0 flex flex-col border-t border-cyan-100 sm:mt-6 sm:grid sm:grid-cols-[1fr_1.2fr]">
+        <div className="mt-0 flex flex-col border-t border-cyan-100 sm:mt-2">
           {/* Hadith footer — 1st on mobile via order, sits after the grid on sm+ (order-none) */}
-          <div className="order-1 relative overflow-hidden border-t border-amber-200/60 bg-[linear-gradient(135deg,#fffbeb,#fefce8_55%,#fff7ed)] px-3 py-3 text-center sm:order-0 sm:col-span-2 sm:border-t-0 sm:px-8 sm:py-8">
+          <div className="order-1 relative m-3 overflow-hidden rounded-3xl border border-amber-200/50 bg-[linear-gradient(180deg,#fffdfa_0%,#ffffff_100%)] px-4 py-5 text-center sm:order-0 sm:mx-8 sm:mb-8 sm:mt-0 sm:bg-[linear-gradient(135deg,#fffbeb,#fefce8_55%,#fff7ed)]">
             {/* subtle Islamic-inspired geometric accent */}
             <div
-              className="pointer-events-none absolute inset-0 opacity-[0.05]"
+              className="pointer-events-none absolute inset-0 hidden opacity-[0.05] sm:block"
               aria-hidden="true"
               style={{
                 backgroundImage:
@@ -229,40 +229,42 @@ export function QardHasanahBanner({ onCtaClick }) {
               }}
             />
             <div
-              className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full border border-amber-300/30"
+              className="pointer-events-none absolute -left-10 -top-10 hidden h-40 w-40 rounded-full border border-amber-300/30 sm:block"
               aria-hidden="true"
             />
             <div
-              className="pointer-events-none absolute -bottom-12 -right-12 h-48 w-48 rounded-full border border-amber-400/30"
+              className="pointer-events-none absolute -bottom-12 -right-12 hidden h-48 w-48 rounded-full border border-amber-400/30 sm:block"
               aria-hidden="true"
             />
 
-            <div className="relative mx-auto max-w-3xl rounded-2xl border border-amber-200/70 bg-white/70 px-3 py-3 shadow-[0_10px_35px_rgba(180,131,25,0.10)] ring-1 ring-amber-100 backdrop-blur-sm sm:px-8 sm:py-6">
+            <div className="relative mx-auto flex max-w-[17.25rem] items-start justify-center gap-3 text-center sm:max-w-3xl sm:flex-col sm:items-stretch sm:rounded-2xl sm:border sm:border-amber-200/70 sm:bg-white/80 sm:px-8 sm:py-6 sm:shadow-[0_10px_35px_rgba(180,131,25,0.10)] sm:ring-1 sm:ring-amber-100 sm:backdrop-blur-sm">
               <span
-                className="mx-auto mb-1.5 flex h-8 w-8 items-center justify-center rounded-full border border-amber-300/60 bg-[linear-gradient(135deg,#92400e,#b45309_55%,#d97706)] text-lg font-serif text-amber-50 shadow-md sm:mb-3 sm:h-11 sm:w-11 sm:text-2xl"
+                className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-amber-300/70 bg-[linear-gradient(135deg,#a8550f,#c26a13_55%,#d97706)] text-base font-serif text-amber-50 shadow-[0_10px_22px_rgba(180,131,25,0.28)] sm:mx-auto sm:mb-3 sm:mt-0 sm:h-11 sm:w-11 sm:text-2xl"
                 aria-hidden="true"
               >
                 &ldquo;
               </span>
 
-              <p className="text-balance text-sm font-bold italic leading-6 text-slate-900 sm:text-xl sm:leading-9">
-                &ldquo;{qh.hadith}&rdquo;
-              </p>
+              <div className="min-w-0 flex-1 sm:flex-none">
+                <p className="max-w-[13.25rem] text-balance text-left text-[0.8rem] font-black italic leading-7 text-slate-600 sm:mx-auto sm:max-w-none sm:text-center sm:text-base sm:leading-7">
+                  &ldquo;{qh.hadith}&rdquo;
+                </p>
 
-              <div className="mx-auto mt-1.5 flex items-center justify-center gap-2 sm:mt-3 sm:gap-3" aria-hidden="true">
-                <span className="h-px w-6 bg-amber-400/50 sm:w-12" />
-                <span className="h-1.5 w-1.5 rotate-45 bg-amber-500/80" />
-                <span className="h-px w-6 bg-amber-400/50 sm:w-12" />
+                <div className="mt-3 flex items-center justify-center gap-2 sm:mx-auto sm:gap-3" aria-hidden="true">
+                  <span className="h-px w-8 bg-amber-400/55 sm:w-12" />
+                  <span className="h-1.5 w-1.5 rotate-45 bg-amber-500/80" />
+                  <span className="h-px w-8 bg-amber-400/55 sm:w-12" />
+                </div>
+
+                <p className="mt-3 text-[0.66rem] font-extrabold uppercase tracking-[0.24em] text-[#c96d16] sm:text-xs">
+                  {qh.hadithSource}
+                </p>
               </div>
-
-              <p className="mt-1.5 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-amber-700 sm:mt-3 sm:text-xs">
-                {qh.hadithSource}
-              </p>
             </div>
           </div>
 
-          {/* Trust strip — 2nd on mobile: swipeable carousel; wrapped row from sm+ */}
-          <div className="order-2  py-6 sm:order-0">
+          {/* Trust strip — 2nd on mobile: swipeable carousel (mobile-only, off on desktop) */}
+          <div className="order-2 py-6 sm:hidden">
             <div
               ref={trustTrackRef}
               onTouchStart={() => setIsTrustPaused(true)}
@@ -345,32 +347,30 @@ export function QardHasanahBanner({ onCtaClick }) {
               </div>
             ) : null}
           </div>
-          {/* slider */}
-          <div className="hidden">
+          {/* Trust row — desktop-only: all items shown in a single row */}
+          <div className="order-2 hidden py-6 sm:order-0 sm:flex sm:justify-center sm:gap-4 sm:px-8">
             {qh.trustItems.map((item, index) => (
-              <TrustStripCard
-                key={item.title}
-                item={item}
-                index={index}
-              />
+              <div key={item.title} className="sm:flex-1">
+                <TrustStripCard item={item} index={index} fullWidth />
+              </div>
             ))}
           </div>
 
-          {/* CTA — 3rd on mobile */}
-          <div className="order-3 relative m-3 overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-5 py-6 text-center sm:order-0 sm:px-8 sm:py-5">
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-cyan-300">
+          {/* CTA — 3rd on mobile, full-width below the trust row on desktop */}
+          <div className="order-3 relative m-3 overflow-hidden rounded-3xl border border-amber-200/50 bg-[linear-gradient(180deg,#fffdfa_0%,#ffffff_100%)] px-5 py-6 text-center sm:order-0 sm:mx-8 sm:mb-8 sm:mt-0 sm:bg-[linear-gradient(135deg,#fffbeb,#fefce8_55%,#fff7ed)] sm:px-8 sm:py-5">
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-amber-700">
               <span aria-hidden="true">🌱</span> {qh.ctaEyebrow}
             </p>
-            <p className="mt-1.5 text-lg font-extrabold text-white sm:text-xl">
+            <p className="mt-1.5 text-lg font-extrabold text-slate-900 sm:text-xl">
               {qh.ctaAmount}
             </p>
-            <p className="mt-0.5 text-xs font-semibold leading-5 text-cyan-100 sm:text-sm">
+            <p className="mt-0.5 text-xs font-semibold leading-5 text-slate-600 sm:text-sm">
               {qh.ctaTitle}
             </p>
             <button
               type="button"
               onClick={onCtaClick}
-              className="mt-3 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-extrabold text-cyan-800 shadow-lg shadow-cyan-950/30 ring-2 ring-white/60 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-950/40 sm:text-sm"
+              className="mt-3 inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-5 py-2.5 text-xs font-extrabold text-white shadow-lg shadow-cyan-950/30 ring-2 ring-white/60 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-950/40 sm:text-sm"
             >
               <span aria-hidden="true">🤲</span>
               {qh.ctaButtonLabel}
