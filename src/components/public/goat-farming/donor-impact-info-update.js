@@ -45,7 +45,7 @@ function FeatureSlideCard({ feature, index }) {
       />
 
       <div className="relative p-3 sm:p-5">
-        <div className="flex items-center gap-3 rounded-2xl bg-slate-50/80 px-2.5 py-2 sm:gap-4 sm:px-3 sm:py-2.5">
+        <div className="flex items-center gap-2.5 rounded-2xl bg-slate-50/80 py-1.5 sm:gap-3 sm:py-2">
           <div
             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br ${glow} text-base shadow-lg ring-2 ring-white sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl sm:ring-4`}
           >
@@ -59,11 +59,11 @@ function FeatureSlideCard({ feature, index }) {
 
 
         <div
-          className={`mt-2 ml-2.5 hidden h-1 w-12 rounded-full bg-linear-to-r ${glow} sm:ml-3 sm:block`}
+          className={`mt-1.5 hidden h-1 w-12 rounded-full bg-linear-to-r ${glow} sm:mt-2 sm:block`}
           aria-hidden="true"
         />
 
-        <p className="mt-1.5 px-2.5 text-xs leading-5 text-slate-600 sm:mt-3 sm:px-3 sm:leading-6">
+        <p className="mt-1 text-xs leading-5 text-slate-600 sm:mt-2 sm:leading-6">
           {feature.description}
         </p>
       </div>

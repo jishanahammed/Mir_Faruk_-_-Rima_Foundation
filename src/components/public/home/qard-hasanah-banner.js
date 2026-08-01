@@ -13,14 +13,19 @@ const STEP_GLOWS = [
   "from-rose-400 to-red-500",
 ];
 
-function StepCard({ icon, title, description, index, isLast, onOpen }) {
+const TRUST_DOT_COLORS = [
+  { active: "text-emerald-600", inactive: "text-emerald-200" },
+  { active: "text-sky-600", inactive: "text-sky-200" },
+  { active: "text-amber-600", inactive: "text-amber-200" },
+  { active: "text-pink-600", inactive: "text-pink-200" },
+  { active: "text-indigo-600", inactive: "text-indigo-200" },
+  { active: "text-rose-600", inactive: "text-rose-200" },
+];
+
+function StepCard({ icon, title, description, index, isLast }) {
   return (
     <div className="relative h-full w-full">
-      <button
-        type="button"
-        onClick={onOpen}
-        className="group flex h-full w-full flex-col items-center gap-3 rounded-3xl border border-cyan-100 bg-white p-6 text-center shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300 hover:shadow-[0_18px_40px_rgba(8,145,178,0.18)]"
-      >
+      <div className="group flex h-full w-full flex-col items-center gap-3 rounded-3xl border border-cyan-100 bg-white p-6 text-center shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300 hover:shadow-[0_18px_40px_rgba(8,145,178,0.18)]">
         <span className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-cyan-300/70 bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-xl shadow-md transition-transform duration-300 group-hover:scale-110">
           {icon}
         </span>
@@ -30,11 +35,7 @@ function StepCard({ icon, title, description, index, isLast, onOpen }) {
         </span>
 
         <p className="text-sm leading-6 text-slate-600">{description}</p>
-
-        <span className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-cyan-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          Tap for details <span aria-hidden="true">&rarr;</span>
-        </span>
-      </button>
+      </div>
 
       {!isLast ? (
         <span
@@ -48,72 +49,39 @@ function StepCard({ icon, title, description, index, isLast, onOpen }) {
   );
 }
 
-function StepDetailModal({ step, index, onClose, eyebrow }) {
-  if (!step) return null;
+function TrustStripCard({ item, index, fullWidth = false }) {
   const glow = STEP_GLOWS[index % STEP_GLOWS.length];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]"
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose}
+    <article
+      className={`overflow-hidden rounded-2xl border border-cyan-100 bg-white/95 shadow-[0_10px_24px_rgba(8,145,178,0.10)] ${fullWidth ? "w-full max-w-xs sm:max-w-sm" : "w-full max-w-[15rem]"
+        }`}
     >
-      <div
-        className="relative w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-[0_25px_80px_-15px_rgba(0,0,0,0.35)] ring-1 ring-black/5 animate-[popIn_0.25s_cubic-bezier(0.34,1.56,0.64,1)]"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className={`h-1.5 w-full bg-linear-to-r ${glow}`} aria-hidden="true" />
-
-        <div
-          className={`absolute -top-16 -right-16 h-40 w-40 rounded-full bg-linear-to-br ${glow} opacity-20 blur-2xl`}
-          aria-hidden="true"
-        />
-
-        <div className="relative p-7">
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
+      <div className={`h-1.5 w-full bg-linear-to-r ${glow}`} aria-hidden="true" />
+      <div className="p-2.5 sm:p-3">
+        <div className="flex items-center gap-2 rounded-2xl bg-slate-50/80 py-1.5 sm:gap-2.5 sm:py-1.5">
+          <span
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br ${glow} text-base shadow-lg ring-2 ring-white sm:rounded-2xl`}
+            aria-hidden="true"
           >
-            ✕
-          </button>
-
-          <div
-            className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br ${glow} text-2xl shadow-lg ring-4 ring-white`}
-          >
-            <span aria-hidden="true">{step.icon}</span>
-          </div>
-
-          <p className="mt-4 text-xs font-bold uppercase tracking-widest text-cyan-600">
-            {eyebrow ?? `Step ${index + 1}`}
-          </p>
-          <h3 className="mt-1 text-xl font-bold tracking-tight text-slate-900">
-            {step.title}
+            {item.icon}
+          </span>
+          <h3 className="flex min-h-9 items-center text-sm font-bold tracking-tight text-slate-900">
+            {item.title}
           </h3>
-          <div className={`mt-2 h-1 w-12 rounded-full bg-linear-to-r ${glow}`} aria-hidden="true" />
-
-          <p className="mt-4 text-sm leading-7 text-slate-600">{step.description}</p>
-
-          <button
-            type="button"
-            onClick={onClose}
-            className={`mt-6 w-full rounded-xl bg-linear-to-r ${glow} px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:opacity-90`}
-          >
-            Got it
-          </button>
         </div>
+        <div className={`mt-1.5 hidden h-1 w-10 rounded-full bg-linear-to-r ${glow} sm:block`} aria-hidden="true" />
+        <p className="mt-1 text-xs leading-5 text-slate-600 sm:mt-1.5">
+          {item.description}
+        </p>
       </div>
-    </div>
+    </article>
   );
 }
 
 export function QardHasanahBanner({ onCtaClick }) {
   const { copy } = useSiteLocale();
   const qh = copy.qardHasanahBanner;
-  const [activeStepIndex, setActiveStepIndex] = useState(null);
-  const [activeTrustIndex, setActiveTrustIndex] = useState(null);
   const [trustSlideIndex, setTrustSlideIndex] = useState(0);
   const [isTrustPaused, setIsTrustPaused] = useState(false);
   const trustTrackRef = useRef(null);
@@ -231,7 +199,6 @@ export function QardHasanahBanner({ onCtaClick }) {
                       description={step.description}
                       index={index}
                       isLast={isLast}
-                      onOpen={() => setActiveStepIndex(index)}
                     />
                   </div>
                   {!isLast ? (
@@ -251,15 +218,25 @@ export function QardHasanahBanner({ onCtaClick }) {
         {/* CTA + trust strip — mobile: stacked single column (order-controlled), sm+: two-column grid */}
         <div className="mt-0 flex flex-col border-t border-cyan-100 sm:mt-6 sm:grid sm:grid-cols-[1fr_1.2fr]">
           {/* Hadith footer — 1st on mobile via order, sits after the grid on sm+ (order-none) */}
-          <div className="order-1 border-t border-cyan-100 bg-white px-5 py-3 text-center sm:order-0 sm:col-span-2 sm:border-t-0 sm:px-8">
-            <p className="text-xs font-semibold italic leading-5 text-slate-800">
+          <div className="order-1 border-t border-cyan-100 bg-[linear-gradient(135deg,rgba(236,254,255,0.95),rgba(255,255,255,1),rgba(224,242,254,0.95))] px-4 py-4 text-center sm:order-0 sm:col-span-2 sm:border-t-0 sm:px-6 sm:py-5">
+            <div className="mx-auto max-w-3xl rounded-2xl border border-cyan-200/80 bg-white/85 px-4 py-3 shadow-[0_10px_30px_rgba(8,145,178,0.10)] ring-1 ring-cyan-100/80 backdrop-blur-sm sm:px-6 sm:py-4">
+              <span
+                className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-sm text-white shadow-md"
+                aria-hidden="true"
+              >
+                "
+              </span>
+              <p className="text-sm font-semibold italic leading-6 text-slate-800 sm:text-[0.95rem]">
               &ldquo;{qh.hadith}&rdquo;
-            </p>
-            <p className="mt-0.5 text-[0.65rem] font-semibold text-cyan-700">{qh.hadithSource}</p>
+              </p>
+              <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-cyan-700 sm:text-[0.72rem]">
+                {qh.hadithSource}
+              </p>
+            </div>
           </div>
 
           {/* Trust strip — 2nd on mobile: swipeable carousel; wrapped row from sm+ */}
-          <div className="order-2 bg-cyan-50/60 py-6 sm:order-0 sm:hidden">
+          <div className="order-2  py-6 sm:order-0">
             <div
               ref={trustTrackRef}
               onTouchStart={() => setIsTrustPaused(true)}
@@ -269,38 +246,87 @@ export function QardHasanahBanner({ onCtaClick }) {
               {qh.trustItems.map((item, index) => (
                 <div
                   key={item.title}
-                  className="flex basis-full shrink-0 grow-0 snap-center items-center justify-center px-6"
+                  className="flex basis-full shrink-0 grow-0 snap-center items-center justify-center px-4"
                 >
-                  <button
-                    type="button"
-                    onClick={() => setActiveTrustIndex(index)}
-                    className="flex items-center gap-1.5 rounded-full border border-cyan-100 bg-white px-3 py-1.5 text-[0.68rem] font-semibold text-slate-700 shadow-sm"
-                  >
-                    <span aria-hidden="true">{item.icon}</span>
-                    {item.title}
-                  </button>
+                  <TrustStripCard
+                    item={item}
+                    index={index}
+                    fullWidth
+                  />
                 </div>
               ))}
             </div>
+
+            {trustCount > 1 ? (
+              <div className="mt-3 flex items-center justify-center gap-2">
+                {qh.trustItems.map((item, index) => {
+                  const isActive = index === trustSlideIndex;
+                  const dotColor = TRUST_DOT_COLORS[index % TRUST_DOT_COLORS.length];
+                  const ringSize = 16;
+                  const strokeWidth = 2;
+                  const radius = (ringSize - strokeWidth) / 2;
+                  const circumference = 2 * Math.PI * radius;
+                  const arcLength = circumference * 0.28;
+
+                  return (
+                    <button
+                      key={item.title}
+                      type="button"
+                      aria-label={`Show trust item ${index + 1}`}
+                      onClick={() => {
+                        const track = trustTrackRef.current;
+                        if (!track) return;
+                        const cardWidth = track.scrollWidth / trustCount;
+                        track.scrollTo({ left: cardWidth * index, behavior: "smooth" });
+                      }}
+                      className={`relative flex items-center justify-center ${isActive ? dotColor.active : dotColor.inactive
+                        }`}
+                      style={{ width: ringSize, height: ringSize }}
+                    >
+                      <span className="absolute h-1.5 w-1.5 rounded-full bg-current" />
+                      {isActive ? (
+                        <svg width={ringSize} height={ringSize} className="absolute">
+                          <circle
+                            cx={ringSize / 2}
+                            cy={ringSize / 2}
+                            r={radius}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={strokeWidth}
+                            className="opacity-30"
+                          />
+                          <circle
+                            key={trustSlideIndex}
+                            cx={ringSize / 2}
+                            cy={ringSize / 2}
+                            r={radius}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={strokeWidth}
+                            strokeLinecap="round"
+                            strokeDasharray={`${arcLength} ${circumference - arcLength}`}
+                            style={{
+                              transformOrigin: "50% 50%",
+                              animation: "feature-ring-spin 3s linear forwards",
+                              animationPlayState: isTrustPaused ? "paused" : "running",
+                            }}
+                          />
+                        </svg>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
           {/* slider */}
-          <div className="order-2 hidden flex-wrap items-center justify-center gap-2 bg-cyan-50/60 px-5 py-4 sm:order-0 sm:flex sm:gap-2 sm:px-6 sm:py-4">
+          <div className="hidden">
             {qh.trustItems.map((item, index) => (
-              <button
+              <TrustStripCard
                 key={item.title}
-                type="button"
-                onClick={() => setActiveTrustIndex(index)}
-                className="group flex items-center gap-1.5 rounded-full border border-cyan-100 bg-white px-2.5 py-1 text-[0.62rem] font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-300 hover:shadow-md"
-              >
-                <span aria-hidden="true">{item.icon}</span>
-                {item.title}
-                <span
-                  aria-hidden="true"
-                  className="text-cyan-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                >
-                  &rarr;
-                </span>
-              </button>
+                item={item}
+                index={index}
+              />
             ))}
           </div>
 
@@ -327,22 +353,7 @@ export function QardHasanahBanner({ onCtaClick }) {
         </div>
       </div>
 
-      {activeStepIndex !== null ? (
-        <StepDetailModal
-          step={qh.steps[activeStepIndex]}
-          index={activeStepIndex}
-          onClose={() => setActiveStepIndex(null)}
-        />
-      ) : null}
-
-      {activeTrustIndex !== null ? (
-        <StepDetailModal
-          step={qh.trustItems[activeTrustIndex]}
-          index={activeTrustIndex}
-          eyebrow="Our Promise"
-          onClose={() => setActiveTrustIndex(null)}
-        />
-      ) : null}
     </section>
   );
 }
+
