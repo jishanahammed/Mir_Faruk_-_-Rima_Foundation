@@ -45,21 +45,25 @@ function FeatureSlideCard({ feature, index }) {
       />
 
       <div className="relative p-3 sm:p-5">
-        <div
-          className={`flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br ${glow} text-base shadow-lg ring-2 ring-white sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl sm:ring-4`}
-        >
-          <span aria-hidden="true">{feature.icon}</span>
+        <div className="flex items-center gap-3 rounded-2xl bg-slate-50/80 px-2.5 py-2 sm:gap-4 sm:px-3 sm:py-2.5">
+          <div
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br ${glow} text-base shadow-lg ring-2 ring-white sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl sm:ring-4`}
+          >
+            <span aria-hidden="true">{feature.icon}</span>
+          </div>
+
+          <h3 className="flex min-h-9 items-center text-sm font-bold tracking-tight text-slate-900 sm:min-h-12 sm:text-base">
+            {feature.label}
+          </h3>
         </div>
 
-        <p className="mt-3 hidden text-[0.65rem] font-bold uppercase tracking-widest text-emerald-600 sm:block">
-          Step {index + 1}
-        </p>
-        <h3 className="mt-2 text-sm font-bold tracking-tight text-slate-900 sm:mt-1 sm:text-base">
-          {feature.label}
-        </h3>
-        <div className={`mt-2 hidden h-1 w-10 rounded-full bg-linear-to-r ${glow} sm:block`} aria-hidden="true" />
 
-        <p className="mt-1.5 text-xs leading-5 text-slate-600 sm:mt-3 sm:leading-6">
+        <div
+          className={`mt-2 ml-2.5 hidden h-1 w-12 rounded-full bg-linear-to-r ${glow} sm:ml-3 sm:block`}
+          aria-hidden="true"
+        />
+
+        <p className="mt-1.5 px-2.5 text-xs leading-5 text-slate-600 sm:mt-3 sm:px-3 sm:leading-6">
           {feature.description}
         </p>
       </div>
@@ -796,9 +800,8 @@ export function DonorImpactInfoUpdatePage() {
                         const slideWidth = track.scrollWidth / featureCount;
                         track.scrollTo({ left: slideWidth * index, behavior: "smooth" });
                       }}
-                      className={`relative flex items-center justify-center ${
-                        isActive ? dotColor.active : dotColor.inactive
-                      }`}
+                      className={`relative flex items-center justify-center ${isActive ? dotColor.active : dotColor.inactive
+                        }`}
                       style={{ width: ringSize, height: ringSize }}
                     >
                       <span className="absolute h-1.5 w-1.5 rounded-full bg-current" />
