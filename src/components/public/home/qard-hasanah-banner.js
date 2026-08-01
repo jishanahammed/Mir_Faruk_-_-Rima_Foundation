@@ -218,18 +218,44 @@ export function QardHasanahBanner({ onCtaClick }) {
         {/* CTA + trust strip — mobile: stacked single column (order-controlled), sm+: two-column grid */}
         <div className="mt-0 flex flex-col border-t border-cyan-100 sm:mt-6 sm:grid sm:grid-cols-[1fr_1.2fr]">
           {/* Hadith footer — 1st on mobile via order, sits after the grid on sm+ (order-none) */}
-          <div className="order-1 border-t border-cyan-100 bg-[linear-gradient(135deg,rgba(236,254,255,0.95),rgba(255,255,255,1),rgba(224,242,254,0.95))] px-4 py-4 text-center sm:order-0 sm:col-span-2 sm:border-t-0 sm:px-6 sm:py-5">
-            <div className="mx-auto max-w-3xl rounded-2xl border border-cyan-200/80 bg-white/85 px-4 py-3 shadow-[0_10px_30px_rgba(8,145,178,0.10)] ring-1 ring-cyan-100/80 backdrop-blur-sm sm:px-6 sm:py-4">
+          <div className="order-1 relative overflow-hidden border-t border-amber-200/60 bg-[linear-gradient(135deg,#fffbeb,#fefce8_55%,#fff7ed)] px-3 py-3 text-center sm:order-0 sm:col-span-2 sm:border-t-0 sm:px-8 sm:py-8">
+            {/* subtle Islamic-inspired geometric accent */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.05]"
+              aria-hidden="true"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(45deg, rgba(180,131,25,0.6) 0 2px, transparent 2px 18px), repeating-linear-gradient(-45deg, rgba(180,131,25,0.6) 0 2px, transparent 2px 18px)",
+              }}
+            />
+            <div
+              className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full border border-amber-300/30"
+              aria-hidden="true"
+            />
+            <div
+              className="pointer-events-none absolute -bottom-12 -right-12 h-48 w-48 rounded-full border border-amber-400/30"
+              aria-hidden="true"
+            />
+
+            <div className="relative mx-auto max-w-3xl rounded-2xl border border-amber-200/70 bg-white/70 px-3 py-3 shadow-[0_10px_35px_rgba(180,131,25,0.10)] ring-1 ring-amber-100 backdrop-blur-sm sm:px-8 sm:py-6">
               <span
-                className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-sm text-white shadow-md"
+                className="mx-auto mb-1.5 flex h-8 w-8 items-center justify-center rounded-full border border-amber-300/60 bg-[linear-gradient(135deg,#92400e,#b45309_55%,#d97706)] text-lg font-serif text-amber-50 shadow-md sm:mb-3 sm:h-11 sm:w-11 sm:text-2xl"
                 aria-hidden="true"
               >
-                "
+                &ldquo;
               </span>
-              <p className="text-sm font-semibold italic leading-6 text-slate-800 sm:text-[0.95rem]">
-              &ldquo;{qh.hadith}&rdquo;
+
+              <p className="text-balance text-sm font-bold italic leading-6 text-slate-900 sm:text-xl sm:leading-9">
+                &ldquo;{qh.hadith}&rdquo;
               </p>
-              <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-cyan-700 sm:text-[0.72rem]">
+
+              <div className="mx-auto mt-1.5 flex items-center justify-center gap-2 sm:mt-3 sm:gap-3" aria-hidden="true">
+                <span className="h-px w-6 bg-amber-400/50 sm:w-12" />
+                <span className="h-1.5 w-1.5 rotate-45 bg-amber-500/80" />
+                <span className="h-px w-6 bg-amber-400/50 sm:w-12" />
+              </div>
+
+              <p className="mt-1.5 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-amber-700 sm:mt-3 sm:text-xs">
                 {qh.hadithSource}
               </p>
             </div>
