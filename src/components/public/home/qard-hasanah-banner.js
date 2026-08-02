@@ -22,19 +22,21 @@ const TRUST_DOT_COLORS = [
   { active: "text-rose-600", inactive: "text-rose-200" },
 ];
 
-function StepCard({ icon, title, description, index, isLast }) {
+function StepCard({ icon, title, description, isLast }) {
   return (
     <div className="relative h-full w-full">
-      <div className="group flex h-full w-full flex-col items-center gap-3 rounded-3xl border border-cyan-100 bg-white p-6 text-center shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300 hover:shadow-[0_18px_40px_rgba(8,145,178,0.18)]">
-        <span className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-cyan-300/70 bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-xl shadow-md transition-transform duration-300 group-hover:scale-110">
-          {icon}
-        </span>
+      <div className="group flex h-full w-full flex-col gap-0 rounded-3xl border border-cyan-100 bg-white p-4 text-left shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300 hover:shadow-[0_18px_40px_rgba(8,145,178,0.18)] sm:gap-3 sm:p-6 sm:text-center">
+        <div className="flex items-start gap-1 sm:flex-col sm:items-center sm:gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-cyan-300/70 bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-lg shadow-md transition-transform duration-300 group-hover:scale-110 sm:h-12 sm:w-12 sm:text-xl">
+            {icon}
+          </span>
 
-        <span className="flex min-h-7 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-1 py-2 text-center text-sm font-bold leading-5 text-white">
-          {index + 1}. {title}
-        </span>
+          <span className="flex min-h-0 flex-1 items-center px-2 py-0 text-left text- font-bold leading-4 text-cyan-800 sm:min-h-7 sm:w-full sm:flex-none sm:justify-center sm:rounded-full sm:bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] sm:px-1 sm:py-2 sm:text-center sm:text-sm sm:leading-5 sm:text-white">
+            {title}
+          </span>
+        </div>
 
-        <p className="text-sm leading-6 text-slate-600">{description}</p>
+        <p className="-mt-4 pl-13 text-xs leading-4 text-slate-600 sm:mt-0 sm:pl-0 sm:text-sm sm:leading-6">{description}</p>
       </div>
 
       {!isLast ? (
@@ -54,26 +56,27 @@ function TrustStripCard({ item, index, fullWidth = false }) {
 
   return (
     <article
-      className={`overflow-hidden rounded-2xl border border-cyan-100 bg-white/95 shadow-[0_10px_24px_rgba(8,145,178,0.10)] ${fullWidth ? "w-full max-w-xs sm:max-w-sm" : "w-full max-w-[15rem] sm:max-w-xs"
+      className={`overflow-hidden rounded-[1.65rem] border border-cyan-100 bg-white shadow-[0_10px_24px_rgba(8,145,178,0.10)] ${fullWidth ? "w-full max-w-xs sm:max-w-sm" : "w-full max-w-[15rem] sm:max-w-xs"
         }`}
     >
-      <div className={`h-1.5 w-full bg-linear-to-r ${glow}`} aria-hidden="true" />
-      <div className="p-2.5 sm:p-3">
-        <div className="flex items-center gap-2 rounded-2xl bg-slate-50/80 py-1.5 sm:gap-2.5 sm:py-1.5">
+      <div className="h-1.5 w-full bg-[linear-gradient(90deg,#22d3ee,_#38bdf8)]" aria-hidden="true" />
+      <div className="p-3 sm:p-3.5">
+        <div className="flex items-start gap-3 rounded-[1.35rem] bg-slate-50/90 px-3 py-3 text-left sm:gap-2.5 sm:rounded-2xl sm:px-3 sm:py-3">
           <span
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br ${glow} text-base shadow-lg ring-2 ring-white sm:rounded-2xl`}
+            className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br ${glow} text-base shadow-[0_8px_18px_rgba(56,189,248,0.22)] ring-2 ring-white sm:mt-0 sm:rounded-2xl`}
             aria-hidden="true"
           >
             {item.icon}
           </span>
-          <h3 className="flex min-h-9 items-center text-sm font-bold tracking-tight text-slate-900">
-            {item.title}
-          </h3>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-[0.75rem] font-bold tracking-tight text-slate-900 sm:text-[0.95rem]">
+              {item.title}
+            </h3>
+            <p className=" text-[0.72rem] leading-5 text-slate-500 sm:text-[0.82rem] sm:leading-5">
+              {item.description}
+            </p>
+          </div>
         </div>
-        <div className={`mt-1.5 hidden h-1 w-10 rounded-full bg-linear-to-r ${glow} sm:block`} aria-hidden="true" />
-        <p className="mt-1 text-xs leading-5 text-slate-600 sm:mt-1.5">
-          {item.description}
-        </p>
       </div>
     </article>
   );
@@ -127,7 +130,7 @@ export function QardHasanahBanner({ onCtaClick }) {
 
   return (
     <section className="bg-white px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-10 overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-[0_18px_60px_rgba(15,23,42,0.10)]">
+      <div className="relative mx-auto flex w-full  max-w-7xl flex-col gap-10 overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-[0_18px_60px_rgba(15,23,42,0.10)]">
         {/* Hero */}
         <div className="relative grid gap-5 overflow-hidden bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-5 py-6 sm:px-8 lg:grid-cols-[1.3fr_1fr] lg:items-center lg:py-8">
           <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -181,7 +184,7 @@ export function QardHasanahBanner({ onCtaClick }) {
         </div>
 
         {/* Process steps */}
-        <div className=" sm:px-4">
+        <div className="p-2 sm:px-4">
           <p className="inline-flex mb-2 w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] px-4 py-4 text-center text-[0.7rem] font-bold text-white sm:text-xs">
             <span aria-hidden="true">🔄</span>
             {qh.processHeading}
@@ -197,7 +200,6 @@ export function QardHasanahBanner({ onCtaClick }) {
                       icon={step.icon}
                       title={step.title}
                       description={step.description}
-                      index={index}
                       isLast={isLast}
                     />
                   </div>
