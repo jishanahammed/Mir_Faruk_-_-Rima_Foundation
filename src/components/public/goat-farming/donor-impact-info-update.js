@@ -996,16 +996,16 @@ export function DonorImpactInfoUpdatePage() {
         </div>
 
         {/* ── Belief banner ────────────────────────────────────────────── */}
-        <div className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-white px-6 py-4 text-center shadow-[0_18px_60px_rgba(6,95,70,0.08)] sm:px-10 sm:py-5">
+        <div className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-white px-3 py-3 text-center shadow-[0_18px_60px_rgba(6,95,70,0.08)] sm:px-10 sm:py-5">
           <span
             className="absolute inset-x-0 top-0 block h-1.5 bg-[linear-gradient(90deg,_#065f46,_#0d9488_45%,_#f59e0b)]"
             aria-hidden="true"
           />
 
           <div className="relative">
-            <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-emerald-700">
+            <p className="flex items-center justify-center gap-1.5 text-[0.6rem] font-bold uppercase tracking-[0.12em] text-emerald-700 sm:gap-2 sm:text-xs sm:tracking-[0.25em]">
               <span
-                className="flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-sm shadow-md ring-2 ring-emerald-50"
+                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75_52%,#0f766e)] text-xs shadow-md ring-2 ring-emerald-50 sm:h-7 sm:w-7 sm:text-sm"
                 aria-hidden="true"
               >
                 🌱
@@ -1013,15 +1013,15 @@ export function DonorImpactInfoUpdatePage() {
               {di.belief.heading}
             </p>
 
-            <div className="mx-auto mt-3 max-w-3xl space-y-1">
+            <div className="mx-auto mt-1.5 max-w-3xl space-y-0.5 sm:mt-3 sm:space-y-1">
               {di.belief.lines.slice(0, -1).map((line, index) => (
-                <p key={index} className="text-sm leading-6 text-slate-600 sm:text-[0.95rem]">
+                <p key={index} className="text-xs leading-4 text-slate-600 sm:text-sm sm:leading-6 sm:text-[0.95rem]">
                   {line}
                 </p>
               ))}
             </div>
 
-            <p className="mx-auto mt-3 inline-block max-w-2xl rounded-full  px-5 py-2 text-base font-bold leading-6 text-emerald-900 sm:text-lg">
+            <p className="mx-auto mt-1.5 inline-block max-w-2xl rounded-full px-4 py-1 text-center text-xs font-bold leading-4 text-emerald-900 sm:mt-3 sm:px-5 sm:py-2 sm:text-lg sm:leading-6">
               {di.belief.lines[di.belief.lines.length - 1]}
             </p>
           </div>
