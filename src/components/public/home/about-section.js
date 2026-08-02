@@ -53,22 +53,23 @@ export function AboutSection({ className = "" }) {
                   aria-hidden="true"
                 />
 
-                <span
-                  className={`relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br ${theme.glow} text-2xl shadow-lg ring-4 ${theme.ring} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
-                >
-                  <span aria-hidden="true">{theme.icon}</span>
-                </span>
+                <div className="relative flex items-start gap-3 sm:block">
+                  <span
+                    className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br ${theme.glow} text-2xl shadow-lg ring-4 ${theme.ring} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                  >
+                    <span aria-hidden="true">{theme.icon}</span>
+                  </span>
 
-                <h3 className="relative mt-5 text-lg font-bold leading-7 text-slate-950">
-                  {item.title}
-                </h3>
-                <div
-                  className={`relative mt-2 h-1 w-10 rounded-full bg-linear-to-r ${theme.glow} transition-all duration-300 group-hover:w-16`}
-                  aria-hidden="true"
-                />
-                <p className="relative mt-4 text-sm leading-7 text-slate-600">
-                  {item.description}
-                </p>
+                  <div className="min-w-0 flex-1 sm:block">
+                    <h3 className="relative text-lg font-bold leading-7 text-slate-950 sm:mt-5">
+                      {item.title}
+                    </h3>
+
+                    <p className="relative mt-1 text-sm leading-7 text-slate-600 sm:mt-4">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
               </article>
             );
           })}
