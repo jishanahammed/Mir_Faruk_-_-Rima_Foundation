@@ -15,7 +15,7 @@ export function AboutSection({ className = "" }) {
   return (
     <section
       id="about-us"
-      className={`relative overflow-hidden bg-[linear-gradient(180deg,_#f8fafc_0%,_#ffffff_54%,_#ecfeff_100%)] px-6 py-24 lg:px-8 ${className}`}
+      className={`relative overflow-hidden bg-[linear-gradient(180deg,_#f8fafc_0%,_#ffffff_54%,_#ecfeff_100%)] px-6 py-10 sm:py-24 lg:px-8 ${className}`}
     >
       <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,_transparent,_rgba(8,145,178,0.35),_transparent)]" />
       <div className="absolute inset-0 bg-[linear-gradient(115deg,_rgba(255,255,255,0)_0%,_rgba(6,182,212,0.08)_46%,_rgba(245,158,11,0.07)_100%)]" />
@@ -44,7 +44,7 @@ export function AboutSection({ className = "" }) {
             return (
               <article
                 key={item.title}
-                className="group relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] transition-all duration-300 ease-out hover:-translate-y-2 hover:border-transparent hover:shadow-[0_28px_90px_rgba(8,145,178,0.22)]"
+                className="group relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)] transition-all duration-300 ease-out hover:-translate-y-2 hover:border-transparent hover:shadow-[0_28px_90px_rgba(8,145,178,0.22)] sm:p-6"
               >
                 <div className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-teal-500 via-cyan-500 to-amber-500 opacity-90" />
 
@@ -53,19 +53,19 @@ export function AboutSection({ className = "" }) {
                   aria-hidden="true"
                 />
 
-                <div className="relative flex items-start gap-3 sm:block">
+                <div className="relative flex items-start gap-2 sm:block">
                   <span
-                    className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br ${theme.glow} text-2xl shadow-lg ring-4 ${theme.ring} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                    className={`relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br ${theme.glow} text-xl shadow-lg ring-4 ${theme.ring} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 sm:h-14 sm:w-14 sm:text-2xl`}
                   >
                     <span aria-hidden="true">{theme.icon}</span>
                   </span>
 
                   <div className="min-w-0 flex-1 sm:block">
-                    <h3 className="relative text-lg font-bold leading-7 text-slate-950 sm:mt-5">
+                    <h3 className="relative text-base font-bold leading-6 text-slate-950 sm:mt-5 sm:text-lg sm:leading-7">
                       {item.title}
                     </h3>
 
-                    <p className="relative mt-1 text-sm leading-7 text-slate-600 sm:mt-4">
+                    <p className="relative mt-0.5 text-xs leading-5 text-slate-600 sm:mt-4 sm:text-sm sm:leading-7">
                       {item.description}
                     </p>
                   </div>
