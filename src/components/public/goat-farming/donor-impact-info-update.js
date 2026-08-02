@@ -176,14 +176,14 @@ function StepCard({ icon, heading, items }) {
 function CycleSlideCard({ icon, title, description, step, highlight }) {
   return (
     <div
-      className={`relative flex h-full flex-col items-center overflow-hidden rounded-[2rem] border px-6 py-8 text-center shadow-[0_18px_50px_rgba(6,95,70,0.10)] transition-transform duration-300 ${highlight
-        ? "border-emerald-300 bg-[linear-gradient(155deg,_#065f46,_#047857_60%,_#0d9488)] text-white"
+      className={`relative flex h-full flex-col items-center overflow-hidden rounded-[2rem] border px-4 py-5 text-center transition-transform duration-300 sm:px-6 sm:py-8 ${highlight
+        ? "border-emerald-200 bg-white text-slate-900"
         : "border-emerald-100 bg-white"
         }`}
     >
       <span
-        className={`absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full text-[0.65rem] font-bold ${highlight
-          ? "bg-white/15 text-amber-200 ring-1 ring-white/30"
+        className={`absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full text-[0.6rem] font-bold sm:right-4 sm:top-4 sm:h-7 sm:w-7 sm:text-[0.65rem] ${highlight
+          ? "bg-emerald-100 text-emerald-700"
           : "bg-emerald-100 text-emerald-700"
           }`}
         aria-hidden="true"
@@ -192,8 +192,8 @@ function CycleSlideCard({ icon, title, description, step, highlight }) {
       </span>
 
       <span
-        className={`flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-md ${highlight
-          ? "bg-white/15 ring-2 ring-white/30"
+        className={`flex h-12 w-12 items-center justify-center rounded-2xl text-2xl shadow-md sm:h-16 sm:w-16 sm:text-3xl ${highlight
+          ? "bg-emerald-50 ring-2 ring-emerald-100"
           : "bg-emerald-50 ring-2 ring-emerald-100"
           }`}
         aria-hidden="true"
@@ -202,16 +202,16 @@ function CycleSlideCard({ icon, title, description, step, highlight }) {
       </span>
 
       <p
-        className={`mt-5 text-base font-bold ${highlight ? "text-white" : "text-slate-900"}`}
+        className={`mt-3 text-sm font-bold text-slate-900 sm:mt-5 sm:text-base`}
       >
         {title}
       </p>
       <span
-        className={`mt-2 h-1 w-10 rounded-full ${highlight ? "bg-amber-300/80" : "bg-emerald-400/70"}`}
+        className={`mt-1.5 h-1 w-8 rounded-full sm:mt-2 sm:w-10 ${highlight ? "bg-emerald-500/70" : "bg-emerald-400/70"}`}
         aria-hidden="true"
       />
       <p
-        className={`mt-3 text-[0.8rem] leading-6 ${highlight ? "text-emerald-50" : "text-slate-500"}`}
+        className={`mt-2 text-[0.74rem] leading-5 ${highlight ? "text-slate-600" : "text-slate-500"} sm:mt-3 sm:text-[0.8rem] sm:leading-6`}
       >
         {description}
       </p>
@@ -294,14 +294,14 @@ function CycleSlider({ slides, autoPlayMs = 3500 }) {
 
   return (
     <div
-      className="mt-6"
+      className="mt-6 rounded-[2rem] bg-white"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       <div className="relative">
         {/* Viewport */}
         <div
-          className="overflow-hidden py-2 touch-pan-y select-none"
+          className="overflow-hidden bg-white py-2 touch-pan-y select-none"
           onTouchStart={(event) => handleDragStart(event.touches[0].clientX)}
           onTouchMove={(event) =>
             handleDragMove(
@@ -331,7 +331,7 @@ function CycleSlider({ slides, autoPlayMs = 3500 }) {
             {slides.map((slide, slideIndex) => (
               <div
                 key={slideIndex}
-                className="shrink-0 px-2.5 sm:px-3"
+                className="shrink-0 bg-white px-2.5 sm:px-3"
                 style={{ width: `${100 / total}%` }}
               >
                 <CycleSlideCard {...slide} />
@@ -669,7 +669,7 @@ export function DonorImpactInfoUpdatePage() {
   }, [featureCount, isFeaturePaused, featureSlideIndex]);
 
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(180deg,_#f4fbf4_0%,_#ffffff_35%,_#f4fffb_100%)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+    <section className="relative overflow-hidden bg-white px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(16,122,87,0.10),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(245,158,11,0.10),_transparent_24%)]" />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8">
@@ -887,7 +887,7 @@ export function DonorImpactInfoUpdatePage() {
         </div>
 
         {/* ── Continuous cycle ─────────────────────────────────────────── */}
-        <div className="rounded-[2rem] border border-emerald-100 bg-white p-5 shadow-[0_18px_60px_rgba(6,95,70,0.06)] sm:p-8">
+        <div className="rounded-[2rem] border border-emerald-100 bg-white p-3 sm:p-8">
           <SectionHeading>{di.cycle.heading}</SectionHeading>
           <p className="mt-1 text-center text-xs text-slate-500">
             {di.cycle.subheading}
@@ -912,7 +912,7 @@ export function DonorImpactInfoUpdatePage() {
             ]}
           />
 
-          <p className="mx-auto mt-6 max-w-2xl rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/70 px-4 py-3 text-center text-xs font-semibold leading-6 text-emerald-900 sm:text-sm">
+          <p className="mx-auto mt-6 max-w-2xl rounded-2xl border border-dashed border-emerald-300 bg-white px-4 py-3 text-center text-xs font-semibold leading-6 text-emerald-900 sm:text-sm">
             ♾️ {di.cycle.infinity}
           </p>
         </div>
