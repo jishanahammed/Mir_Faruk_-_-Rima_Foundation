@@ -13,12 +13,7 @@ export async function FeaturedProjects() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-slate-50 px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-cyan-100/50 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-64 w-64 -translate-x-1/2 translate-y-1/2 rounded-full bg-teal-100/40 blur-3xl" />
-      </div>
-
+    <section className="relative overflow-hidden bg-white px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
       <div className="relative mx-auto max-w-7xl">
         <FeaturedProjectsHeader />
 

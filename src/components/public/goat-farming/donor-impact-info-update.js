@@ -661,6 +661,11 @@ export function DonorImpactInfoUpdatePage() {
     const id = setInterval(() => {
       const track = featureTrackRef.current;
       if (!track) return;
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+      if (atEnd) {
+        track.scrollTo({ left: 0, behavior: "smooth" });
+        return;
+      }
       const slideWidth = track.scrollWidth / featureCount;
       const nextIndex = (featureSlideIndex + 1) % featureCount;
       track.scrollTo({ left: slideWidth * nextIndex, behavior: "smooth" });

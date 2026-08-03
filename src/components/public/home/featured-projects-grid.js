@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 import { DonateBankInfoModal } from "@/components/public/donate/donate-bank-info-modal";
@@ -20,6 +21,10 @@ const STATUS_BADGE_CLASS = {
   running: "bg-cyan-100 text-cyan-700",
   completed: "bg-violet-100 text-violet-700",
 };
+
+function getProjectThumb(project) {
+  return project.thumbnailImage ?? project.images?.find((item) => item?.imageUrl)?.imageUrl ?? null;
+}
 
 function LocationIcon() {
   return (
@@ -72,34 +77,33 @@ function FeaturedProjectCard({ project, locale, fp, onDonate }) {
     label: fp.statusLabels[statusKey],
     cls: STATUS_BADGE_CLASS[statusKey],
   };
-  const thumb = project.images?.[0]?.imageUrl ?? null;
+  const thumb = getProjectThumb(project);
   const detailHref = `/projects/${project.projectCategoryId}/${project.id}`;
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border-2 border-transparent bg-white bg-clip-padding shadow-[0_18px_50px_rgba(15,23,42,0.10)] ring-1 ring-slate-100 transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-400 hover:shadow-[0_0_0_4px_rgba(8,145,178,0.15),0_28px_70px_rgba(8,145,178,0.25)] hover:ring-cyan-200">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-cyan-100 bg-white ring-1 ring-slate-100 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:ring-cyan-100">
       <Link
         href={detailHref}
-        className={`relative block h-48 overflow-hidden bg-linear-to-br ${BRAND_GLOW} sm:h-52`}
+        className="relative block h-48 overflow-hidden bg-slate-100 sm:h-52"
       >
         {thumb ? (
-          // Full-bleed photo banner, edge-to-edge.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={thumb}
             alt={title}
+            fill
+            sizes="(max-width: 639px) 86vw, (max-width: 1023px) 50vw, 33vw"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            unoptimized
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="h-14 w-14 text-white/70" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="h-14 w-14 text-slate-300" aria-hidden="true">
               <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" strokeLinecap="round" strokeLinejoin="round" />
               <rect x="9" y="3" width="6" height="4" rx="1" />
               <path d="M9 12h6M9 16h4" strokeLinecap="round" />
             </svg>
           </div>
         )}
-
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/45 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
         <span className={`absolute right-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold shadow-sm backdrop-blur-sm ${badge.cls}`}>
           {badge.label}
@@ -160,9 +164,13 @@ export function FeaturedProjectsGrid({ projects }) {
       if (frame) return;
       frame = requestAnimationFrame(() => {
         frame = null;
-        const cardWidth = track.scrollWidth / projects.length;
-        const index = Math.round(track.scrollLeft / cardWidth);
-        setActiveIndex(Math.min(projects.length - 1, Math.max(0, index)));
+        const children = Array.from(track.children);
+        const nextIndex = children.reduce((closestIndex, child, index) => {
+          const currentDistance = Math.abs(track.scrollLeft - child.offsetLeft);
+          const closestDistance = Math.abs(track.scrollLeft - children[closestIndex].offsetLeft);
+          return currentDistance < closestDistance ? index : closestIndex;
+        }, 0);
+        setActiveIndex(nextIndex);
       });
     };
 
@@ -176,9 +184,24 @@ export function FeaturedProjectsGrid({ projects }) {
   const scrollToIndex = (index) => {
     const track = trackRef.current;
     if (!track) return;
-    const cardWidth = track.scrollWidth / projects.length;
-    track.scrollTo({ left: cardWidth * index, behavior: "smooth" });
+    const target = track.children[index];
+    if (!target) return;
+    track.scrollTo({ left: target.offsetLeft, behavior: "smooth" });
   };
+
+  // Desktop/tablet: shows 3 cards at a time, slides one item at a time, autoplay non-stop
+  const VISIBLE_COUNT = 3;
+  const maxDesktopIndex = Math.max(0, projects.length - VISIBLE_COUNT);
+  const [desktopIndex, setDesktopIndex] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    if (maxDesktopIndex <= 0 || isHovering) return;
+    const timer = setInterval(() => {
+      setDesktopIndex((prev) => (prev + 1) % (maxDesktopIndex + 1));
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [maxDesktopIndex, isHovering]);
 
   return (
     <>
@@ -186,7 +209,7 @@ export function FeaturedProjectsGrid({ projects }) {
       <div className="mt-10 sm:hidden">
         <div
           ref={trackRef}
-          className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-1 pb-2 scrollbar-none [-ms-overflow-style:none]"
+          className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-4 pt-1 scrollbar-none [-ms-overflow-style:none]"
         >
           {projects.map((project) => (
             <div key={project.id} className="w-[86%] shrink-0 snap-center">
@@ -218,17 +241,46 @@ export function FeaturedProjectsGrid({ projects }) {
         ) : null}
       </div>
 
-      {/* Tablet/desktop: standard grid */}
-      <div className="mt-10 hidden gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project) => (
-          <FeaturedProjectCard
-            key={project.id}
-            project={project}
-            locale={locale}
-            fp={fp}
-            onDonate={(info) => setModalProject(info)}
-          />
-        ))}
+      {/* Tablet/desktop: one-at-a-time autoplay slider */}
+      <div
+        className="relative mt-10 hidden sm:block"
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        <div className="overflow-hidden rounded-[2rem] bg-white px-2 py-2">
+          <div
+            className="flex transition-transform duration-700 ease-out"
+            style={{ transform: `translateX(-${desktopIndex * (100 / VISIBLE_COUNT)}%)` }}
+          >
+            {projects.map((project) => (
+              <div key={project.id} className="w-1/3 shrink-0 px-2">
+                <FeaturedProjectCard
+                  project={project}
+                  locale={locale}
+                  fp={fp}
+                  onDonate={(info) => setModalProject(info)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {maxDesktopIndex > 0 ? (
+          <div className="mt-6 flex items-center justify-center gap-2.5">
+            {Array.from({ length: maxDesktopIndex + 1 }).map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                aria-label={`Show slide ${index + 1}`}
+                onClick={() => setDesktopIndex(index)}
+                className={`h-2.5 rounded-full transition-all duration-300 ${index === desktopIndex
+                  ? `w-8 bg-linear-to-r ${BRAND_GLOW}`
+                  : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                  }`}
+              />
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <DonateBankInfoModal

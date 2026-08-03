@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { AboutSection } from "@/components/public/home/about-section";
-import { BankInfo } from "@/components/public/home/bank-info";
 import { CeoBani } from "@/components/public/home/ceo-bani";
 import { ContactSection } from "@/components/public/home/contact-section";
 import { DonateBankInfoModal } from "@/components/public/donate/donate-bank-info-modal";
@@ -34,7 +33,6 @@ export function HomePage({ featuredProjects }) {
 
       {featuredProjects}
       <DonorImpactInfoUpdatePage />
-      <BankInfo />
       {/* <ContactSection /> */}
 
       <DonateBankInfoModal

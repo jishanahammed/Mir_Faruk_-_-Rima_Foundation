@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { DonorImpactInfoUpdatePage } from "@/components/public/goat-farming/donor-impact-info-update";
 import { AboutSection } from "@/components/public/home/about-section";
-import { BankInfo } from "@/components/public/home/bank-info";
 import { CeoBani } from "@/components/public/home/ceo-bani";
 import { DonateBankInfoModal } from "@/components/public/donate/donate-bank-info-modal";
 import { DonorRegistrationModal } from "@/components/public/home/donor-registration-modal";
@@ -81,8 +80,6 @@ export function HomeMobile({ featuredProjects }) {
       </section>
 
       <RegistrationSection />
-
-      <BankInfo />
 
       <DonorRegistrationModal
         isOpen={isDonorModalOpen}
