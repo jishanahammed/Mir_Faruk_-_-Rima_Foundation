@@ -335,6 +335,15 @@ const siteCopy = {
     navigationLabel: "Navigation",
     registrationLabel: "Registration",
     contactLabel: "Contact",
+    navItems: [
+      { label: "Home", href: "/" },
+      { label: "Our Mission", href: "/about#mission" },
+      { label: "Our Work", href: "/our-work" },
+      { label: "Donate", href: "/donate" },
+      { label: "Emergency Donation", href: "/emergency-donation" },
+      { label: "Qard Hasanah", href: "/donor-impact-info-update" },
+      { label: "Contact Us", href: "/contact" },
+    ],
     note: "Shariah-aligned social support platform designed for transparent, long-term community care.",
     legal: [
       "Registered under the Societies Registration Act, 1860 (Act XXI of 1860)",

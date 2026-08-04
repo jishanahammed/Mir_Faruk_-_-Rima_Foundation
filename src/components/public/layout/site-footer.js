@@ -6,7 +6,7 @@ import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
 export function SiteFooter() {
   const { copy } = useSiteLocale();
-  const { brand, contact, footer, header, members, registration } = copy;
+  const { brand, contact, footer, members, registration } = copy;
   const year = new Date().getFullYear();
 
   // Brand name shown on two lines: everything before the last word, then the
@@ -53,7 +53,7 @@ export function SiteFooter() {
               {footer.navigationLabel}
             </p>
             <nav className="mt-5 grid gap-3">
-              {header.navItems.map((item) => (
+              {footer.navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}

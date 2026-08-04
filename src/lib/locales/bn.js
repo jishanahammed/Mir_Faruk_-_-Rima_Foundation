@@ -337,6 +337,15 @@ const siteCopy = {
     navigationLabel: "নেভিগেশন",
     registrationLabel: "রেজিস্ট্রেশন",
     contactLabel: "যোগাযোগ",
+    navItems: [
+      { label: "হোম", href: "/" },
+      { label: "আমাদের লক্ষ্য", href: "/about#mission" },
+      { label: "আমাদের কার্যক্রম", href: "/our-work" },
+      { label: "অনুদান করুন", href: "/donate" },
+      { label: "জরুরি অনুদান", href: "/emergency-donation" },
+      { label: "কর্জে হাসানা", href: "/donor-impact-info-update" },
+      { label: "যোগাযোগ করুন", href: "/contact" },
+    ],
     note: "স্বচ্ছতা, জবাবদিহিতা ও দীর্ঘমেয়াদি কমিউনিটি সহায়তার জন্য নির্মিত একটি শরীয়াহ-সম্মত সামাজিক প্ল্যাটফর্ম।",
     legal: [
       "সোসাইটিজ রেজিস্ট্রেশন অ্যাক্ট, ১৮৬০ (১৮৬০ সালের ২১ নং আইন)-এর অধীনে নিবন্ধিত",

@@ -337,6 +337,15 @@ const siteCopy = {
     navigationLabel: "Navigation",
     registrationLabel: "Registrering",
     contactLabel: "Kontakt",
+    navItems: [
+      { label: "Hjem", href: "/" },
+      { label: "Vores Mission", href: "/about#mission" },
+      { label: "Vores Arbejde", href: "/our-work" },
+      { label: "Donér", href: "/donate" },
+      { label: "Nøddonation", href: "/emergency-donation" },
+      { label: "Qard Hasanah", href: "/donor-impact-info-update" },
+      { label: "Kontakt Os", href: "/contact" },
+    ],
     note: "Sharia-tilpasset social støtteplatform designet til transparent og langsigtet omsorg i lokalsamfundet.",
     legal: [
       "Registreret i henhold til Societies Registration Act, 1860 (Act XXI of 1860)",
