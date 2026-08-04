@@ -35,65 +35,65 @@ export function VideoSection() {
       <div className="absolute left-[-7rem] top-32 h-64 w-64 rounded-full bg-cyan-100/60 blur-3xl" />
       <div className="absolute bottom-20 right-[-6rem] h-72 w-72 rounded-full bg-amber-100/50 blur-3xl" />
 
-      <div className="relative mx-auto grid w-full max-w-7xl gap-4 md:gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
-        <div className="relative flex flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-slate-200/80 bg-white/90 p-5 text-center shadow-[0_24px_80px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur md:gap-4 md:rounded-[2rem] md:p-6 lg:items-start lg:justify-center lg:rounded-[2.5rem] lg:border-white/70 lg:bg-[linear-gradient(155deg,_rgba(255,255,255,0.98)_0%,_rgba(236,254,255,0.92)_48%,_rgba(255,251,235,0.88)_100%)] lg:p-10 lg:text-left lg:shadow-[0_35px_120px_rgba(15,23,42,0.12)]">
-          <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-cyan-100/50 blur-3xl lg:h-48 lg:w-48 lg:bg-cyan-200/50" />
-          <div className="absolute -bottom-16 -left-12 hidden h-40 w-40 rounded-full bg-amber-100/50 blur-3xl lg:block" />
-          <div className="absolute inset-x-0 top-0 hidden h-1.5 bg-[linear-gradient(90deg,_#0f766e,_#06b6d4,_#f59e0b)] opacity-90 lg:block" />
+      <div className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-2xl border border-slate-200/80 bg-white/90 shadow-[0_24px_80px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur md:rounded-[2rem] lg:rounded-[2.5rem] lg:border-white/70 lg:bg-[linear-gradient(155deg,_rgba(255,255,255,0.98)_0%,_rgba(236,254,255,0.92)_48%,_rgba(255,251,235,0.88)_100%)] lg:shadow-[0_35px_120px_rgba(15,23,42,0.12)]">
+        <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-cyan-100/50 blur-3xl lg:h-48 lg:w-48 lg:bg-cyan-200/50" />
+        <div className="absolute -bottom-16 -left-12 hidden h-40 w-40 rounded-full bg-amber-100/50 blur-3xl lg:block" />
+        <div className="absolute inset-x-0 top-0 h-1.5 bg-[linear-gradient(90deg,_#0f766e,_#06b6d4,_#f59e0b)] opacity-90" />
 
-          <span className="inline-flex w-fit shrink-0 items-center justify-center gap-1.5 rounded-full border border-cyan-200/80 bg-cyan-50 px-2.5 py-1 text-[0.6rem] font-semibold tracking-[0.2em] text-cyan-700 uppercase md:gap-2 md:px-3 md:py-1.5 md:text-[0.65rem] md:tracking-[0.28em] lg:relative lg:bg-white lg:shadow-md lg:shadow-cyan-100/70">
-            <span className="h-1.5 w-1.5 rounded-full bg-cyan-500" />
-            Motivational Speech
-          </span>
+        <div className="relative grid gap-6 p-5 md:gap-8 md:p-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-10 lg:p-12">
+          <div className="flex flex-col items-center gap-3 text-center md:gap-4 lg:items-start lg:text-left">
+            <span className="inline-flex w-fit shrink-0 items-center justify-center gap-1.5 rounded-full border border-cyan-200/80 bg-cyan-50 px-2.5 py-1 text-[0.6rem] font-semibold tracking-[0.2em] text-cyan-700 uppercase md:gap-2 md:px-3 md:py-1.5 md:text-[0.65rem] md:tracking-[0.28em] lg:bg-white lg:shadow-md lg:shadow-cyan-100/70">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-500" />
+              Motivational Speech
+            </span>
 
-          <div className="relative min-w-0 space-y-0.5 md:space-y-1.5 lg:space-y-3">
-            <h3 className="text-lg font-extrabold leading-tight text-slate-900 md:text-2xl lg:text-4xl">
-              <span className="bg-[linear-gradient(135deg,_#0f172a_4%,_#0f766e_52%,_#0891b2_100%)] bg-clip-text text-transparent">
-                Mir Mohammad Faruk
-              </span>
-            </h3>
-            <p className="text-xs font-semibold tracking-[0.06em] text-slate-500 uppercase md:text-sm md:tracking-[0.08em] lg:text-base">
-              Founder &amp; CEO
-            </p>
-            <p className="hidden max-w-sm text-sm leading-7 text-slate-600 lg:block">
-              A heartfelt call to compassion and action — discover the
-              vision behind Mir Faruk &amp; Rima Foundation's mission.
-            </p>
+            <div className="min-w-0 space-y-0.5 md:space-y-1.5 lg:space-y-3">
+              <h3 className="text-lg font-extrabold leading-tight text-slate-900 md:text-2xl lg:text-4xl">
+                <span className="bg-[linear-gradient(135deg,_#0f172a_4%,_#0f766e_52%,_#0891b2_100%)] bg-clip-text text-transparent">
+                  Mir Mohammad Faruk
+                </span>
+              </h3>
+              <p className="text-xs font-semibold tracking-[0.06em] text-slate-500 uppercase md:text-sm md:tracking-[0.08em] lg:text-base">
+                Founder &amp; CEO
+              </p>
+              <p className="hidden max-w-sm text-sm leading-7 text-slate-600 lg:block">
+                A heartfelt call to compassion and action — discover the
+                vision behind Mir Faruk &amp; Rima Foundation's mission.
+              </p>
 
-            <div className="hidden items-center gap-2 pt-2 lg:flex">
-              <span className="h-px w-10 bg-[linear-gradient(90deg,_#0891b2,_transparent)]" />
-              <span className="text-xs font-semibold tracking-[0.24em] text-cyan-700 uppercase">
-                CARE · COMMIT · CHANGE
-              </span>
+              <div className="hidden items-center gap-2 pt-2 lg:flex">
+                <span className="h-px w-10 bg-[linear-gradient(90deg,_#0891b2,_transparent)]" />
+                <span className="text-xs font-semibold tracking-[0.24em] text-cyan-700 uppercase">
+                  CARE · COMMIT · CHANGE
+                </span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="relative mx-auto flex w-full max-w-2xl items-center lg:max-w-none">
-          <figure className="group relative w-full overflow-hidden rounded-2xl border border-white/70 bg-white/90 p-2 shadow-[0_35px_120px_rgba(15,23,42,0.14)] ring-1 ring-slate-200/70 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_40px_130px_rgba(8,145,178,0.18)] md:rounded-[2.5rem] md:p-3 lg:p-4 lg:shadow-[0_40px_140px_rgba(8,145,178,0.16)]">
-            <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,_#0f766e,_#06b6d4,_#f59e0b)] opacity-80 lg:h-1.5" />
-
-            <button
-              type="button"
-              onClick={() => setIsOpen(true)}
-              aria-label="Play video"
-              className="group relative block aspect-video w-full overflow-hidden rounded-xl md:rounded-[2rem]"
-            >
-              <Image
-                src="/mmfaruk.1.png"
-                alt="Mir Faruk & Rima Foundation"
-                fill
-                sizes="(max-width: 672px) 100vw, 672px"
-                className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-black/20 transition-opacity duration-300 group-hover:from-black/60" />
-              <span className="absolute inset-0 flex items-center justify-center">
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-cyan-700 shadow-xl ring-4 ring-white/30 transition-transform duration-300 ease-out group-hover:scale-110 group-active:scale-95 md:h-14 md:w-14 lg:h-20 lg:w-20">
-                  <PlayIcon />
+          <div className="relative mx-auto w-full max-w-2xl lg:max-w-none">
+            <figure className="group relative w-full overflow-hidden rounded-xl border border-white/70 bg-white/90 p-1.5 shadow-[0_35px_120px_rgba(15,23,42,0.14)] ring-1 ring-slate-200/70 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_40px_130px_rgba(8,145,178,0.18)] md:rounded-2xl md:p-2 lg:shadow-[0_40px_140px_rgba(8,145,178,0.16)]">
+              <button
+                type="button"
+                onClick={() => setIsOpen(true)}
+                aria-label="Play video"
+                className="group relative block aspect-video w-full overflow-hidden rounded-lg md:rounded-xl"
+              >
+                <Image
+                  src="/mmfaruk.1.png"
+                  alt="Mir Faruk & Rima Foundation"
+                  fill
+                  sizes="(max-width: 672px) 100vw, 672px"
+                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-black/20 transition-opacity duration-300 group-hover:from-black/60" />
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-cyan-700 shadow-md ring-2 ring-white/30 transition-transform duration-300 ease-out group-hover:scale-110 group-active:scale-95 md:h-14 md:w-14 lg:h-20 lg:w-20">
+                    <PlayIcon />
+                  </span>
                 </span>
-              </span>
-            </button>
-          </figure>
+              </button>
+            </figure>
+          </div>
         </div>
       </div>
 
