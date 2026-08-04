@@ -120,6 +120,20 @@ const siteCopy = {
     imageAlt:
       "Message from Mir Mohammad Faruk, Founder & CEO of Mir Faruk & Rima Foundation",
   },
+  videoSpeech: {
+    badge: "Motivational Speech",
+    name: "Mir Mohammad Faruk",
+    role: "Founder & CEO",
+    description:
+      "A heartfelt call to compassion and action — discover the vision behind Mir Faruk & Rima Foundation's mission.",
+    tagline: "Care · Commit · Change",
+    imageAlt:
+      "Mir Mohammad Faruk speaking with open arms, award plaques visible on the table",
+    playLabel: "Play motivational speech by Mir Mohammad Faruk",
+    closeLabel: "Close video",
+    modalLabel: "Motivational speech video",
+    videoTitle: "Mir Mohammad Faruk — Motivational Speech",
+  },
   about: {
     eyebrow: "Our Approach",
     title: "A social support model built on trust, discipline, and lasting dignity.",

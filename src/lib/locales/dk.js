@@ -120,6 +120,20 @@ const siteCopy = {
     imageAlt:
       "Budskab fra Mir Mohammad Faruk, stifter & CEO af Mir Faruk & Rima Foundation",
   },
+  videoSpeech: {
+    badge: "Motiverende tale",
+    name: "Mir Mohammad Faruk",
+    role: "Stifter & CEO",
+    description:
+      "En oprigtig opfordring til medfølelse og handling — oplev visionen bag Mir Faruk & Rima Foundations mission.",
+    tagline: "Omsorg · Engagement · Forandring",
+    imageAlt:
+      "Mir Mohammad Faruk taler med åbne arme, hædersplaketter synlige på bordet",
+    playLabel: "Afspil motiverende tale af Mir Mohammad Faruk",
+    closeLabel: "Luk video",
+    modalLabel: "Motiverende tale-video",
+    videoTitle: "Mir Mohammad Faruk — Motiverende tale",
+  },
   about: {
     eyebrow: "Vores tilgang",
     title: "En social støttemodel bygget på tillid, disciplin og varig værdighed.",
