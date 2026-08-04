@@ -11,6 +11,7 @@ import { QardHasanahBanner } from "@/components/public/home/qard-hasanah-banner"
 import { RegistrationSection } from "@/components/public/home/registration-section";
 import { SupportModelPanel } from "@/components/public/home/support-model-panel";
 import { TopHero } from "@/components/public/home/top-hero";
+import { VideoSection } from "@/components/public/home/video-section";
 import { LearnMoreButton, RegistrationButton } from "@/components/public/ui/cta-buttons";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
@@ -36,6 +37,8 @@ export function HomeMobile({ featuredProjects }) {
       </section>
 
       <CeoBani />
+
+      <VideoSection />
 
       <section className="relative overflow-hidden px-5 py-12">
         <div className="absolute right-[-5rem] top-8 h-48 w-48 rounded-full bg-cyan-100/60 blur-3xl" />
