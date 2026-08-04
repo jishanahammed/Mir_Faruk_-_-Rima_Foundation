@@ -16,7 +16,7 @@ export function SiteFooter() {
   const brandNameFirst = brandNameWords.join(" ");
 
   return (
-    <footer className="relative overflow-hidden bg-[linear-gradient(135deg,_#083344_0%,_#0f172a_52%,_#134e4a_100%)] text-white">
+    <footer className="relative overflow-hidden bg-[linear-gradient(135deg,#0e4a5e_0%,#1e293b_52%,#1a6f61_100%)] text-white">
       <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,_transparent,_rgba(34,211,238,0.45),_transparent)]" />
       <div className="absolute left-[-10rem] top-[-8rem] h-72 w-72 rounded-full bg-cyan-300/10 blur-3xl" />
       <div className="absolute right-[-8rem] bottom-[-10rem] h-80 w-80 rounded-full bg-teal-300/10 blur-3xl" />
