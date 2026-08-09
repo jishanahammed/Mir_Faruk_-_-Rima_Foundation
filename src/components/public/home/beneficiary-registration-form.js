@@ -23,6 +23,12 @@ const beneficiaryFormCopy = {
     selectDistrictFirstOption: "— Select District First —",
     noDistrictsFound: "No districts found",
     noUpazilasFound: "No upazilas found",
+    selectUpazilaFirst: "select upazila first",
+    selectUpazilaFirstOption: "— Select Upazila First —",
+    selectLocalGovernmentFirst: "select union / pourashava first",
+    selectLocalGovernmentFirstOption: "— Select Union / Pourashava First —",
+    noLocalGovernmentsFound: "No union parishads / pourashavas found",
+    noWardsFound: "No wards found",
     backToRegistration: "Back to Registration",
     back: "Back",
     continue: "Save & Continue",
@@ -67,6 +73,8 @@ const beneficiaryFormCopy = {
       division: "Division",
       district: "District",
       upazila: "Upazila / Thana",
+      unionParishadorPourashava: "Union Parishad / Pourashava",
+      ward: "Ward No.",
       unionWard: "Union / Ward",
       villageArea: "Village / Area",
       maritalStatus: "Marital Status",
@@ -152,6 +160,12 @@ const beneficiaryFormCopy = {
     selectDistrictFirstOption: "— প্রথমে জেলা নির্বাচন করুন —",
     noDistrictsFound: "কোনো জেলা পাওয়া যায়নি",
     noUpazilasFound: "কোনো উপজেলা পাওয়া যায়নি",
+    selectUpazilaFirst: "প্রথমে উপজেলা নির্বাচন করুন",
+    selectUpazilaFirstOption: "— প্রথমে উপজেলা নির্বাচন করুন —",
+    selectLocalGovernmentFirst: "প্রথমে ইউনিয়ন / পৌরসভা নির্বাচন করুন",
+    selectLocalGovernmentFirstOption: "— প্রথমে ইউনিয়ন / পৌরসভা নির্বাচন করুন —",
+    noLocalGovernmentsFound: "কোনো ইউনিয়ন পরিষদ / পৌরসভা পাওয়া যায়নি",
+    noWardsFound: "কোনো ওয়ার্ড পাওয়া যায়নি",
     backToRegistration: "রেজিস্ট্রেশনে ফিরে যান",
     back: "পেছনে",
     continue: "সংরক্ষণ করে এগিয়ে যান",
@@ -196,6 +210,8 @@ const beneficiaryFormCopy = {
       division: "বিভাগ",
       district: "জেলা",
       upazila: "উপজেলা / থানা",
+      unionParishadorPourashava: "ইউনিয়ন পরিষদ / পৌরসভা",
+      ward: "ওয়ার্ড নং",
       unionWard: "ইউনিয়ন / ওয়ার্ড",
       villageArea: "গ্রাম / এলাকা",
       maritalStatus: "বৈবাহিক অবস্থা",
@@ -276,6 +292,12 @@ const beneficiaryFormCopy = {
     selectDistrictFirstOption: "— Vaelg distrikt foerst —",
     noDistrictsFound: "Ingen distrikter fundet",
     noUpazilasFound: "Ingen upazilaer fundet",
+    selectUpazilaFirst: "vaelg upazila foerst",
+    selectUpazilaFirstOption: "— Vaelg upazila foerst —",
+    selectLocalGovernmentFirst: "vaelg union / pourashava foerst",
+    selectLocalGovernmentFirstOption: "— Vaelg union / pourashava foerst —",
+    noLocalGovernmentsFound: "Ingen union parishader / pourashavaer fundet",
+    noWardsFound: "Ingen wards fundet",
     backToRegistration: "Tilbage til registrering",
     back: "Tilbage",
     continue: "Gem og fortsaet",
@@ -320,6 +342,8 @@ const beneficiaryFormCopy = {
       division: "Division",
       district: "Distrikt",
       upazila: "Upazila / Thana",
+      unionParishadorPourashava: "Union Parishad / Pourashava",
+      ward: "Ward nr.",
       unionWard: "Union / Ward",
       villageArea: "Landsby / omraade",
       maritalStatus: "Civilstand",
@@ -402,6 +426,10 @@ const initialFormState = {
   district: "",
   upazilaId: "",
   upazila: "",
+  unionParishadorPourashavaId: "",
+  unionParishadorPourashava: "",
+  wardId: "",
+  ward: "",
   unionWard: "",
   villageArea: "",
   maritalStatus: "",
@@ -689,6 +717,74 @@ function useUpazilaOptions(districtId) {
   return upazilas;
 }
 
+function useLocalGovernmentOptions(upazilaId) {
+  const [localGovernments, setLocalGovernments] = useState([]);
+
+  useEffect(() => {
+    if (!upazilaId) {
+      setLocalGovernments([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    apiGet(`Locations/local-governments?upazilaId=${upazilaId}`)
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          setLocalGovernments(data);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setLocalGovernments([]);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [upazilaId]);
+
+  return localGovernments;
+}
+
+function useWardOptions(localGovernmentId) {
+  const [wards, setWards] = useState([]);
+
+  useEffect(() => {
+    if (!localGovernmentId) {
+      setWards([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    apiGet(`Locations/wards?localGovernmentId=${localGovernmentId}`)
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          setWards(data);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setWards([]);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [localGovernmentId]);
+
+  return wards;
+}
+
+function wardLabel(item, htmlLang) {
+  if (!item) return "";
+  const name = locationName(item, htmlLang);
+  return name ? `${item.wardNo} — ${name}` : String(item.wardNo);
+}
+
 function locationName(item, htmlLang) {
   if (!item) return "";
   if (htmlLang === "bn") return item.nameBn || item.nameEn;
@@ -696,7 +792,16 @@ function locationName(item, htmlLang) {
   return item.nameEn;
 }
 
-function LocationCascadeFields({ prefix, form, errors, onChange, text, divisions, htmlLang }) {
+function LocationCascadeFields({
+  prefix,
+  form,
+  errors,
+  onChange,
+  text,
+  divisions,
+  htmlLang,
+  includeLocalGovernment = false,
+}) {
   const divisionIdField = prefix ? `${prefix}DivisionId` : "divisionId";
   const divisionField = prefix ? `${prefix}Division` : "division";
   const districtIdField = prefix ? `${prefix}DistrictId` : "districtId";
@@ -706,6 +811,44 @@ function LocationCascadeFields({ prefix, form, errors, onChange, text, divisions
 
   const districts = useDistrictOptions(form[divisionIdField]);
   const upazilas = useUpazilaOptions(form[districtIdField]);
+  const localGovernments = useLocalGovernmentOptions(
+    includeLocalGovernment ? form.upazilaId : "",
+  );
+  const wards = useWardOptions(
+    includeLocalGovernment ? form.unionParishadorPourashavaId : "",
+  );
+
+  const clearLocalGovernmentAndWard = () => {
+    if (!includeLocalGovernment) return;
+    onChange("unionParishadorPourashavaId")({ target: { type: "text", value: "" } });
+    onChange("unionParishadorPourashava")({ target: { type: "text", value: "" } });
+    onChange("wardId")({ target: { type: "text", value: "" } });
+    onChange("ward")({ target: { type: "text", value: "" } });
+  };
+
+  const handleLocalGovernmentChange = (event) => {
+    const localGovernmentId = event.target.value;
+    const selected = localGovernments.find((item) => String(item.id) === localGovernmentId);
+
+    onChange("unionParishadorPourashavaId")({
+      target: { type: "text", value: localGovernmentId },
+    });
+    onChange("unionParishadorPourashava")({
+      target: { type: "text", value: selected ? locationName(selected, htmlLang) : "" },
+    });
+    onChange("wardId")({ target: { type: "text", value: "" } });
+    onChange("ward")({ target: { type: "text", value: "" } });
+  };
+
+  const handleWardChange = (event) => {
+    const wardId = event.target.value;
+    const selected = wards.find((item) => String(item.id) === wardId);
+
+    onChange("wardId")({ target: { type: "text", value: wardId } });
+    onChange("ward")({
+      target: { type: "text", value: selected ? wardLabel(selected, htmlLang) : "" },
+    });
+  };
 
   const handleDivisionChange = (event) => {
     const divisionId = event.target.value;
@@ -719,6 +862,7 @@ function LocationCascadeFields({ prefix, form, errors, onChange, text, divisions
     onChange(districtField)({ target: { type: "text", value: "" } });
     onChange(upazilaIdField)({ target: { type: "text", value: "" } });
     onChange(upazilaField)({ target: { type: "text", value: "" } });
+    clearLocalGovernmentAndWard();
   };
 
   const handleDistrictChange = (event) => {
@@ -731,6 +875,7 @@ function LocationCascadeFields({ prefix, form, errors, onChange, text, divisions
     });
     onChange(upazilaIdField)({ target: { type: "text", value: "" } });
     onChange(upazilaField)({ target: { type: "text", value: "" } });
+    clearLocalGovernmentAndWard();
   };
 
   const handleUpazilaChange = (event) => {
@@ -741,6 +886,7 @@ function LocationCascadeFields({ prefix, form, errors, onChange, text, divisions
     onChange(upazilaField)({
       target: { type: "text", value: selected ? locationName(selected, htmlLang) : "" },
     });
+    clearLocalGovernmentAndWard();
   };
 
   return (
@@ -841,6 +987,84 @@ function LocationCascadeFields({ prefix, form, errors, onChange, text, divisions
           ))}
         </select>
       </Field>
+
+      {includeLocalGovernment ? (
+        <>
+          <Field
+            id="unionParishadorPourashavaId"
+            label={
+              <>
+                {text.labels.unionParishadorPourashava}
+                {!form.upazilaId ? (
+                  <span className="ml-1 text-[11px] font-normal text-slate-400">
+                    ({text.selectUpazilaFirst})
+                  </span>
+                ) : null}
+              </>
+            }
+            error={errors.unionParishadorPourashavaId}
+          >
+            <select
+              id="unionParishadorPourashavaId"
+              name="unionParishadorPourashavaId"
+              value={form.unionParishadorPourashavaId}
+              onChange={handleLocalGovernmentChange}
+              disabled={!form.upazilaId}
+              className={inputClass(Boolean(errors.unionParishadorPourashavaId))}
+            >
+              <option value="">
+                {form.upazilaId
+                  ? localGovernments.length === 0
+                    ? text.noLocalGovernmentsFound
+                    : `${text.selectPrefix} ${text.labels.unionParishadorPourashava}`
+                  : text.selectUpazilaFirstOption}
+              </option>
+              {localGovernments.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {locationName(item, htmlLang)}
+                </option>
+              ))}
+            </select>
+          </Field>
+
+          <Field
+            id="wardId"
+            label={
+              <>
+                {text.labels.ward}
+                {!form.unionParishadorPourashavaId ? (
+                  <span className="ml-1 text-[11px] font-normal text-slate-400">
+                    ({text.selectLocalGovernmentFirst})
+                  </span>
+                ) : null}
+              </>
+            }
+            error={errors.wardId}
+          >
+            <select
+              id="wardId"
+              name="wardId"
+              value={form.wardId}
+              onChange={handleWardChange}
+              disabled={!form.unionParishadorPourashavaId}
+              className={inputClass(Boolean(errors.wardId))}
+            >
+              <option value="">
+                {form.unionParishadorPourashavaId
+                  ? wards.length === 0
+                    ? text.noWardsFound
+                    : `${text.selectPrefix} ${text.labels.ward}`
+                  : text.selectLocalGovernmentFirstOption}
+              </option>
+              {wards.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {wardLabel(item, htmlLang)}
+                </option>
+              ))}
+            </select>
+          </Field>
+        </>
+      ) : null}
     </>
   );
 }
@@ -1151,6 +1375,7 @@ export function BeneficiaryRegistrationForm() {
                 text={text}
                 divisions={divisions}
                 htmlLang={siteCopy.htmlLang}
+                includeLocalGovernment
               />
               <TextInput id="unionWard" {...fieldProps} />
               <TextInput id="villageArea" {...fieldProps} />

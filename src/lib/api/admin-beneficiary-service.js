@@ -158,6 +158,13 @@ function normalizeBeneficiaryDetails(payload) {
     gender: pickValue(payload, "gender", "Gender", ""),
     presentAddress: pickValue(payload, "presentAddress", "PresentAddress", ""),
     permanentAddress: pickValue(payload, "permanentAddress", "PermanentAddress", ""),
+    unionParishadorPourashava: pickValue(
+      payload,
+      "unionParishadorPourashava",
+      "UnionParishadorPourashava",
+      "",
+    ),
+    ward: pickValue(payload, "ward", "Ward", ""),
     unionWard: pickValue(payload, "unionWard", "UnionWard", ""),
     villageArea: pickValue(payload, "villageArea", "VillageArea", ""),
     maritalStatus: pickValue(payload, "maritalStatus", "MaritalStatus", ""),
@@ -265,6 +272,12 @@ export async function getAdminBeneficiaryList(filters = {}) {
 export async function getAdminBeneficiaryById(id) {
   return normalizeBeneficiaryDetails(
     await apiGetById("Beneficiaries", id, await getAdminAuthConfig()),
+  );
+}
+
+export async function getDonorViewBeneficiaryById(id) {
+  return normalizeBeneficiaryDetails(
+    await apiGetById("Beneficiaries/me-view", id, await getAdminAuthConfig()),
   );
 }
 

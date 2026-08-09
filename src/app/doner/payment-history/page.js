@@ -7,6 +7,7 @@ import {
   PAYMENT_METHOD_OPTIONS,
   PAYMENT_STATUS_OPTIONS,
 } from "@/lib/api/donor-portal-service";
+import { getDonorAvailableAmountSummary } from "@/lib/api/donor-amount-assignment-service";
 import { getCurrentDonorUser } from "@/lib/donor-session";
 
 export const metadata = {
@@ -74,11 +75,18 @@ export default async function DonerPaymentHistoryPage({ searchParams }) {
     hasPreviousPage: false,
   };
   let errorMessage = "";
+  let amountSummary = null;
 
   try {
     paymentHistories = await getDonorPaymentHistoryList(user, filters);
   } catch (error) {
     errorMessage = getApiErrorMessage(error);
+  }
+
+  try {
+    amountSummary = await getDonorAvailableAmountSummary(user);
+  } catch {
+    amountSummary = null;
   }
 
   return (
@@ -93,6 +101,7 @@ export default async function DonerPaymentHistoryPage({ searchParams }) {
       <DonorPortalPaymentHistoryTable
         paymentHistories={paymentHistories}
         filters={filters}
+        amountSummary={amountSummary}
       />
     </div>
   );

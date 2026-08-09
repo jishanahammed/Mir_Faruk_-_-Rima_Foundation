@@ -156,6 +156,8 @@ function normalizePaymentHistory(payload) {
     receiptUrl,
     receiptLink: buildAssetUrl(receiptUrl),
     remarks: pickValue(payload, "remarks", "Remarks", ""),
+    isAssigned: Boolean(pickValue(payload, "isAssigned", "IsAssigned", false)),
+    beneficiaryName: pickValue(payload, "beneficiaryName", "BeneficiaryName", ""),
     createdAt: pickValue(payload, "createdAt", "CreatedAt", null),
     updatedAt: pickValue(payload, "updatedAt", "UpdatedAt", null),
   };

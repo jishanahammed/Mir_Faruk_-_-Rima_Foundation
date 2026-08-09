@@ -18,6 +18,7 @@ import {
 const navItems = [
   { label: "Dashboard", href: "/doner", icon: "dashboard" },
   { label: "Payment History", href: "/doner/payment-history", icon: "payment" },
+  { label: "Amount Allocation", href: "/doner/amount-allocation", icon: "allocation" },
   { label: "Donation Statement", href: "/doner/donation-statement", icon: "statement" },
   { label: "Profile Update", href: "/doner/profile", icon: "profile" },
   { label: "Change Password", href: "/doner/change-password", icon: "lock" },
@@ -31,6 +32,10 @@ const routeTitles = {
   "/doner/payment-history": {
     eyebrow: "My Donations",
     title: "Payment history",
+  },
+  "/doner/amount-allocation": {
+    eyebrow: "My Donations",
+    title: "Amount allocation",
   },
   "/doner/donation-statement": {
     eyebrow: "My Account",
@@ -84,6 +89,16 @@ function Icon({ name }) {
         <path d="M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M14 3v4h4" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M9 12h6M9 15.5h6M9 8.5h2" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (name === "allocation") {
+    return (
+      <svg {...common}>
+        <circle cx="12" cy="7" r="3" />
+        <path d="M5 20a7 7 0 0 1 14 0" strokeLinecap="round" />
+        <path d="M12 11v9M9 15h6" strokeLinecap="round" />
       </svg>
     );
   }

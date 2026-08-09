@@ -1,8 +1,4 @@
 import Link from "next/link";
-import { updateBeneficiaryStatusAction } from "@/app/admin/beneficiaries/actions";
-import { AutoSubmitSelect } from "@/components/admin/auto-submit-select";
-import { BeneficiaryReportDownloadButton } from "@/components/admin/beneficiary-report-download-button";
-import { BENEFICIARY_STATUS_OPTIONS } from "@/lib/api/admin-beneficiary-service";
 
 const statusClassNames = {
   Pending: "border-amber-200 bg-amber-50 text-amber-700",
@@ -125,9 +121,9 @@ function BooleanBadge({ value, trueLabel = "Yes", falseLabel = "No" }) {
 
 function Section({ eyebrow, title, description, children }) {
   return (
-    <section className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm shadow-cyan-950/5">
+    <section className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm shadow-emerald-950/5">
       <div className="border-b border-slate-100 px-6 py-5">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-700">{eyebrow}</p>
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">{eyebrow}</p>
         <h2 className="mt-2 text-xl font-bold tracking-tight text-slate-950">{title}</h2>
         {description ? <p className="mt-2 text-sm leading-6 text-slate-500">{description}</p> : null}
       </div>
@@ -149,7 +145,7 @@ function DetailItem({ label, value, className = "" }) {
 
 function LongTextItem({ label, value }) {
   return (
-    <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm shadow-cyan-950/5">
+    <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm shadow-emerald-950/5">
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">{label}</p>
       <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-slate-700">
         {value || "Not provided"}
@@ -206,7 +202,7 @@ function DocumentPreview({ document }) {
 
 function DocumentCard({ document }) {
   return (
-    <article className="rounded-[26px] border border-slate-200 bg-white p-4 shadow-sm shadow-cyan-950/5">
+    <article className="rounded-[26px] border border-slate-200 bg-white p-4 shadow-sm shadow-emerald-950/5">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-sm font-bold text-slate-950">{document.label}</p>
@@ -227,7 +223,7 @@ function DocumentCard({ document }) {
           href={document.fileUrl}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-10 items-center justify-center rounded-xl border border-cyan-200 bg-cyan-50 px-4 text-sm font-semibold text-cyan-800 transition hover:border-cyan-300 hover:bg-cyan-100"
+          className="inline-flex h-10 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 px-4 text-sm font-semibold text-emerald-800 transition hover:border-emerald-300 hover:bg-emerald-100"
         >
           Open document
         </a>
@@ -236,54 +232,24 @@ function DocumentCard({ document }) {
   );
 }
 
-function StatusControl({ beneficiary, currentPath }) {
-  return (
-    <form action={updateBeneficiaryStatusAction} className="space-y-3">
-      <input type="hidden" name="id" value={beneficiary.id} />
-      <input type="hidden" name="returnPath" value={currentPath} />
-      <label className="block">
-        <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
-          Review status
-        </span>
-        <AutoSubmitSelect
-          name="status"
-          defaultValue={beneficiary.status}
-          className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100"
-        >
-          {BENEFICIARY_STATUS_OPTIONS.map((status) => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
-        </AutoSubmitSelect>
-      </label>
-      <p className="text-xs leading-5 text-slate-500">
-        Changing the selection updates the beneficiary status immediately.
-      </p>
-    </form>
-  );
-}
-
-export function BeneficiaryProfileView({ beneficiary, backHref, currentPath }) {
+export function DonorBeneficiaryProfileView({ beneficiary, backHref }) {
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-[32px] border border-cyan-100 bg-white shadow-xl shadow-cyan-950/5">
-        <div className="bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.18),_transparent_38%),linear-gradient(135deg,#f8fafc,#effcff)] p-6 sm:p-7">
+      <section className="overflow-hidden rounded-[32px] border border-emerald-100 bg-white shadow-xl shadow-emerald-950/5">
+        <div className="bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_38%),linear-gradient(135deg,#f8fafc,#ecfdf5)] p-6 sm:p-7">
           <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
             <div className="flex items-start gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-white text-lg font-black text-cyan-800 shadow-sm ring-1 ring-cyan-100">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-white text-lg font-black text-emerald-800 shadow-sm ring-1 ring-emerald-100">
                 {getInitials(beneficiary.fullName)}
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">
                   Beneficiary Profile
                 </p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950">
                   {beneficiary.fullName || "Unnamed beneficiary"}
                 </h1>
-                <p className="mt-2 text-sm font-medium text-slate-500">
-                  ID #{beneficiary.id} - User {beneficiary.userId || "Not assigned"}
-                </p>
+                <p className="mt-2 text-sm font-medium text-slate-500">ID #{beneficiary.id}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <StatusBadge status={beneficiary.status} />
                   <span className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
@@ -297,18 +263,12 @@ export function BeneficiaryProfileView({ beneficiary, backHref, currentPath }) {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row xl:flex-col">
-              <div className="flex flex-col gap-3 sm:flex-row xl:flex-col">
-                <Link
-                  href={backHref}
-                  className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:border-cyan-200 hover:text-cyan-800"
-                >
-                  Back to list
-                </Link>
-                <BeneficiaryReportDownloadButton beneficiary={beneficiary} />
-              </div>
-              <div className="min-w-[280px] rounded-[26px] border border-white/70 bg-white/90 p-4 shadow-sm backdrop-blur">
-                <StatusControl beneficiary={beneficiary} currentPath={currentPath} />
-              </div>
+              <Link
+                href={backHref}
+                className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:text-emerald-800"
+              >
+                Back to search
+              </Link>
             </div>
           </div>
         </div>
@@ -344,6 +304,7 @@ export function BeneficiaryProfileView({ beneficiary, backHref, currentPath }) {
           <DetailItem label="Full Name" value={beneficiary.fullName} />
           <DetailItem label="Father / Husband Name" value={beneficiary.fatherOrHusbandName} />
           <DetailItem label="Mother Name" value={beneficiary.motherName} />
+          <DetailItem label="Division" value={beneficiary.division} />
           <DetailItem label="District" value={beneficiary.district} />
           <DetailItem label="Upazila" value={beneficiary.upazila} />
           <DetailItem

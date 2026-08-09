@@ -4,13 +4,23 @@ import {
   getAdminDivisions,
   getAdminDistricts,
   getAdminUpazilas,
+  getAdminLocalGovernments,
+  getAdminWards,
 } from "@/lib/api/admin-location-service";
-import { DivisionTable, DistrictTable, UpazilaTable } from "@/components/admin/location_Component/location-table";
+import {
+  DivisionTable,
+  DistrictTable,
+  UpazilaTable,
+  LocalGovernmentTable,
+  WardTable,
+} from "@/components/admin/location_Component/location-table";
 import { LocationAddModal } from "@/components/admin/location_Component/location-add-modal";
 import {
   createDivisionAction, updateDivisionAction,
   createDistrictAction, updateDistrictAction,
   createUpazilaAction, updateUpazilaAction,
+  createLocalGovernmentAction, updateLocalGovernmentAction,
+  createWardAction, updateWardAction,
 } from "@/app/admin/location-page/actions";
 
 export const metadata = {
@@ -18,12 +28,22 @@ export const metadata = {
 };
 
 const PAGE_SIZE_DEFAULT = 10;
-const TABS = ["divisions", "districts", "upazilas"];
+const TABS = ["divisions", "districts", "upazilas", "local-governments", "wards"];
 
 const TAB_CONFIG = {
   divisions: { label: "Divisions", eyebrow: "Level 1", color: "cyan" },
   districts:  { label: "Districts",  eyebrow: "Level 2", color: "violet" },
   upazilas:   { label: "Upazilas / Thanas", eyebrow: "Level 3", color: "emerald" },
+  "local-governments": { label: "Union Parishad / Pourashava", eyebrow: "Level 4", color: "amber" },
+  wards: { label: "Wards", eyebrow: "Level 5", color: "sky" },
+};
+
+const ADD_BUTTON_LABELS = {
+  divisions: "Division",
+  districts: "District",
+  upazilas: "Upazila",
+  "local-governments": "Union / Pourashava",
+  wards: "Ward",
 };
 
 function readParam(params, key, fallback = "") {
@@ -61,21 +81,27 @@ export default async function AdminLocationPage({ searchParams }) {
     : PAGE_SIZE_DEFAULT;
   const divisionId = readParam(params, "divisionId") ? Number(readParam(params, "divisionId")) : null;
   const districtId = readParam(params, "districtId") ? Number(readParam(params, "districtId")) : null;
+  const upazilaId = readParam(params, "upazilaId") ? Number(readParam(params, "upazilaId")) : null;
+  const localGovernmentId = readParam(params, "localGovernmentId")
+    ? Number(readParam(params, "localGovernmentId"))
+    : null;
 
-  let allDivisions = [], allDistricts = [], allUpazilas = [];
+  let allDivisions = [], allDistricts = [], allUpazilas = [], allLocalGovernments = [], allWards = [];
   let errorMessage = "";
 
   try {
-    [allDivisions, allDistricts, allUpazilas] = await Promise.all([
+    [allDivisions, allDistricts, allUpazilas, allLocalGovernments, allWards] = await Promise.all([
       getAdminDivisions(),
       getAdminDistricts(),
       getAdminUpazilas(),
+      getAdminLocalGovernments(),
+      getAdminWards(),
     ]);
   } catch (err) {
     errorMessage = getApiErrorMessage(err);
   }
 
-  const filters = { search, page, pageSize, divisionId, districtId };
+  const filters = { search, page, pageSize, divisionId, districtId, upazilaId, localGovernmentId };
 
   const divisionData = paginate(
     allDivisions,
@@ -97,16 +123,42 @@ export default async function AdminLocationPage({ searchParams }) {
     (it, q) => it.nameEn.toLowerCase().includes(q) || it.nameBn.includes(q) || (it.nameDk ?? "").toLowerCase().includes(q),
   );
 
+  const localGovernmentPool = upazilaId
+    ? allLocalGovernments.filter((lg) => lg.upazilaId === upazilaId)
+    : allLocalGovernments;
+  const localGovernmentData = paginate(
+    localGovernmentPool,
+    page, pageSize, search,
+    (it, q) => it.nameEn.toLowerCase().includes(q) || it.nameBn.includes(q) || (it.nameDk ?? "").toLowerCase().includes(q),
+  );
+
+  const wardPool = localGovernmentId
+    ? allWards.filter((w) => w.localGovernmentId === localGovernmentId)
+    : allWards;
+  const wardData = paginate(
+    wardPool,
+    page, pageSize, search,
+    (it, q) =>
+      it.nameEn.toLowerCase().includes(q) ||
+      it.nameBn.includes(q) ||
+      (it.nameDk ?? "").toLowerCase().includes(q) ||
+      String(it.wardNo).includes(q),
+  );
+
   const tabCounts = {
     divisions: allDivisions.length,
     districts: allDistricts.length,
     upazilas: allUpazilas.length,
+    "local-governments": allLocalGovernments.length,
+    wards: allWards.length,
   };
 
   const tabColors = {
     divisions: { active: "border-cyan-500 text-cyan-700 bg-cyan-50", dot: "bg-cyan-500", count: "bg-cyan-100 text-cyan-700" },
     districts:  { active: "border-violet-500 text-violet-700 bg-violet-50", dot: "bg-violet-500", count: "bg-violet-100 text-violet-700" },
     upazilas:   { active: "border-emerald-500 text-emerald-700 bg-emerald-50", dot: "bg-emerald-500", count: "bg-emerald-100 text-emerald-700" },
+    "local-governments": { active: "border-amber-500 text-amber-700 bg-amber-50", dot: "bg-amber-500", count: "bg-amber-100 text-amber-700" },
+    wards: { active: "border-sky-500 text-sky-700 bg-sky-50", dot: "bg-sky-500", count: "bg-sky-100 text-sky-700" },
   };
 
   return (
@@ -117,12 +169,14 @@ export default async function AdminLocationPage({ searchParams }) {
           <p className="text-xs font-bold tracking-widest text-cyan-700 uppercase">Master Data</p>
           <h1 className="mt-1 text-2xl font-extrabold text-slate-900">Location Management</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Manage the Division → District → Upazila hierarchy used in registration forms.
+            Manage the Division → District → Upazila → Union Parishad / Pourashava → Ward hierarchy
+            used in registration forms.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <span className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600">
-            {allDivisions.length} Div · {allDistricts.length} Dist · {allUpazilas.length} Upa
+            {allDivisions.length} Div · {allDistricts.length} Dist · {allUpazilas.length} Upa ·{" "}
+            {allLocalGovernments.length} UP/Pour · {allWards.length} Ward
           </span>
         </div>
       </div>
@@ -155,13 +209,13 @@ export default async function AdminLocationPage({ searchParams }) {
               <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
                 <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
               </svg>
-              Add {TAB_CONFIG[activeTab].label.split(" ")[0]}
+              Add {ADD_BUTTON_LABELS[activeTab]}
             </Link>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 border-b border-slate-200 bg-white px-4 pt-3">
+        <div className="flex gap-1 overflow-x-auto border-b border-slate-200 bg-white px-4 pt-3">
           {TABS.map((tab) => {
             const isActive = tab === activeTab;
             const c = tabColors[tab];
@@ -169,7 +223,7 @@ export default async function AdminLocationPage({ searchParams }) {
               <Link
                 key={tab}
                 href={`/admin/location-page?tab=${tab}`}
-                className={`flex items-center gap-2 rounded-t-xl border-b-2 px-4 pb-3 pt-2 text-sm font-semibold transition ${
+                className={`flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 px-4 pb-3 pt-2 text-sm font-semibold transition ${
                   isActive
                     ? `${c.active} border-current`
                     : "border-transparent text-slate-500 hover:text-slate-800"
@@ -206,6 +260,20 @@ export default async function AdminLocationPage({ searchParams }) {
             districts={allDistricts}
           />
         )}
+        {activeTab === "local-governments" && (
+          <LocalGovernmentTable
+            data={localGovernmentData}
+            filters={filters}
+            upazilas={allUpazilas}
+          />
+        )}
+        {activeTab === "wards" && (
+          <WardTable
+            data={wardData}
+            filters={filters}
+            localGovernments={allLocalGovernments}
+          />
+        )}
       </section>
 
       {/* Add/Edit modal — rendered server-side via URL param */}
@@ -214,15 +282,23 @@ export default async function AdminLocationPage({ searchParams }) {
         params={params}
         divisions={allDivisions}
         districts={allDistricts}
+        upazilas={allUpazilas}
+        localGovernments={allLocalGovernments}
         allDivisions={allDivisions}
         allDistricts={allDistricts}
         allUpazilas={allUpazilas}
+        allLocalGovernments={allLocalGovernments}
+        allWards={allWards}
         createDivisionAction={createDivisionAction}
         updateDivisionAction={updateDivisionAction}
         createDistrictAction={createDistrictAction}
         updateDistrictAction={updateDistrictAction}
         createUpazilaAction={createUpazilaAction}
         updateUpazilaAction={updateUpazilaAction}
+        createLocalGovernmentAction={createLocalGovernmentAction}
+        updateLocalGovernmentAction={updateLocalGovernmentAction}
+        createWardAction={createWardAction}
+        updateWardAction={updateWardAction}
       />
     </div>
   );

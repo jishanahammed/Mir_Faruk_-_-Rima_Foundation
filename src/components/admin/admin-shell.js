@@ -36,6 +36,7 @@ const navSections = [
       { label: "Donor List", href: "/admin/donors", icon: "users" },
       { label: "Beneficiary List", href: "/admin/beneficiaries", icon: "list" },
       { label: "Payment History", href: "/admin/donersPayment", icon: "payment" },
+      { label: "Amount Assignment", href: "/admin/amount-assignment", icon: "payment" },
     ],
   },
 
@@ -88,6 +89,10 @@ const routeTitles = {
   "/admin/donersPayment": {
     eyebrow: "Donor Payments",
     title: "Donation / Payment History",
+  },
+  "/admin/amount-assignment": {
+    eyebrow: "Donor Allocations",
+    title: "Amount Assignment",
   },
   "/admin/beneficiaries": {
     eyebrow: "Beneficiary Management",

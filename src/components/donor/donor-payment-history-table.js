@@ -227,6 +227,11 @@ function MobilePaymentCard({ payment, serial }) {
           value={payment.adminApprovalStatus}
           tone={getStatusTone(payment.adminApprovalStatus)}
         />
+        {payment.isAssigned ? (
+          <StatusBadge value={payment.beneficiaryName || "Assigned"} tone="emerald" />
+        ) : (
+          <StatusBadge value="Available" tone="slate" />
+        )}
       </div>
     </article>
   );
@@ -248,7 +253,30 @@ function EmptyState() {
   );
 }
 
-export function DonorPortalPaymentHistoryTable({ paymentHistories, filters }) {
+function AmountSummaryStrip({ summary }) {
+  if (!summary) {
+    return null;
+  }
+
+  const cards = [
+    { label: "Total Payment Amount", value: summary.totalPaymentAmount, tone: "border-slate-200 bg-white text-slate-950" },
+    { label: "Total Assigned Amount", value: summary.totalAssignedAmount, tone: "border-amber-200 bg-amber-50 text-amber-700" },
+    { label: "Total Available Amount", value: summary.totalAvailableAmount, tone: "border-emerald-200 bg-emerald-50 text-emerald-700" },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 gap-4 p-6 pb-0 sm:grid-cols-3">
+      {cards.map((card) => (
+        <div key={card.label} className={`rounded-[24px] border p-5 shadow-sm shadow-emerald-950/5 ${card.tone}`}>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] opacity-70">{card.label}</p>
+          <p className="mt-2 text-xl font-black">{formatAmount(card.value)} BDT</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function DonorPortalPaymentHistoryTable({ paymentHistories, filters, amountSummary }) {
   const items = paymentHistories.items ?? [];
   const startItem =
     paymentHistories.totalCount === 0
@@ -265,6 +293,8 @@ export function DonorPortalPaymentHistoryTable({ paymentHistories, filters }) {
 
   return (
     <section className="overflow-hidden rounded-[30px] border border-emerald-100 bg-white shadow-xl shadow-emerald-950/5">
+      <AmountSummaryStrip summary={amountSummary} />
+
       <div className="border-b border-emerald-100 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_38%),linear-gradient(135deg,#f8fafc,#ecfdf5)] p-6">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
@@ -420,6 +450,7 @@ export function DonorPortalPaymentHistoryTable({ paymentHistories, filters }) {
                   <th className="px-4 py-3">Payment Method</th>
                   <th className="px-4 py-3">Amount</th>
                   <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Assignment</th>
                   <th className="px-4 py-3">Invoice</th>
                 </tr>
               </thead>
@@ -442,6 +473,13 @@ export function DonorPortalPaymentHistoryTable({ paymentHistories, filters }) {
                         value={item.adminApprovalStatus}
                         tone={getStatusTone(item.adminApprovalStatus)}
                       />
+                    </td>
+                    <td className="px-4 py-3">
+                      {item.isAssigned ? (
+                        <StatusBadge value={item.beneficiaryName || "Assigned"} tone="emerald" />
+                      ) : (
+                        <StatusBadge value="Available" tone="slate" />
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <InvoiceAction payment={item} />
