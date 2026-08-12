@@ -13,6 +13,11 @@ const nextConfig = {
       { pathname: "/**", search: "" },
       { pathname: "/api/asset", search: "**" },
     ],
+    // googleusercontent.com serves Google account profile photos shown after
+    // sign-in (see google-signin-button.js / customer-feedback-section.js).
+    remotePatterns: [
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+    ],
   },
 };
 
