@@ -6,7 +6,7 @@ import { useSiteLocale } from "@/components/public/providers/locale-provider";
 const feedbackCopy = {
   en: {
     eyebrow: "Your Voice",
-    title: "Customer Feedback",
+    title: "Feedback",
     nameLabel: "Full name",
     namePlaceholder: "Your full name",
     emailLabel: "Email",
@@ -27,7 +27,7 @@ const feedbackCopy = {
   },
   bn: {
     eyebrow: "আপনার মতামত",
-    title: "গ্রাহক মতামত",
+    title: "মতামত",
     nameLabel: "পূর্ণ নাম",
     namePlaceholder: "আপনার পূর্ণ নাম",
     emailLabel: "ইমেইল",
@@ -48,7 +48,7 @@ const feedbackCopy = {
   },
   da: {
     eyebrow: "Din stemme",
-    title: "Kundefeedback",
+    title: "Feedback",
     nameLabel: "Fulde navn",
     namePlaceholder: "Dit fulde navn",
     emailLabel: "E-mail",
@@ -69,7 +69,7 @@ const feedbackCopy = {
   },
 };
 
-function resolveCopy(htmlLang) {
+export function resolveCopy(htmlLang) {
   if (htmlLang === "bn") return feedbackCopy.bn;
   if (htmlLang === "da" || htmlLang === "dk") return feedbackCopy.da;
   return feedbackCopy.en;

@@ -11,11 +11,10 @@ export default async function FeedbackPage() {
 
   return (
     <>
-      <CustomerFeedbackShowcase
-        items={publishedFeedback}
-        text={{ eyebrow: "What people are saying", title: "Customer Feedback" }}
-      />
+
       <CustomerFeedbackSection />
+      <CustomerFeedbackShowcase items={publishedFeedback} />
+
     </>
   );
 }

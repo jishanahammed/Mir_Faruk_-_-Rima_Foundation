@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSiteLocale } from "@/components/public/providers/locale-provider";
+import { resolveCopy } from "@/components/public/home/customer-feedback-section";
 
 const PAGE_SIZE = 6;
 
@@ -62,7 +64,9 @@ function PaginationButton({ children, className, ...props }) {
   );
 }
 
-export function CustomerFeedbackShowcase({ items, text }) {
+export function CustomerFeedbackShowcase({ items }) {
+  const { copy: siteCopy } = useSiteLocale();
+  const text = resolveCopy(siteCopy.htmlLang);
   const [page, setPage] = useState(1);
 
   const totalPages = Math.max(1, Math.ceil((items?.length ?? 0) / PAGE_SIZE));
