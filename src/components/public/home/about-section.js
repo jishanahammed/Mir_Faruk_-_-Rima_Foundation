@@ -22,16 +22,16 @@ export function AboutSection({ className = "" }) {
 
       <div className="relative mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
         <div className="flex flex-col justify-between gap-8 rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur sm:p-8">
-          <div className="max-w-2xl space-y-3">
-            <p className="text-xs font-semibold tracking-[0.32em] text-cyan-700 uppercase">
+          <div className="mx-auto flex max-w-2xl flex-col items-center space-y-2.5 text-center sm:mx-0 sm:items-start sm:space-y-3 sm:text-left">
+            <p className="inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1 text-[11px] font-bold tracking-[0.22em] text-cyan-700 uppercase sm:bg-transparent sm:px-0 sm:py-0 sm:text-xs sm:tracking-[0.32em]">
               {about.eyebrow}
             </p>
-            <h2 className="max-w-xl text-2xl font-semibold leading-tight sm:text-[1.7rem] md:text-3xl">
+            <h2 className="mx-auto max-w-xl text-xl font-bold leading-[1.2] sm:mx-0 sm:text-[1.7rem] sm:font-semibold sm:leading-tight md:text-3xl">
               <span className="bg-[linear-gradient(135deg,_#0f172a_0%,_#0f766e_54%,_#0891b2_100%)] bg-clip-text text-transparent">
                 {about.title}
               </span>
             </h2>
-            <p className="text-sm leading-7 text-slate-600 md:text-base">
+            <p className="text-[0.9rem] leading-6 text-slate-600 sm:text-sm sm:leading-7 md:text-base">
               {about.description}
             </p>
           </div>

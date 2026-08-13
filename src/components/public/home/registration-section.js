@@ -31,7 +31,7 @@ export function RegistrationSection() {
                   aria-hidden="true"
                   className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.22),transparent_72%)] lg:hidden"
                 />
-                <div className="relative flex h-full flex-col items-start">
+                <div className="relative flex h-full flex-col items-center text-center sm:items-start sm:text-left">
                   <p className="inline-flex rounded-full border border-cyan-100 bg-cyan-50 px-3 py-1 text-[0.65rem] font-bold tracking-[0.22em] text-cyan-800 uppercase">
                     {registration.optionEyebrow}
                   </p>
@@ -44,12 +44,7 @@ export function RegistrationSection() {
                   {item.id === "donor-registration" ? (
                     <button
                       type="button"
-                      className="mt-5 inline-flex w-full justify-center rounded-full border border-cyan-200 px-5 py-3 text-sm font-semibold !text-white shadow-lg shadow-cyan-950/10 transition hover:opacity-90 sm:w-auto lg:mt-6"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(135deg, #0f172a, #155e75 52%, #0f766e)",
-                        color: "#ffffff",
-                      }}
+                      className="mt-5 inline-flex items-center justify-center rounded-full border-0 bg-[linear-gradient(135deg,#0e7490,#06b6d4_50%,#0d9488)] px-6 py-2.5 text-sm font-extrabold text-white! shadow-lg shadow-cyan-500/40 ring-2 ring-cyan-300/60 transition hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/50 hover:brightness-110 lg:mt-6"
                       onClick={() => setIsDonorModalOpen(true)}
                     >
                       {registration.continueLabel}
@@ -61,11 +56,7 @@ export function RegistrationSection() {
                           ? "/register/beneficiary"
                           : "/contact"
                       }
-                      className="mt-5 inline-flex w-full justify-center rounded-full border border-cyan-200 px-5 py-3 text-sm font-semibold !text-white shadow-lg shadow-cyan-950/10 visited:!text-white hover:!text-white focus:!text-white active:!text-white transition hover:opacity-90 sm:w-auto lg:mt-6"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(135deg, #0f172a, #155e75 52%, #0f766e)",
-                      }}
+                      className="mt-5 inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,#0e7490,#06b6d4_50%,#0d9488)] px-6 py-2.5 text-sm font-extrabold text-white! shadow-lg shadow-cyan-500/40 ring-2 ring-cyan-300/60 transition hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/50 hover:brightness-110 lg:mt-6"
                     >
                       {registration.continueLabel}
                     </a>

@@ -24,16 +24,16 @@ export function SupportModelPanel({ label, title, text, pillars = [], metrics = 
       />
       <div className="relative">
         <div className="flex items-start justify-between gap-4">
-          <div>
+          <div className="mx-auto flex flex-col items-center text-center sm:mx-0 sm:items-start sm:text-left">
             {label ? (
-              <p className="text-xs font-semibold tracking-[0.28em] text-cyan-700 uppercase">
+              <p className="inline-flex items-center rounded-full bg-cyan-50 px-3 py-1 text-[11px] font-bold tracking-[0.22em] text-cyan-700 uppercase sm:bg-transparent sm:px-0 sm:py-0 sm:text-xs sm:tracking-[0.28em]">
                 {label}
               </p>
             ) : null}
             {title ? (
               <h2
                 id={headingId}
-                className="mt-4 max-w-sm text-xl font-semibold leading-tight text-slate-950 sm:text-[1.7rem]"
+                className="mx-auto mt-3 max-w-sm text-xl font-bold leading-tight text-slate-950 sm:mx-0 sm:mt-4 sm:text-[1.7rem] sm:font-semibold"
               >
                 {title}
               </h2>
