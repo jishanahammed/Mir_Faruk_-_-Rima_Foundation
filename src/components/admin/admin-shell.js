@@ -26,7 +26,8 @@ const navSections = [
     items: [
       { label: "Board Members", href: "/admin/Board_Member_Page", icon: "board" },
       { label: "Locations", href: "/admin/location-page", icon: "location" },
-      { label: "CEO Bani", href: "/admin/CeoBani", icon: "profile" }
+      { label: "CEO Bani", href: "/admin/CeoBani", icon: "profile" },
+      { label: "Video Speech", href: "/admin/video-speech", icon: "folder" }
     ],
   },
 
@@ -138,6 +139,10 @@ const routeTitles = {
   "/admin/CeoBani": {
     eyebrow: "Content",
     title: "CEO Bani",
+  },
+  "/admin/video-speech": {
+    eyebrow: "Content",
+    title: "Video Speeches",
   },
   "/admin/registrations": {
     eyebrow: "Review Queue",

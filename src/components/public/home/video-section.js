@@ -4,8 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 
-const VIDEO_ID = "fjmA9lTguvc";
-const THUMBNAIL_SRC = "/mir-mohammad-faruk-motivational-video.webp";
+const FALLBACK_VIDEO_ID = "fjmA9lTguvc";
+const FALLBACK_THUMBNAIL_SRC = "/mir-mohammad-faruk-motivational-video.webp";
+
+function buildImageUrl(rawPath) {
+  if (!rawPath) return null;
+  const clean = rawPath.replace(/\\/g, "/").replace(/^~\//, "").replace(/^\/+/, "");
+  return `/api/asset?path=${encodeURIComponent(clean)}`;
+}
+
+function pickLocaleField(speech, base, lang) {
+  const key = `${base}${lang === "bn" ? "Bn" : lang === "dk" ? "Dk" : "En"}`;
+  return speech?.[key] || speech?.[`${base}En`] || "";
+}
 
 function PlayIcon() {
   return (
@@ -38,13 +49,29 @@ function CloseIcon() {
   );
 }
 
-export function VideoSection() {
-  const { copy } = useSiteLocale();
-  const { videoSpeech } = copy;
+export function VideoSection({ videoSpeech: dynamicSpeech }) {
+  const { copy, locale } = useSiteLocale();
+  const { videoSpeech: staticCopy } = copy;
   const [isOpen, setIsOpen] = useState(false);
   const closeButtonRef = useRef(null);
   const playButtonRef = useRef(null);
-  const embedSrc = `https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+
+  const lang = (locale ?? "EN").toLowerCase();
+  const videoId = dynamicSpeech?.videoId || FALLBACK_VIDEO_ID;
+  const thumbnailSrc = buildImageUrl(dynamicSpeech?.backgroundImageUrl) || FALLBACK_THUMBNAIL_SRC;
+  const displayName = dynamicSpeech ? pickLocaleField(dynamicSpeech, "name", lang) : staticCopy.name;
+  const displayRole = dynamicSpeech ? pickLocaleField(dynamicSpeech, "role", lang) : staticCopy.role;
+  const displayDescription = dynamicSpeech
+    ? pickLocaleField(dynamicSpeech, "description", lang) || staticCopy.description
+    : staticCopy.description;
+
+  const videoSpeech = {
+    ...staticCopy,
+    name: displayName,
+    role: displayRole,
+    description: displayDescription,
+  };
+  const embedSrc = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -150,7 +177,7 @@ export function VideoSection() {
         <div className="relative z-10 w-full">
           <figure className="relative aspect-video w-full overflow-hidden rounded-2xl border-[5px] border-white/95 bg-white shadow-[0_22px_55px_rgba(15,118,110,0.18),0_6px_18px_rgba(15,23,42,0.08)] sm:rounded-[20px] sm:border-[7px] md:rounded-[24px] md:border-[8px] lg:rounded-[28px] lg:border-[10px]">
             <Image
-              src={THUMBNAIL_SRC}
+              src={thumbnailSrc}
               alt={videoSpeech.imageAlt}
               fill
               loading="lazy"

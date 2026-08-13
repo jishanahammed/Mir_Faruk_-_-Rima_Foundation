@@ -18,7 +18,7 @@ import { useSiteLocale } from "@/components/public/providers/locale-provider";
 // Mobile-only composition of the home page: the hero is split apart so the
 // CEO letter sits right under the heading, followed by the highlight and
 // support cards as a single scrollable column with full-width CTAs.
-export function HomeMobile({ featuredProjects }) {
+export function HomeMobile({ featuredProjects, videoSpeech }) {
   const { copy } = useSiteLocale();
   const { hero } = copy;
   const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
@@ -38,7 +38,7 @@ export function HomeMobile({ featuredProjects }) {
 
       <CeoBani />
 
-      <VideoSection />
+      <VideoSection videoSpeech={videoSpeech} />
 
       <section className="relative overflow-hidden px-5 py-12">
         <div className="absolute right-[-5rem] top-8 h-48 w-48 rounded-full bg-cyan-100/60 blur-3xl" />

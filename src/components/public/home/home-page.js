@@ -13,12 +13,12 @@ import { useIsMobile } from "@/hooks/use-is-mobile";
 import { DonorImpactInfoUpdatePage } from "../goat-farming/donor-impact-info-update";
 import { VideoSection } from "@/components/public/home/video-section";
 
-export function HomePage({ featuredProjects }) {
+export function HomePage({ featuredProjects, videoSpeech }) {
   const isMobile = useIsMobile();
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
 
   if (isMobile) {
-    return <HomeMobile featuredProjects={featuredProjects} />;
+    return <HomeMobile featuredProjects={featuredProjects} videoSpeech={videoSpeech} />;
   }
 
   return (
@@ -26,7 +26,7 @@ export function HomePage({ featuredProjects }) {
       <Hero />
       <CeoBani />
 
-      <VideoSection />
+      <VideoSection videoSpeech={videoSpeech} />
 
       <AboutSection />
 

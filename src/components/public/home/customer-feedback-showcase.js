@@ -2,9 +2,20 @@
 
 import { useMemo, useState } from "react";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
-import { resolveCopy } from "@/components/public/home/customer-feedback-section";
 
 const PAGE_SIZE = 6;
+
+const SHOWCASE_TITLES = {
+  en: "Your Satisfaction",
+  bn: "আপনার সন্তুষ্টি",
+  da: "Din tilfredshed",
+};
+
+function resolveShowcaseTitle(htmlLang) {
+  if (htmlLang === "bn") return SHOWCASE_TITLES.bn;
+  if (htmlLang === "da" || htmlLang === "dk") return SHOWCASE_TITLES.da;
+  return SHOWCASE_TITLES.en;
+}
 
 function formatDate(value) {
   if (!value) return "";
@@ -70,7 +81,7 @@ function PaginationButton({ children, className, ...props }) {
 
 export function CustomerFeedbackShowcase({ items }) {
   const { copy: siteCopy } = useSiteLocale();
-  const text = resolveCopy(siteCopy.htmlLang);
+  const showcaseTitle = resolveShowcaseTitle(siteCopy.htmlLang);
   const [page, setPage] = useState(1);
 
   const totalPages = Math.max(1, Math.ceil((items?.length ?? 0) / PAGE_SIZE));
@@ -89,8 +100,7 @@ export function CustomerFeedbackShowcase({ items }) {
     <section className="bg-white py-10 sm:py-12">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <p className="text-xs font-black uppercase tracking-[0.22em] text-cyan-700">{text.eyebrow}</p>
-          <h2 className="mt-2 text-xl font-black tracking-tight text-slate-950 sm:text-2xl">{text.title}</h2>
+          <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">{showcaseTitle}</h2>
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
