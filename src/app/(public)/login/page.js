@@ -129,7 +129,7 @@ export default function LoginPage() {
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
-                  href="/register"
+                  href="/register/donor"
                   className="rounded-full bg-[linear-gradient(135deg,#06b6d4,#0f766e)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-950/25 transition hover:brightness-110"
                 >
                   {copy.registration.menuLabel}
@@ -249,7 +249,7 @@ export default function LoginPage() {
                 your account.
               </p>
               <Link
-                href="/register"
+                href="/register/donor"
                 className="mt-4 inline-flex rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75)] px-4 py-2 text-sm font-semibold !text-white visited:!text-white hover:!text-white focus-visible:!text-white active:!text-white shadow-md shadow-slate-900/10 transition hover:brightness-110"
               >
                 Go to registration

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSiteLocale } from "@/components/public/providers/locale-provider";
 import { apiPost } from "@/lib/api/browser-api-service";
 import { DonateBankInfoModal } from "@/components/public/donate/donate-bank-info-modal";
 
@@ -9,8 +10,6 @@ const donorFormCopy = {
   en: {
     eyebrow: "Donor Account",
     title: "Donor Registration",
-    closeLabel: "Close donor registration form",
-    closeActionLabel: "Close",
     submitLabel: "Create Donor Account",
     processingLabel: "Creating account...",
     successTitle: "Registration details received",
@@ -74,11 +73,9 @@ const donorFormCopy = {
   bn: {
     eyebrow: "দাতা অ্যাকাউন্ট",
     title: "দাতা রেজিস্ট্রেশন",
-    closeLabel: "দাতা রেজিস্ট্রেশন ফর্ম বন্ধ করুন",
-    closeActionLabel: "বন্ধ করুন",
     submitLabel: "দাতা অ্যাকাউন্ট তৈরি করুন",
     processingLabel: "অ্যাকাউন্ট তৈরি হচ্ছে...",
-    successTitle: "রেজিস্ট্রেশন তথ্য গ্রহণ করা হয়েছে",
+    successTitle: "রেজিস্ট্রেশন তথ্য গ্রহণ করা হয়েছে",
     successText:
       "ধন্যবাদ। দাতা অ্যাকাউন্ট অনুরোধ রিভিউ এবং লগইনের পর প্রোফাইল সম্পন্ন করার জন্য প্রস্তুত।",
     submitError:
@@ -96,17 +93,17 @@ const donorFormCopy = {
       profession: "পেশা",
       donorType: "দাতার ধরন",
       purpose: "অনুদানের পছন্দের উদ্দেশ্য",
-      frequency: "অনুদানের সময়কাল",
+      frequency: "অনুদানের সময়কাল",
       contactSection: "যোগাযোগের ব্যক্তি",
-      contactSectionHint: "দাতা সমন্বয়ের জন্য যার সাথে যোগাযোগ করা হবে তার তথ্য দিন।",
+      contactSectionHint: "দাতা সমন্বয়ের জন্য যার সাথে যোগাযোগ করা হবে তার তথ্য দিন।",
       contactFullName: "যোগাযোগের ব্যক্তির পূর্ণ নাম",
       contactMobile: "যোগাযোগের ব্যক্তির মোবাইল নম্বর",
       contactTelephone: "যোগাযোগের ব্যক্তির টেলিফোন নম্বর",
-      password: "পাসওয়ার্ড",
-      confirmPassword: "পাসওয়ার্ড নিশ্চিত করুন",
+      password: "পাসওয়ার্ড",
+      confirmPassword: "পাসওয়ার্ড নিশ্চিত করুন",
       isPublic: "আমার দাতা প্রোফাইল প্রকাশ্যে দেখান",
       isPublicHint:
-        "সক্রিয় থাকলে আপনার নাম ফাউন্ডেশনের প্রকাশ্য দাতা তালিকায় দেখা যেতে পারে। গোপন রাখতে টিক তুলে দিন।",
+        "সক্রিয় থাকলে আপনার নাম ফাউন্ডেশনের প্রকাশ্য দাতা তালিকায় দেখা যেতে পারে। গোপন রাখতে টিক তুলে দিন।",
       yesLabel: "হ্যাঁ",
       noLabel: "না",
       terms: "আমি শর্তাবলীতে সম্মত",
@@ -119,28 +116,26 @@ const donorFormCopy = {
       profession: "আপনার পেশা লিখুন",
       donorType: "দাতার ধরন নির্বাচন করুন",
       purpose: "অনুদানের উদ্দেশ্য নির্বাচন করুন",
-      frequency: "সময়কাল নির্বাচন করুন",
+      frequency: "সময়কাল নির্বাচন করুন",
       contactFullName: "যোগাযোগের ব্যক্তির পূর্ণ নাম লিখুন",
       contactMobile: "+৮৮০ ১XXXXXXXXX",
       contactTelephone: "+৮৮০ ২XXXXXXX",
-      password: "নিরাপদ পাসওয়ার্ড দিন",
-      confirmPassword: "পাসওয়ার্ড আবার লিখুন",
+      password: "নিরাপদ পাসওয়ার্ড দিন",
+      confirmPassword: "পাসওয়ার্ড আবার লিখুন",
     },
     donorTypes: ["ব্যক্তিগত", "সংস্থা", "কোম্পানি", "প্রবাসী দাতা"],
     purposes: [
       "সাধারণ তহবিল",
-      "করজে হাসানাহ সহায়তা",
+      "করজে হাসানাহ সহায়তা",
       "গবাদিপশু কর্মসূচি",
-      "জরুরি সহায়তা",
-      "শিক্ষা সহায়তা",
+      "জরুরি সহায়তা",
+      "শিক্ষা সহায়তা",
     ],
     frequencies: ["এককালীন", "মাসিক", "বার্ষিক"],
   },
   da: {
     eyebrow: "Donorkonto",
     title: "Donorregistrering",
-    closeLabel: "Luk donorregistreringsformular",
-    closeActionLabel: "Luk",
     submitLabel: "Opret Donorkonto",
     processingLabel: "Opretter konto...",
     successTitle: "Registreringsoplysninger modtaget",
@@ -242,21 +237,21 @@ const validationCopy = {
     termsRequired: "Please agree to the Terms & Conditions.",
   },
   bn: {
-    fullNameRequired: "পূর্ণ নাম প্রয়োজন।",
-    fullNameInvalid: "সংখ্যা ছাড়া সঠিক নাম লিখুন।",
-    emailRequired: "ইমেইল ঠিকানা প্রয়োজন।",
+    fullNameRequired: "পূর্ণ নাম প্রয়োজন।",
+    fullNameInvalid: "সংখ্যা ছাড়া সঠিক নাম লিখুন।",
+    emailRequired: "ইমেইল ঠিকানা প্রয়োজন।",
     emailInvalid: "সঠিক ইমেইল ঠিকানা লিখুন।",
-    mobileRequired: "মোবাইল নম্বর প্রয়োজন।",
+    mobileRequired: "মোবাইল নম্বর প্রয়োজন।",
     mobileInvalid: "সঠিক মোবাইল নম্বর লিখুন।",
-    contactFullNameInvalid: "সংখ্যা ছাড়া সঠিক যোগাযোগের ব্যক্তির নাম লিখুন।",
+    contactFullNameInvalid: "সংখ্যা ছাড়া সঠিক যোগাযোগের ব্যক্তির নাম লিখুন।",
     contactMobileInvalid: "সঠিক যোগাযোগের মোবাইল নম্বর লিখুন।",
     contactTelephoneInvalid: "সঠিক যোগাযোগের টেলিফোন নম্বর লিখুন।",
-    addressRequired: "ঠিকানা প্রয়োজন।",
+    addressRequired: "ঠিকানা প্রয়োজন।",
     addressInvalid: "ঠিকানা অন্তত ৮ অক্ষরের হতে হবে।",
-    passwordRequired: "পাসওয়ার্ড প্রয়োজন।",
+    passwordRequired: "পাসওয়ার্ড প্রয়োজন।",
     passwordInvalid: "অন্তত ৬ অক্ষর ব্যবহার করুন।",
-    confirmPasswordRequired: "কনফার্ম পাসওয়ার্ড প্রয়োজন।",
-    confirmPasswordInvalid: "পাসওয়ার্ড মিলছে না।",
+    confirmPasswordRequired: "কনফার্ম পাসওয়ার্ড প্রয়োজন।",
+    confirmPasswordInvalid: "পাসওয়ার্ড মিলছে না।",
     isPublicRequired: "আপনার দাতা প্রোফাইল প্রকাশ্যে দেখানো হবে কিনা তা নির্বাচন করুন।",
     termsRequired: "শর্তাবলীতে সম্মতি দিন।",
   },
@@ -402,7 +397,9 @@ function inputClass(hasError = false) {
   return `h-12 w-full rounded-xl border px-4 text-sm font-medium text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-4 ${stateClass}`;
 }
 
-export function DonorRegistrationModal({ isOpen, language, onClose }) {
+export function DonorRegistrationForm() {
+  const { copy: siteCopy } = useSiteLocale();
+  const language = siteCopy?.htmlLang;
   const copy = donorFormCopy[language] ?? donorFormCopy.en;
   const [form, setForm] = useState(initialFormState);
   const [validationErrors, setValidationErrors] = useState({});
@@ -411,42 +408,6 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
   const [submitMessage, setSubmitMessage] = useState("");
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
   const [isBankInfoOpen, setIsBankInfoOpen] = useState(false);
-
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen && !isBankInfoOpen) {
-    return null;
-  }
-
-  if (isBankInfoOpen) {
-    return (
-      <DonateBankInfoModal
-        isOpen={isBankInfoOpen}
-        onClose={() => {
-          setIsBankInfoOpen(false);
-          onClose();
-        }}
-      />
-    );
-  }
 
   const updateField = (field) => (event) => {
     const value =
@@ -540,440 +501,403 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/55 px-4 py-4 backdrop-blur-sm sm:items-center sm:py-8"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="donor-registration-title"
-    >
-      <button
-        type="button"
-        className="absolute inset-0 cursor-default"
-        aria-label={copy.closeLabel}
-        onClick={onClose}
-      />
-
-      <div className="relative max-h-[92vh] w-full max-w-3xl overflow-hidden rounded-3xl border border-white/70 bg-white shadow-2xl shadow-slate-950/30">
-        <div className="flex items-start justify-between gap-4 border-b border-slate-100 bg-[linear-gradient(135deg,_#f8fafc,_#ecfeff)] px-5 py-5 sm:px-7">
-          <div>
+    <>
+      <section className="bg-white px-6 py-12 lg:px-8">
+      <div className="mx-auto w-full max-w-3xl">
+        <div className="rounded-3xl border border-white/70 bg-white shadow-2xl shadow-slate-950/10">
+          <div className="border-b border-slate-100 bg-[linear-gradient(135deg,_#f8fafc,_#ecfeff)] px-5 py-6 sm:px-7">
             <p className="text-xs font-bold tracking-[0.24em] text-cyan-700 uppercase">
               {copy.eyebrow}
             </p>
-            <h2
-              id="donor-registration-title"
-              className="mt-2 text-2xl font-semibold text-slate-950 sm:text-3xl"
-            >
+            <h1 className="mt-2 text-2xl font-semibold text-slate-950 sm:text-3xl">
               {copy.title}
-            </h2>
+            </h1>
           </div>
-          <button
-            type="button"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-xl leading-none text-slate-500 transition hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-700"
-            aria-label={copy.closeLabel}
-            onClick={onClose}
-          >
-            x
-          </button>
-        </div>
 
-        <form
-          className="max-h-[calc(92vh-9.5rem)] overflow-y-auto px-5 py-6 sm:px-7"
-          onSubmit={handleSubmit}
-          noValidate
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field
-              id="donor-full-name"
-              label={copy.fields.fullName}
-              error={validationErrors.fullName}
-              required
-            >
-              <input
+          <form className="px-5 py-6 sm:px-7" onSubmit={handleSubmit} noValidate>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field
                 id="donor-full-name"
-                name="fullName"
-                type="text"
-                autoComplete="name"
+                label={copy.fields.fullName}
+                error={validationErrors.fullName}
                 required
-                disabled={isSubmitting}
-                value={form.fullName}
-                onChange={updateField("fullName")}
-                placeholder={copy.placeholders.fullName}
-                className={inputClass(Boolean(validationErrors.fullName))}
-              />
-            </Field>
+              >
+                <input
+                  id="donor-full-name"
+                  name="fullName"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  disabled={isSubmitting}
+                  value={form.fullName}
+                  onChange={updateField("fullName")}
+                  placeholder={copy.placeholders.fullName}
+                  className={inputClass(Boolean(validationErrors.fullName))}
+                />
+              </Field>
 
-            <Field
-              id="donor-email"
-              label={copy.fields.email}
-              error={validationErrors.email}
-              required
-            >
-              <input
+              <Field
                 id="donor-email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                label={copy.fields.email}
+                error={validationErrors.email}
                 required
-                disabled={isSubmitting}
-                value={form.email}
-                onChange={updateField("email")}
-                placeholder={copy.placeholders.email}
-                className={inputClass(Boolean(validationErrors.email))}
-              />
-            </Field>
+              >
+                <input
+                  id="donor-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  disabled={isSubmitting}
+                  value={form.email}
+                  onChange={updateField("email")}
+                  placeholder={copy.placeholders.email}
+                  className={inputClass(Boolean(validationErrors.email))}
+                />
+              </Field>
 
-            <Field
-              id="donor-mobile"
-              label={copy.fields.mobile}
-              error={validationErrors.mobile}
-              required
-            >
-              <input
+              <Field
                 id="donor-mobile"
-                name="mobile"
-                type="tel"
-                autoComplete="tel"
+                label={copy.fields.mobile}
+                error={validationErrors.mobile}
                 required
-                disabled={isSubmitting}
-                value={form.mobile}
-                onChange={updateField("mobile")}
-                placeholder={copy.placeholders.mobile}
-                className={inputClass(Boolean(validationErrors.mobile))}
-              />
-            </Field>
+              >
+                <input
+                  id="donor-mobile"
+                  name="mobile"
+                  type="tel"
+                  autoComplete="tel"
+                  required
+                  disabled={isSubmitting}
+                  value={form.mobile}
+                  onChange={updateField("mobile")}
+                  placeholder={copy.placeholders.mobile}
+                  className={inputClass(Boolean(validationErrors.mobile))}
+                />
+              </Field>
 
-            <Field
-              id="donor-address"
-              label={copy.fields.address}
-              error={validationErrors.address}
-              required
-            >
-              <input
+              <Field
                 id="donor-address"
-                name="address"
-                type="text"
-                autoComplete="street-address"
+                label={copy.fields.address}
+                error={validationErrors.address}
                 required
-                disabled={isSubmitting}
-                value={form.address}
-                onChange={updateField("address")}
-                placeholder={copy.placeholders.address}
-                className={inputClass(Boolean(validationErrors.address))}
-              />
-            </Field>
+              >
+                <input
+                  id="donor-address"
+                  name="address"
+                  type="text"
+                  autoComplete="street-address"
+                  required
+                  disabled={isSubmitting}
+                  value={form.address}
+                  onChange={updateField("address")}
+                  placeholder={copy.placeholders.address}
+                  className={inputClass(Boolean(validationErrors.address))}
+                />
+              </Field>
 
-            <Field
-              id="donor-profession"
-              label={copy.fields.profession}
-              error={validationErrors.profession}
-            >
-              <input
+              <Field
                 id="donor-profession"
-                name="profession"
-                type="text"
-                autoComplete="organization-title"
-                disabled={isSubmitting}
-                value={form.profession}
-                onChange={updateField("profession")}
-                placeholder={copy.placeholders.profession}
-                className={inputClass(Boolean(validationErrors.profession))}
-              />
-            </Field>
+                label={copy.fields.profession}
+                error={validationErrors.profession}
+              >
+                <input
+                  id="donor-profession"
+                  name="profession"
+                  type="text"
+                  autoComplete="organization-title"
+                  disabled={isSubmitting}
+                  value={form.profession}
+                  onChange={updateField("profession")}
+                  placeholder={copy.placeholders.profession}
+                  className={inputClass(Boolean(validationErrors.profession))}
+                />
+              </Field>
 
-            <Field
-              id="donor-type"
-              label={copy.fields.donorType}
-              error={validationErrors.donorType}
-            >
-              <select
+              <Field
                 id="donor-type"
-                name="donorType"
-                disabled={isSubmitting}
-                value={form.donorType}
-                onChange={updateField("donorType")}
-                className={inputClass(Boolean(validationErrors.donorType))}
+                label={copy.fields.donorType}
+                error={validationErrors.donorType}
               >
-                <option value="">{copy.placeholders.donorType}</option>
-                {copy.donorTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </Field>
+                <select
+                  id="donor-type"
+                  name="donorType"
+                  disabled={isSubmitting}
+                  value={form.donorType}
+                  onChange={updateField("donorType")}
+                  className={inputClass(Boolean(validationErrors.donorType))}
+                >
+                  <option value="">{copy.placeholders.donorType}</option>
+                  {copy.donorTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </Field>
 
-            <Field
-              id="donor-purpose"
-              label={copy.fields.purpose}
-              error={validationErrors.purpose}
-            >
-              <select
+              <Field
                 id="donor-purpose"
-                name="purpose"
-                disabled={isSubmitting}
-                value={form.purpose}
-                onChange={updateField("purpose")}
-                className={inputClass(Boolean(validationErrors.purpose))}
+                label={copy.fields.purpose}
+                error={validationErrors.purpose}
               >
-                <option value="">{copy.placeholders.purpose}</option>
-                {copy.purposes.map((purpose) => (
-                  <option key={purpose} value={purpose}>
-                    {purpose}
-                  </option>
-                ))}
-              </select>
-            </Field>
+                <select
+                  id="donor-purpose"
+                  name="purpose"
+                  disabled={isSubmitting}
+                  value={form.purpose}
+                  onChange={updateField("purpose")}
+                  className={inputClass(Boolean(validationErrors.purpose))}
+                >
+                  <option value="">{copy.placeholders.purpose}</option>
+                  {copy.purposes.map((purpose) => (
+                    <option key={purpose} value={purpose}>
+                      {purpose}
+                    </option>
+                  ))}
+                </select>
+              </Field>
 
-            <Field
-              id="donor-frequency"
-              label={copy.fields.frequency}
-              error={validationErrors.frequency}
-            >
-              <select
+              <Field
                 id="donor-frequency"
-                name="frequency"
-                disabled={isSubmitting}
-                value={form.frequency}
-                onChange={updateField("frequency")}
-                className={inputClass(Boolean(validationErrors.frequency))}
+                label={copy.fields.frequency}
+                error={validationErrors.frequency}
               >
-                <option value="">{copy.placeholders.frequency}</option>
-                {copy.frequencies.map((frequency) => (
-                  <option key={frequency} value={frequency}>
-                    {frequency}
-                  </option>
-                ))}
-              </select>
-            </Field>
-
-            <div className="sm:col-span-2 mt-2 rounded-2xl border border-cyan-100 bg-cyan-50/70 p-4">
-              <p className="text-sm font-semibold text-cyan-900">{copy.fields.contactSection}</p>
-              <p className="mt-1 text-sm leading-6 text-slate-600">
-                {copy.fields.contactSectionHint}
-              </p>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <Field
-                  id="donor-contact-full-name"
-                  label={copy.fields.contactFullName}
-                  error={validationErrors.contactFullName}
+                <select
+                  id="donor-frequency"
+                  name="frequency"
+                  disabled={isSubmitting}
+                  value={form.frequency}
+                  onChange={updateField("frequency")}
+                  className={inputClass(Boolean(validationErrors.frequency))}
                 >
-                  <input
+                  <option value="">{copy.placeholders.frequency}</option>
+                  {copy.frequencies.map((frequency) => (
+                    <option key={frequency} value={frequency}>
+                      {frequency}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+
+              <div className="sm:col-span-2 mt-2 rounded-2xl border border-cyan-100 bg-cyan-50/70 p-4">
+                <p className="text-sm font-semibold text-cyan-900">{copy.fields.contactSection}</p>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
+                  {copy.fields.contactSectionHint}
+                </p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <Field
                     id="donor-contact-full-name"
-                    name="contactFullName"
-                    type="text"
-                    autoComplete="name"
-                    disabled={isSubmitting}
-                    value={form.contactFullName}
-                    onChange={updateField("contactFullName")}
-                    placeholder={copy.placeholders.contactFullName}
-                    className={inputClass(Boolean(validationErrors.contactFullName))}
-                  />
-                </Field>
+                    label={copy.fields.contactFullName}
+                    error={validationErrors.contactFullName}
+                  >
+                    <input
+                      id="donor-contact-full-name"
+                      name="contactFullName"
+                      type="text"
+                      autoComplete="name"
+                      disabled={isSubmitting}
+                      value={form.contactFullName}
+                      onChange={updateField("contactFullName")}
+                      placeholder={copy.placeholders.contactFullName}
+                      className={inputClass(Boolean(validationErrors.contactFullName))}
+                    />
+                  </Field>
 
-                <Field
-                  id="donor-contact-mobile"
-                  label={copy.fields.contactMobile}
-                  error={validationErrors.contactMobile}
-                >
-                  <input
+                  <Field
                     id="donor-contact-mobile"
-                    name="contactMobile"
-                    type="tel"
-                    autoComplete="tel"
-                    disabled={isSubmitting}
-                    value={form.contactMobile}
-                    onChange={updateField("contactMobile")}
-                    placeholder={copy.placeholders.contactMobile}
-                    className={inputClass(Boolean(validationErrors.contactMobile))}
-                  />
-                </Field>
+                    label={copy.fields.contactMobile}
+                    error={validationErrors.contactMobile}
+                  >
+                    <input
+                      id="donor-contact-mobile"
+                      name="contactMobile"
+                      type="tel"
+                      autoComplete="tel"
+                      disabled={isSubmitting}
+                      value={form.contactMobile}
+                      onChange={updateField("contactMobile")}
+                      placeholder={copy.placeholders.contactMobile}
+                      className={inputClass(Boolean(validationErrors.contactMobile))}
+                    />
+                  </Field>
 
-                <Field
-                  id="donor-contact-telephone"
-                  label={copy.fields.contactTelephone}
-                  error={validationErrors.contactTelephone}
-                >
-                  <input
+                  <Field
                     id="donor-contact-telephone"
-                    name="contactTelephone"
-                    type="tel"
-                    autoComplete="tel-national"
-                    disabled={isSubmitting}
-                    value={form.contactTelephone}
-                    onChange={updateField("contactTelephone")}
-                    placeholder={copy.placeholders.contactTelephone}
-                    className={inputClass(Boolean(validationErrors.contactTelephone))}
-                  />
-                </Field>
+                    label={copy.fields.contactTelephone}
+                    error={validationErrors.contactTelephone}
+                  >
+                    <input
+                      id="donor-contact-telephone"
+                      name="contactTelephone"
+                      type="tel"
+                      autoComplete="tel-national"
+                      disabled={isSubmitting}
+                      value={form.contactTelephone}
+                      onChange={updateField("contactTelephone")}
+                      placeholder={copy.placeholders.contactTelephone}
+                      className={inputClass(Boolean(validationErrors.contactTelephone))}
+                    />
+                  </Field>
+                </div>
               </div>
-            </div>
 
-            <Field
-              id="donor-password"
-              label={copy.fields.password}
-              error={validationErrors.password}
-              required
-            >
-              <input
+              <Field
                 id="donor-password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
+                label={copy.fields.password}
+                error={validationErrors.password}
                 required
-                minLength={6}
-                disabled={isSubmitting}
-                value={form.password}
-                onChange={updateField("password")}
-                placeholder={copy.placeholders.password}
-                className={inputClass(Boolean(validationErrors.password))}
-              />
-            </Field>
+              >
+                <input
+                  id="donor-password"
+                  name="password"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  minLength={6}
+                  disabled={isSubmitting}
+                  value={form.password}
+                  onChange={updateField("password")}
+                  placeholder={copy.placeholders.password}
+                  className={inputClass(Boolean(validationErrors.password))}
+                />
+              </Field>
 
-            <Field
-              id="donor-confirm-password"
-              label={copy.fields.confirmPassword}
-              error={validationErrors.confirmPassword}
-              required
+              <Field
+                id="donor-confirm-password"
+                label={copy.fields.confirmPassword}
+                error={validationErrors.confirmPassword}
+                required
+              >
+                <input
+                  id="donor-confirm-password"
+                  name="confirmPassword"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  minLength={6}
+                  disabled={isSubmitting}
+                  value={form.confirmPassword}
+                  onChange={updateField("confirmPassword")}
+                  placeholder={copy.placeholders.confirmPassword}
+                  className={inputClass(Boolean(validationErrors.confirmPassword))}
+                />
+              </Field>
+            </div>
+
+            <div
+              className={`mt-5 rounded-2xl border p-4 text-sm font-semibold leading-6 ${validationErrors.isPublic
+                ? "border-red-200 bg-red-50 text-red-700"
+                : "border-cyan-100 bg-cyan-50/70 text-slate-700"
+                }`}
+            >
+              <p>
+                {copy.fields.isPublic}
+                <span className="ml-1 text-red-500">*</span>
+              </p>
+              <p className="mt-1 text-xs font-medium leading-5 text-slate-500">
+                {copy.fields.isPublicHint}
+              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2">
+                <label className="flex items-center gap-2">
+                  <input
+                    name="isPublic"
+                    type="radio"
+                    disabled={isSubmitting}
+                    checked={form.isPublic === true}
+                    onChange={() => setIsPublicField(true)}
+                    className="h-4 w-4 border-slate-300 text-cyan-700 accent-cyan-700"
+                  />
+                  <span>{copy.fields.yesLabel}</span>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    name="isPublic"
+                    type="radio"
+                    disabled={isSubmitting}
+                    checked={form.isPublic === false}
+                    onChange={() => setIsPublicField(false)}
+                    className="h-4 w-4 border-slate-300 text-cyan-700 accent-cyan-700"
+                  />
+                  <span>{copy.fields.noLabel}</span>
+                </label>
+              </div>
+              {validationErrors.isPublic ? (
+                <p className="mt-2 text-xs font-semibold leading-5 text-red-600">
+                  {validationErrors.isPublic}
+                </p>
+              ) : null}
+            </div>
+
+            <label
+              className={`mt-5 flex items-start gap-3 rounded-2xl border p-4 text-sm font-semibold leading-6 ${validationErrors.terms
+                ? "border-red-200 bg-red-50 text-red-700"
+                : "border-slate-200 bg-slate-50 text-slate-700"
+                }`}
             >
               <input
-                id="donor-confirm-password"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
+                name="terms"
+                type="checkbox"
                 required
-                minLength={6}
                 disabled={isSubmitting}
-                value={form.confirmPassword}
-                onChange={updateField("confirmPassword")}
-                placeholder={copy.placeholders.confirmPassword}
-                className={inputClass(Boolean(validationErrors.confirmPassword))}
+                checked={form.terms}
+                onChange={updateField("terms")}
+                className="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-700 accent-cyan-700"
               />
-            </Field>
-          </div>
-
-          <div
-            className={`mt-5 rounded-2xl border p-4 text-sm font-semibold leading-6 ${validationErrors.isPublic
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-cyan-100 bg-cyan-50/70 text-slate-700"
-              }`}
-          >
-            <p>
-              {copy.fields.isPublic}
-              <span className="ml-1 text-red-500">*</span>
-            </p>
-            <p className="mt-1 text-xs font-medium leading-5 text-slate-500">
-              {copy.fields.isPublicHint}
-            </p>
-            <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2">
-              <label className="flex items-center gap-2">
-                <input
-                  name="isPublic"
-                  type="radio"
-                  disabled={isSubmitting}
-                  checked={form.isPublic === true}
-                  onChange={() => setIsPublicField(true)}
-                  className="h-4 w-4 border-slate-300 text-cyan-700 accent-cyan-700"
-                />
-                <span>{copy.fields.yesLabel}</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  name="isPublic"
-                  type="radio"
-                  disabled={isSubmitting}
-                  checked={form.isPublic === false}
-                  onChange={() => setIsPublicField(false)}
-                  className="h-4 w-4 border-slate-300 text-cyan-700 accent-cyan-700"
-                />
-                <span>{copy.fields.noLabel}</span>
-              </label>
-            </div>
-            {validationErrors.isPublic ? (
+              <span>
+                {copy.fields.terms}
+                <span className="ml-1 text-red-500">*</span>
+              </span>
+            </label>
+            {validationErrors.terms ? (
               <p className="mt-2 text-xs font-semibold leading-5 text-red-600">
-                {validationErrors.isPublic}
+                {validationErrors.terms}
               </p>
             ) : null}
-          </div>
 
-          <label
-            className={`mt-5 flex items-start gap-3 rounded-2xl border p-4 text-sm font-semibold leading-6 ${validationErrors.terms
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-slate-200 bg-slate-50 text-slate-700"
-              }`}
-          >
-            <input
-              name="terms"
-              type="checkbox"
-              required
-              disabled={isSubmitting}
-              checked={form.terms}
-              onChange={updateField("terms")}
-              className="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-700 accent-cyan-700"
-            />
-            <span>
-              {copy.fields.terms}
-              <span className="ml-1 text-red-500">*</span>
-            </span>
-          </label>
-          {validationErrors.terms ? (
-            <p className="mt-2 text-xs font-semibold leading-5 text-red-600">
-              {validationErrors.terms}
-            </p>
-          ) : null}
+            {submitError ? (
+              <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-700">
+                <strong className="block font-semibold">{copy.submitError}</strong>
+                {submitError}
+              </div>
+            ) : null}
 
-          {submitError ? (
-            <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-700">
-              <strong className="block font-semibold">{copy.submitError}</strong>
-              {submitError}
-            </div>
-          ) : null}
-
-          {isAlreadyRegistered ? (
-            <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-800">
-              <strong className="block font-semibold">{copy.alreadyRegisteredTitle}</strong>
-              <p className="mt-1">{copy.alreadyRegisteredText}</p>
-              <Link
-                href="/login"
-                className="mt-3 inline-flex h-10 items-center justify-center rounded-full border border-transparent bg-[linear-gradient(135deg,_#0f766e,_#0891b2)] px-5 text-sm font-semibold text-white shadow-md shadow-cyan-200/70 transition hover:-translate-y-0.5"
-              >
-                {copy.goToLoginLabel}
-              </Link>
-            </div>
-          ) : null}
-
-          {submitMessage ? (
-            <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-800">
-              <strong className="block font-semibold">{copy.successTitle}</strong>
-              {submitMessage}
-            </div>
-          ) : null}
-
-
-          <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
-            {!submitMessage ? (
-              <p className="flex flex-wrap items-center justify-center gap-1.5 text-sm text-slate-600 sm:justify-start">
-                <span>{copy.alreadyHaveAccountText}</span>
+            {isAlreadyRegistered ? (
+              <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-800">
+                <strong className="block font-semibold">{copy.alreadyRegisteredTitle}</strong>
+                <p className="mt-1">{copy.alreadyRegisteredText}</p>
                 <Link
                   href="/login"
-                  className="font-semibold text-cyan-700 underline-offset-2 transition hover:text-cyan-800 hover:underline"
+                  className="mt-3 inline-flex h-10 items-center justify-center rounded-full border border-transparent bg-[linear-gradient(135deg,_#0f766e,_#0891b2)] px-5 text-sm font-semibold text-white shadow-md shadow-cyan-200/70 transition hover:-translate-y-0.5"
                 >
                   {copy.goToLoginLabel}
-                  <span aria-hidden="true">&nbsp;&rarr;</span>
                 </Link>
-              </p>
-            ) : (
-              <span />
-            )}
+              </div>
+            ) : null}
 
-            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                className="inline-flex h-12 items-center justify-center rounded-full border border-slate-200 bg-white px-6 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                disabled={isSubmitting}
-                onClick={onClose}
-              >
-                {copy.closeActionLabel}
-              </button>
+            {submitMessage ? (
+              <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-800">
+                <strong className="block font-semibold">{copy.successTitle}</strong>
+                {submitMessage}
+              </div>
+            ) : null}
+
+            <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
+              {!submitMessage ? (
+                <p className="flex flex-wrap items-center justify-center gap-1.5 text-sm text-slate-600 sm:justify-start">
+                  <span>{copy.alreadyHaveAccountText}</span>
+                  <Link
+                    href="/login"
+                    className="font-semibold text-cyan-700 underline-offset-2 transition hover:text-cyan-800 hover:underline"
+                  >
+                    {copy.goToLoginLabel}
+                    <span aria-hidden="true">&nbsp;&rarr;</span>
+                  </Link>
+                </p>
+              ) : (
+                <span />
+              )}
+
               {!submitMessage ? (
                 <button
                   type="submit"
@@ -984,9 +908,15 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
                 </button>
               ) : null}
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+      </section>
+
+      <DonateBankInfoModal
+        isOpen={isBankInfoOpen}
+        onClose={() => setIsBankInfoOpen(false)}
+      />
+    </>
   );
 }

@@ -264,6 +264,8 @@ const siteCopy = {
       "স্বেচ্ছাসেবক, দাতা এবং বাস্তবায়ন-সহযোগী সবাই এই উদ্যোগকে আরও কার্যকর, বিশ্বস্ত ও টেকসই করতে গুরুত্বপূর্ণ ভূমিকা রাখতে পারেন।",
     optionEyebrow: "রেজিস্ট্রেশন অপশন",
     continueLabel: "এগিয়ে যান",
+    alreadyHaveAccountText: "ইতিমধ্যে একটি অ্যাকাউন্ট আছে?",
+    goToLoginLabel: "লগইন করুন",
     options: [{
       id: "donor-registration",
       title: "দাতা রেজিস্ট্রেশন",

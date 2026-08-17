@@ -264,6 +264,8 @@ const siteCopy = {
       "Volunteers, donors, and implementation partners all have a role in making this model more responsive, trustworthy, and sustainable.",
     optionEyebrow: "Registration Option",
     continueLabel: "Continue",
+    alreadyHaveAccountText: "Already have an account?",
+    goToLoginLabel: "Go to Login",
     options: [
       {
         id: "donor-registration",

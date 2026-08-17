@@ -266,6 +266,8 @@ const siteCopy = {
       "Frivillige, donorer og samarbejdspartnere har alle en vigtig rolle i at gøre modellen mere troværdig, responsiv og bæredygtig.",
     optionEyebrow: "Registreringsmulighed",
     continueLabel: "Fortsæt",
+    alreadyHaveAccountText: "Har du allerede en konto?",
+    goToLoginLabel: "Gå til login",
     options: [
       {
         id: "donor-registration",
