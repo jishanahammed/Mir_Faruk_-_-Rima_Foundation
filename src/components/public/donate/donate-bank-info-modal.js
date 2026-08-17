@@ -1,9 +1,76 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetchProjectAssistancesAction } from "@/app/(public)/actions";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
+
+const modalCopy = {
+  en: {
+    eyebrow: "Support This Project",
+    title: "Donation Details",
+    contributionPrefix: "Your contribution will support",
+    bankTransfer: "Bank Transfer",
+    officialAccount: "Official Account",
+    afterNote: {
+      badge: "1",
+      text: "After sending your donation, our team will record the transaction and email you a confirmation. Need help? Contact",
+      or: "or call",
+    },
+    verify: {
+      title: "Verify Registration",
+      note: "Already registered? Use your mobile number as the reference. Not yet? Register first to link your donation.",
+      registerCta: "Register Now",
+    },
+    close: "Close",
+    closeAria: "Close donation details",
+  },
+  bn: {
+    eyebrow: "এই প্রকল্পে সহায়তা করুন",
+    title: "দানের বিবরণ",
+    contributionPrefix: "আপনার অনুদান সহায়তা করবে",
+    bankTransfer: "ব্যাংক ট্রান্সফার",
+    officialAccount: "অফিসিয়াল অ্যাকাউন্ট",
+    afterNote: {
+      badge: "১",
+      text: "দান পাঠানোর পর, আমাদের দল লেনদেনটি রেকর্ড করে আপনাকে একটি নিশ্চিতকরণ ইমেইল পাঠাবে। সাহায্য প্রয়োজন? যোগাযোগ করুন",
+      or: "অথবা কল করুন",
+    },
+    verify: {
+      title: "নিবন্ধন যাচাই করুন",
+      note: "ইতিমধ্যে নিবন্ধিত? রেফারেন্স হিসেবে আপনার মোবাইল নম্বর ব্যবহার করুন। এখনও করেননি? আগে নিবন্ধন করুন।",
+      registerCta: "এখনই নিবন্ধন করুন",
+    },
+    close: "বন্ধ করুন",
+    closeAria: "দানের বিবরণ বন্ধ করুন",
+  },
+  da: {
+    eyebrow: "Stot dette projekt",
+    title: "Donationsoplysninger",
+    contributionPrefix: "Dit bidrag vil stotte",
+    bankTransfer: "Bankoverfoersel",
+    officialAccount: "Officiel konto",
+    afterNote: {
+      badge: "1",
+      text: "Efter du har sendt din donation, registrerer vores team transaktionen og sender dig en bekraeftelse via e-mail. Brug for hjaelp? Kontakt",
+      or: "eller ring til",
+    },
+    verify: {
+      title: "Bekraeft registrering",
+      note: "Allerede registreret? Brug dit mobilnummer som reference. Ikke endnu? Registrer dig forst.",
+      registerCta: "Registrer nu",
+    },
+    close: "Luk",
+    closeAria: "Luk donationsoplysninger",
+  },
+};
+
+function resolveModalCopy(htmlLang) {
+  if (htmlLang === "bn") return modalCopy.bn;
+  if (htmlLang === "da" || htmlLang === "dk") return modalCopy.da;
+  return modalCopy.en;
+}
 
 const BANK_DETAILS = [
   { label: "Bank Name", value: "Mutual Trust Bank PLC" },
@@ -18,10 +85,6 @@ const BANK_DETAILS = [
   { label: "Account No", value: "1301000680242", copyable: true, mono: true },
   { label: "Routing Number", value: "145273976", copyable: true, mono: true },
   { label: "SWIFT Code", value: "MTBLBDDH", copyable: true, mono: true, fullWidth: true },
-];
-
-const MOBILE_BANKING = [
-  { label: "bKash (Personal)", value: "+880 1771-528299", copyable: true, mono: true },
 ];
 
 function CopyButton({ value }) {
@@ -102,19 +165,19 @@ function BankIcon() {
   );
 }
 
-function PhoneIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden="true">
-      <rect x="7" y="2" width="10" height="20" rx="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M11 18h2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function HandHeartIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden="true">
       <path d="M12 21s-7.5-4.9-10.2-9.3C.4 9.1 1.2 5.6 4.2 4.2c2.1-1 4.4-.3 5.8 1.4L12 7.7l2-2.1c1.4-1.7 3.7-2.4 5.8-1.4 3 1.4 3.8 4.9 2.4 7.5C19.5 16.1 12 21 12 21Z" />
+    </svg>
+  );
+}
+
+function ShieldCheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden="true">
+      <path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3Z" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -271,6 +334,9 @@ function AssistanceSection({ projectId, variant }) {
 }
 
 export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
+  const { copy: siteCopy } = useSiteLocale();
+  const copy = resolveModalCopy(siteCopy?.htmlLang);
+
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -305,7 +371,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
       <button
         type="button"
         className="absolute inset-0 cursor-default"
-        aria-label="Close donation details"
+        aria-label={copy.closeAria}
         onClick={onClose}
       />
 
@@ -323,17 +389,17 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
             <div className="relative flex items-start justify-between gap-3 sm:gap-4">
               <div className="min-w-0">
                 <p className="text-[0.65rem] font-bold tracking-[0.2em] text-cyan-200 uppercase sm:text-xs sm:tracking-[0.24em]">
-                  Support This Project
+                  {copy.eyebrow}
                 </p>
                 <h2
                   id="donate-bank-info-title"
                   className="mt-2 text-lg font-semibold text-white sm:text-2xl"
                 >
-                  Donation Details
+                  {copy.title}
                 </h2>
                 {project ? (
                   <p className="mt-2 max-w-sm text-xs leading-6 text-cyan-100/85 sm:text-sm">
-                    Your contribution will support{" "}
+                    {copy.contributionPrefix}{" "}
                     <span className="font-semibold text-white">{project}</span>.
                   </p>
                 ) : null}
@@ -341,7 +407,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
               <button
                 type="button"
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 text-lg leading-none text-white transition hover:border-cyan-200 hover:bg-white/20 sm:h-10 sm:w-10 sm:text-xl"
-                aria-label="Close donation details"
+                aria-label={copy.closeAria}
                 onClick={onClose}
               >
                 x
@@ -350,20 +416,29 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-7 sm:py-6">
-            <div className="flex gap-3 rounded-2xl border border-cyan-100 bg-cyan-50/70 p-4 text-sm leading-6 text-slate-700">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white">
-                1
-              </span>
-              <p>
-                Use your registered mobile number as the <strong>Donation Reference ID</strong> when
-                sending your contribution, so we can accurately record it against your account.
-              </p>
-            </div>
-
             <AssistanceSection projectId={projectId} variant="inline" />
 
+            <div className="flex flex-col gap-2.5 rounded-2xl border border-cyan-200 bg-cyan-50/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5">
+              <div className="flex items-start gap-2.5">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-600 text-white">
+                  <ShieldCheckIcon />
+                </span>
+                <p className="text-xs leading-5 text-slate-700">
+                  <span className="mr-1 font-bold text-cyan-800">{copy.verify.title}:</span>
+                  {copy.verify.note}
+                </p>
+              </div>
+              <Link
+                href="/register/donor"
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 self-start rounded-full bg-[linear-gradient(135deg,#0f766e,#0891b2)] px-4 py-2 text-xs font-semibold text-white! shadow-md shadow-cyan-900/15 visited:text-white! hover:text-white! focus:text-white! active:text-white! transition hover:-translate-y-0.5 hover:shadow-lg sm:self-auto"
+              >
+                {copy.verify.registerCta}
+                <span aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
+
             <div className="mt-6">
-              <SectionHeading icon={<BankIcon />}>Bank Transfer</SectionHeading>
+              <SectionHeading icon={<BankIcon />}>{copy.bankTransfer}</SectionHeading>
               <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
                 <div className="relative flex flex-wrap items-center justify-between gap-3 bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-4 py-4 sm:flex-nowrap sm:gap-4 sm:px-6">
                   <Image
@@ -374,7 +449,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
                     className="h-7 w-auto sm:h-9"
                   />
                   <span className="shrink-0 rounded-full border border-cyan-300/40 bg-cyan-400/10 px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.15em] text-cyan-100 sm:px-3 sm:text-[0.62rem] sm:tracking-[0.2em]">
-                    Official Account
+                    {copy.officialAccount}
                   </span>
                 </div>
                 <dl className="grid gap-px bg-slate-100 sm:grid-cols-2">
@@ -385,28 +460,16 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
               </div>
             </div>
 
-            <div className="mt-6">
-              <SectionHeading icon={<PhoneIcon />}>Mobile Banking</SectionHeading>
-              <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-                <dl className="grid gap-px bg-slate-100">
-                  {MOBILE_BANKING.map((item) => (
-                    <DetailRow key={item.label} item={item} highlight />
-                  ))}
-                </dl>
-              </div>
-            </div>
-
             <div className="mt-6 flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-300 text-xs font-bold text-slate-700">
-                2
+                {copy.afterNote.badge}
               </span>
               <p>
-                After sending your donation, our team will record the transaction and email you a
-                confirmation. Need help? Contact{" "}
+                {copy.afterNote.text}{" "}
                 <a href="mailto:support@farukrimafoundation.org" className="font-semibold text-cyan-700 hover:text-cyan-900">
                   support@farukrimafoundation.org
                 </a>{" "}
-                or call{" "}
+                {copy.afterNote.or}{" "}
                 <a href="tel:+8801771528299" className="font-semibold text-cyan-700 hover:text-cyan-900">
                   +88 01771-528299
                 </a>
@@ -419,7 +482,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
               onClick={onClose}
               className="mt-6 w-full rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
             >
-              Close
+              {copy.close}
             </button>
           </div>
         </div>

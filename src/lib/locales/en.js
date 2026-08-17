@@ -820,7 +820,7 @@ const siteCopy = {
     badge: "Give With Purpose",
     title: "Donate to an Active Project",
     subtitle: "Every contribution is directed to a specific, transparently tracked project — see exactly where your donation goes.",
-    ctaLabel: "Donate Now",
+    ctaLabel: "Donate & Register",
   },
   featuredProjects: {
     badge: "Active Projects",

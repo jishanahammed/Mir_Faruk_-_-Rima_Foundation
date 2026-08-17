@@ -822,7 +822,7 @@ const siteCopy = {
     badge: "Giv med formål",
     title: "Doner til et aktivt projekt",
     subtitle: "Hvert bidrag gaar direkte til et specifikt, gennemsigtigt sporet projekt — se praecis hvor din donation ender.",
-    ctaLabel: "Doner nu",
+    ctaLabel: "Doner & Registrer",
   },
   featuredProjects: {
     badge: "Aktive Projekter",
