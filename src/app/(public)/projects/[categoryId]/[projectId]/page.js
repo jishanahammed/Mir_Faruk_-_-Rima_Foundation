@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPublicProjectCategories } from "@/lib/api/public-project-category-service";
 import { getPublicProjectById } from "@/lib/api/public-foundation-project-service";
+import { getPublicProjectBlogsByProject } from "@/lib/api/public-project-blog-service";
 import { getDivisions, getDistricts, getUpazilas } from "@/lib/api/public-location-service";
 import { ProjectDetailPage } from "@/components/public/projects/project-detail-page";
 
@@ -25,6 +26,7 @@ export default async function ProjectDetailRoute({ params }) {
   if (!project) notFound();
 
   const category = categories.find((c) => String(c.id) === String(categoryId));
+  const blogs = await getPublicProjectBlogsByProject(project.id);
 
   // Resolve location names only for the IDs that exist on this project
   const [divisions, districts, upazilas] = await Promise.all([
@@ -44,6 +46,7 @@ export default async function ProjectDetailRoute({ params }) {
       divisionName={divisionName}
       districtName={districtName}
       upazilaName={upazilaName}
+      blogs={blogs}
     />
   );
 }

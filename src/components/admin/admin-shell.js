@@ -52,6 +52,7 @@ const navSections = [
         children: [
           { label: "Project Category", href: "/admin/project-category", icon: "project" },
           { label: "Foundation Projects", href: "/admin/Foundation_Projects", icon: "folder" },
+          { label: "Project Blogs", href: "/admin/Project_Blogs", icon: "folder" },
           { label: "Assistance Types", href: "/admin/assistance-type", icon: "project" },
           { label: "Project Assistance", href: "/admin/project-assistance", icon: "folder" },
         ],
@@ -119,6 +120,10 @@ const routeTitles = {
   "/admin/Foundation_Projects": {
     eyebrow: "Projects",
     title: "Foundation Projects",
+  },
+  "/admin/Project_Blogs": {
+    eyebrow: "Projects",
+    title: "Project Blogs",
   },
   "/admin/assistance-type": {
     eyebrow: "Projects",

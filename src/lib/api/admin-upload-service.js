@@ -55,3 +55,54 @@ export async function deleteProjectImage(imagePath) {
     data: { ImagePath: imagePath },
   });
 }
+
+async function toAxiosForm(webFormData) {
+  const axiosForm = new FormData();
+  for (const [key, value] of webFormData.entries()) {
+    if (value && typeof value === "object" && typeof value.arrayBuffer === "function") {
+      const buffer = Buffer.from(await value.arrayBuffer());
+      axiosForm.append(key, buffer, {
+        filename: value.name || "upload",
+        contentType: value.type || "application/octet-stream",
+        knownLength: buffer.length,
+      });
+    } else {
+      axiosForm.append(key, String(value));
+    }
+  }
+  return axiosForm;
+}
+
+export async function uploadProjectBlogCoverImage(webFormData) {
+  const token = await getToken();
+  const axiosForm = await toAxiosForm(webFormData);
+
+  const res = await authApiClient.post("ProjectBlogs/upload-image", axiosForm, {
+    headers: { Authorization: `Bearer ${token}`, ...axiosForm.getHeaders() },
+    maxBodyLength: Infinity,
+    maxContentLength: Infinity,
+  });
+
+  return res.data; // { url: string }
+}
+
+export async function uploadProjectBlogGalleryImages(webFormData) {
+  const token = await getToken();
+  const axiosForm = await toAxiosForm(webFormData);
+
+  const res = await authApiClient.post("ProjectBlogs/upload-images", axiosForm, {
+    headers: { Authorization: `Bearer ${token}`, ...axiosForm.getHeaders() },
+    maxBodyLength: Infinity,
+    maxContentLength: Infinity,
+  });
+
+  return res.data; // { urls: string[], errors: string[] }
+}
+
+export async function deleteProjectBlogImage(imagePath) {
+  const token = await getToken();
+  await authApiClient.delete("ProjectBlogs/delete-image", {
+    headers: { Authorization: `Bearer ${token}` },
+    data: { ImagePath: imagePath },
+  });
+}

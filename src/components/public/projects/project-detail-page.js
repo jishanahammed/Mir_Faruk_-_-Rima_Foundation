@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
+import { ProjectBlogSection } from "@/components/public/projects/project-blog-section";
 
 function pick(en, bn, dk, locale) {
   if (locale === "BN") return bn || en;
@@ -130,7 +131,7 @@ const Icons = {
 };
 
 /* ── Main Component ────────────────────────────────────────────────────────── */
-export function ProjectDetailPage({ project, category, divisionName, districtName, upazilaName }) {
+export function ProjectDetailPage({ project, category, divisionName, districtName, upazilaName, blogs }) {
   const { locale } = useSiteLocale();
 
   const title = pick(project.projectTitleEn, project.projectTitleBn, project.projectTitleDk, locale);
@@ -337,6 +338,11 @@ export function ProjectDetailPage({ project, category, divisionName, districtNam
               </Link>
             )}
           </div>
+        </div>
+
+        {/* Project Blog — full width */}
+        <div className="mt-8">
+          <ProjectBlogSection blogs={blogs} />
         </div>
       </div>
     </div>
