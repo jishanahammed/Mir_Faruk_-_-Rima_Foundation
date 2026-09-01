@@ -54,6 +54,13 @@ const siteCopy = {
           description: "ফাউন্ডেশনের সাথে যোগাযোগ করুন।",
           icon: "contact",
         },
+        {
+          id: "about-project-blogs",
+          href: "/project-blogs",
+          title: "ব্লগ",
+          description: "আমাদের প্রকল্পের আপডেট ও গল্প পড়ুন।",
+          icon: "blog",
+        },
       ],
     },
   },

@@ -54,6 +54,13 @@ const siteCopy = {
           description: "Kom i kontakt med fonden.",
           icon: "contact",
         },
+        {
+          id: "about-project-blogs",
+          href: "/project-blogs",
+          title: "Blog",
+          description: "Læs opdateringer og historier fra vores projekter.",
+          icon: "blog",
+        },
       ],
     },
   },

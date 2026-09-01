@@ -54,6 +54,13 @@ const siteCopy = {
           description: "Get in touch with the foundation.",
           icon: "contact",
         },
+        {
+          id: "about-project-blogs",
+          href: "/project-blogs",
+          title: "Blog",
+          description: "Read updates and stories from our projects.",
+          icon: "blog",
+        },
       ],
     },
   },
