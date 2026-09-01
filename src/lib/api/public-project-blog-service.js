@@ -58,6 +58,16 @@ export async function getPublicProjectBlogsByProject(projectId) {
   }
 }
 
+export async function getPublicProjectBlogs() {
+  try {
+    const payload = await apiGet("ProjectBlogs/public");
+    const items = Array.isArray(payload) ? payload : [];
+    return items.map(normalizeBlog).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 export async function getPublicProjectBlogById(id) {
   try {
     const p = await apiGet(`ProjectBlogs/public/${encodeURIComponent(id)}`);

@@ -369,6 +369,22 @@ const siteCopy = {
     ],
     legalShortRjsc: "Registered with (RJSC)",
   },
+  projectBlogs: {
+    eyebrow: "Project Stories",
+    heroTitle: "Updates From The Field",
+    heroSubtitle:
+      "Real stories, progress and impact from the projects Mir Faruk & Rima Foundation runs on the ground.",
+    storiesLabel: "Story",
+    storiesLabelPlural: "Stories",
+    emptyTitle: "No stories published yet",
+    emptyText:
+      "Check back soon — updates from our ongoing projects will appear here.",
+    readStory: "Read Story",
+    allStories: "All Stories",
+    supportProject: "Support This Project",
+    noDetails: "No further details available for this story.",
+    galleryTitle: "Gallery",
+  },
   projects: {
     eyebrow: "Our Projects",
     heroTitle: "Where Purpose Meets Action",

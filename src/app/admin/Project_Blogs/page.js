@@ -121,6 +121,7 @@ export default async function AdminProjectBlogsPage({ searchParams }) {
 
       {/* Add / Edit Modal */}
       <ProjectBlogModal
+        key={params?.edit ?? (params?.add === "1" ? "add" : "closed")}
         params={params}
         allBlogs={allBlogs}
         projects={projects}

@@ -371,6 +371,22 @@ const siteCopy = {
     ],
     legalShortRjsc: "Registreret hos (RJSC)",
   },
+  projectBlogs: {
+    eyebrow: "Projekthistorier",
+    heroTitle: "Nyheder Fra Marken",
+    heroSubtitle:
+      "Ægte historier, fremskridt og virkning fra de projekter, Mir Faruk & Rima Foundation driver i marken.",
+    storiesLabel: "Historie",
+    storiesLabelPlural: "Historier",
+    emptyTitle: "Ingen historier udgivet endnu",
+    emptyText:
+      "Kom tilbage snart — opdateringer fra vores igangværende projekter vises her.",
+    readStory: "Læs Historien",
+    allStories: "Alle Historier",
+    supportProject: "Støt Dette Projekt",
+    noDetails: "Ingen yderligere detaljer tilgængelige for denne historie.",
+    galleryTitle: "Galleri",
+  },
   projects: {
     eyebrow: "Vores Projekter",
     heroTitle: "Hvor formål møder handling",

@@ -371,6 +371,22 @@ const siteCopy = {
     ],
     legalShortRjsc: "(RJSC)-এ নিবন্ধিত",
   },
+  projectBlogs: {
+    eyebrow: "প্রকল্পের গল্প",
+    heroTitle: "মাঠপর্যায়ের সর্বশেষ খবর",
+    heroSubtitle:
+      "মীর ফারুক ও রিমা ফাউন্ডেশনের পরিচালিত প্রকল্পগুলোর বাস্তব গল্প, অগ্রগতি ও প্রভাব।",
+    storiesLabel: "গল্প",
+    storiesLabelPlural: "গল্প",
+    emptyTitle: "এখনো কোনো গল্প প্রকাশিত হয়নি",
+    emptyText:
+      "শীঘ্রই দেখুন — আমাদের চলমান প্রকল্পগুলোর আপডেট এখানে প্রকাশিত হবে।",
+    readStory: "পড়ুন",
+    allStories: "সকল গল্প",
+    supportProject: "এই প্রকল্পে সহায়তা করুন",
+    noDetails: "এই গল্পের জন্য আর কোনো বিস্তারিত তথ্য নেই।",
+    galleryTitle: "গ্যালারি",
+  },
   projects: {
     eyebrow: "আমাদের প্রকল্প",
     heroTitle: "উদ্দেশ্য যেখানে কর্মে রূপ নেয়",
