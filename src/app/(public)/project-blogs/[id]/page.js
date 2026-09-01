@@ -19,3 +19,4 @@ export default async function ProjectBlogDetailRoute({ params }) {
 
   return <ProjectBlogDetailPage blog={blog} />;
 }
+
