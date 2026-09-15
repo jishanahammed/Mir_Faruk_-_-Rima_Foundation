@@ -15,6 +15,7 @@ function normalizeAssistance(p) {
     assistanceTypeNameEn: pick(p, "assistanceTypeNameEn", "AssistanceTypeNameEn", null),
     assistanceTypeNameBn: pick(p, "assistanceTypeNameBn", "AssistanceTypeNameBn", null),
     assistanceTypeNameDk: pick(p, "assistanceTypeNameDk", "AssistanceTypeNameDk", null),
+    donationCode: pick(p, "donationCode", "DonationCode", ""),
     nameEn: pick(p, "nameEn", "NameEn", ""),
     nameBn: pick(p, "nameBn", "NameBn", ""),
     nameDk: pick(p, "nameDk", "NameDk", null),

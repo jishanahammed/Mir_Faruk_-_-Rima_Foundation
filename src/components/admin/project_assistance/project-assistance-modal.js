@@ -135,6 +135,18 @@ export function ProjectAssistanceModal({
 
           {/* Section 2: Name & Description */}
           <div className="flex flex-col gap-4">
+            <SectionLabel>Donation Code</SectionLabel>
+            <div className="flex flex-wrap items-center gap-3 rounded-xl border border-cyan-100 bg-cyan-50/60 px-4 py-3">
+              <span className="inline-flex items-center rounded-lg border border-cyan-200 bg-white px-3 py-1.5 font-mono text-sm font-bold tracking-widest text-cyan-800">
+                {editing?.donationCode || "DN-_____"}
+              </span>
+              <p className="text-xs font-medium text-slate-500">
+                {editing
+                  ? "Generated when this record was created. It never changes, so donors can keep using it."
+                  : "A unique 5-digit code is generated automatically once you create this record."}
+              </p>
+            </div>
+
             <SectionLabel>Name</SectionLabel>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <Field label="Name (English)" name="nameEn" defaultValue={editing?.nameEn} required />

@@ -94,7 +94,7 @@ export function ProjectAssistanceTable({ data, search, updateStatusAction, delet
             <input
               name="search"
               defaultValue={search}
-              placeholder="Search assistance records…"
+              placeholder="Search by code, name or project…"
               className="h-9 w-64 rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
             />
           </div>
@@ -133,10 +133,11 @@ export function ProjectAssistanceTable({ data, search, updateStatusAction, delet
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[920px] text-sm">
+          <table className="w-full min-w-[1040px] text-sm">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-500">
                 <th className="px-4 py-3 text-left">#</th>
+                <th className="px-4 py-3 text-left">Donation Code</th>
                 <th className="px-4 py-3 text-left">Name</th>
                 <th className="px-4 py-3 text-left">Project</th>
                 <th className="px-4 py-3 text-left">Type</th>
@@ -152,6 +153,11 @@ export function ProjectAssistanceTable({ data, search, updateStatusAction, delet
                 <tr key={a.id} className="group hover:bg-slate-50/60 transition-colors">
                   <td className="px-4 py-3 text-xs text-slate-400 font-mono">
                     {(pageNumber - 1) * pageSize + idx + 1}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center rounded-lg border border-cyan-200 bg-cyan-50 px-2.5 py-1 font-mono text-xs font-bold tracking-wider text-cyan-800">
+                      {a.donationCode || "—"}
+                    </span>
                   </td>
                   <td className="px-4 py-3 max-w-[200px]">
                     <p className="font-semibold text-slate-800 truncate">{a.nameEn}</p>

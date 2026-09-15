@@ -26,7 +26,7 @@ function readParam(params, key, fallback = "") {
 function paginate(items, page, pageSize, search) {
   const filtered = search
     ? items.filter((a) =>
-        [a.nameEn, a.nameBn, a.projectTitleEn, a.assistanceTypeNameEn]
+        [a.donationCode, a.nameEn, a.nameBn, a.projectTitleEn, a.assistanceTypeNameEn]
           .join(" ").toLowerCase().includes(search.toLowerCase())
       )
     : items;
