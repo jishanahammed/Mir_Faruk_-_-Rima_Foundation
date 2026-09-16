@@ -13,6 +13,12 @@ const modalCopy = {
     contributionPrefix: "Your contribution will support",
     bankTransfer: "Bank Transfer",
     officialAccount: "Official Account",
+    qr: {
+      heading: "Scan to Pay",
+      panelLabel: "Quick Pay",
+      badge: "Instant",
+      note: "Open any banking or MFS app, scan the Bangla QR, and the foundation's account fills in automatically.",
+    },
     afterNote: {
       badge: "1",
       text: "After sending your donation, our team will record the transaction and email you a confirmation. Need help? Contact",
@@ -32,6 +38,12 @@ const modalCopy = {
     contributionPrefix: "আপনার অনুদান সহায়তা করবে",
     bankTransfer: "ব্যাংক ট্রান্সফার",
     officialAccount: "অফিসিয়াল অ্যাকাউন্ট",
+    qr: {
+      heading: "স্ক্যান করে পেমেন্ট",
+      panelLabel: "দ্রুত পেমেন্ট",
+      badge: "তাৎক্ষণিক",
+      note: "যেকোনো ব্যাংকিং বা এমএফএস অ্যাপ খুলে বাংলা কিউআর স্ক্যান করুন, ফাউন্ডেশনের অ্যাকাউন্ট স্বয়ংক্রিয়ভাবে যুক্ত হয়ে যাবে।",
+    },
     afterNote: {
       badge: "১",
       text: "দান পাঠানোর পর, আমাদের দল লেনদেনটি রেকর্ড করে আপনাকে একটি নিশ্চিতকরণ ইমেইল পাঠাবে। সাহায্য প্রয়োজন? যোগাযোগ করুন",
@@ -51,6 +63,12 @@ const modalCopy = {
     contributionPrefix: "Dit bidrag vil stotte",
     bankTransfer: "Bankoverfoersel",
     officialAccount: "Officiel konto",
+    qr: {
+      heading: "Scan og betal",
+      panelLabel: "Hurtig betaling",
+      badge: "Straks",
+      note: "Aabn en bank- eller MFS-app, scan Bangla QR-koden, og fondens konto udfyldes automatisk.",
+    },
     afterNote: {
       badge: "1",
       text: "Efter du har sendt din donation, registrerer vores team transaktionen og sender dig en bekraeftelse via e-mail. Brug for hjaelp? Kontakt",
@@ -105,12 +123,21 @@ function CopyButton({ value }) {
       type="button"
       onClick={handleCopy}
       aria-label={`Copy ${value}`}
-      className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-widest transition sm:px-3 sm:text-[0.68rem] sm:tracking-[0.12em] ${
-        copied
-          ? "border-teal-200 bg-teal-50 text-teal-700"
-          : "border-slate-200 bg-white text-slate-500 hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-800"
-      }`}
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[0.65rem] font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-1 ${copied
+        ? "border-teal-200 bg-teal-50 text-teal-700"
+        : "border-slate-200 bg-white text-slate-500 hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700 hover:shadow-sm"
+        }`}
     >
+      {copied ? (
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.2" className="h-3 w-3" aria-hidden="true">
+          <path d="m5 10.5 3.2 3.2L15 7" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-3 w-3" aria-hidden="true">
+          <rect x="7.2" y="7.2" width="9" height="9" rx="2" />
+          <path d="M12.8 4.5H5.8a1.3 1.3 0 0 0-1.3 1.3v7" strokeLinecap="round" />
+        </svg>
+      )}
       {copied ? "Copied" : "Copy"}
     </button>
   );
@@ -119,29 +146,26 @@ function CopyButton({ value }) {
 function DetailRow({ item, highlight = false }) {
   return (
     <div
-      className={`flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-6 sm:py-3.5 ${
-        item.fullWidth ? "sm:col-span-2" : ""
-      } ${highlight ? "bg-cyan-50/60" : "bg-white"}`}
+      className={`flex flex-1 items-center justify-between gap-3 py-3 pr-4 transition-colors sm:pr-5 ${highlight
+        ? "border-l-[3px] border-cyan-500 bg-cyan-50/70 pl-[calc(1rem-3px)] sm:pl-[calc(1.25rem-3px)]"
+        : "bg-white pl-4 hover:bg-slate-50/70 sm:pl-5"
+        }`}
     >
       <div className="min-w-0">
-        <dt className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-slate-400 sm:text-[0.65rem] sm:tracking-[0.2em]">
+        <dt className={`text-[0.6rem] font-semibold uppercase tracking-[0.16em] ${highlight ? "text-cyan-700" : "text-slate-400"
+          }`}>
           {item.label}
         </dt>
         <dd
-          className={`mt-1 break-all font-semibold text-slate-900 ${
-            item.mono
-              ? "font-mono text-[0.82rem] tracking-wide sm:text-[0.95rem]"
-              : "text-[0.82rem] sm:text-sm"
-          }`}
+          className={`mt-1 break-words font-semibold text-slate-900 ${item.mono
+            ? `font-mono tracking-wide tabular-nums ${highlight ? "text-base sm:text-[1.05rem]" : "text-[0.85rem]"}`
+            : "text-[0.85rem]"
+            }`}
         >
           {item.value}
         </dd>
       </div>
-      {item.copyable ? (
-        <div className="self-start sm:shrink-0 sm:self-auto">
-          <CopyButton value={item.value} />
-        </div>
-      ) : null}
+      {item.copyable ? <CopyButton value={item.value} /> : null}
     </div>
   );
 }
@@ -149,10 +173,11 @@ function DetailRow({ item, highlight = false }) {
 function SectionHeading({ icon, children }) {
   return (
     <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-100 text-cyan-700">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f766e,#0891b2)] text-white shadow-sm shadow-cyan-900/20">
         {icon}
       </span>
-      {children}
+      <span className="shrink-0">{children}</span>
+      <span className="h-px flex-1 bg-[linear-gradient(90deg,rgba(8,145,178,0.25),transparent)]" aria-hidden="true" />
     </p>
   );
 }
@@ -170,6 +195,51 @@ function HandHeartIcon() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden="true">
       <path d="M12 21s-7.5-4.9-10.2-9.3C.4 9.1 1.2 5.6 4.2 4.2c2.1-1 4.4-.3 5.8 1.4L12 7.7l2-2.1c1.4-1.7 3.7-2.4 5.8-1.4 3 1.4 3.8 4.9 2.4 7.5C19.5 16.1 12 21 12 21Z" />
     </svg>
+  );
+}
+
+function QrIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden="true">
+      <rect x="3.5" y="3.5" width="6" height="6" rx="1.2" />
+      <rect x="14.5" y="3.5" width="6" height="6" rx="1.2" />
+      <rect x="3.5" y="14.5" width="6" height="6" rx="1.2" />
+      <path d="M14.5 14.5h3v3m3 0v3h-6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// The MTB poster is fully branded on its own, so it sits on a plain white mat
+// rather than inside a second competing frame. Height-capped so the portrait
+// artwork (1680x2380) cannot drive the modal's height.
+function QrPanel({ copy }) {
+  return (
+    <div className="order-first flex flex-col lg:order-2">
+      <SectionHeading icon={<QrIcon />}>{copy.qr.heading}</SectionHeading>
+      <figure className="mt-3 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 sm:px-5">
+          <p className="text-[0.82rem] font-semibold text-slate-900 sm:text-sm">
+            {copy.qr.panelLabel}
+          </p>
+          <span className="shrink-0 rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.15em] text-teal-700">
+            {copy.qr.badge}
+          </span>
+        </div>
+        <div className="flex flex-1 items-center justify-center bg-[radial-gradient(circle_at_50%_30%,rgba(8,145,178,0.07),transparent_70%)] px-6 py-6">
+          <Image
+            src="/qr.png"
+            alt="Mutual Trust Bank Bangla QR code for Mir Faruk & Rima Foundation. Merchant ID 105100105101199."
+            width={1680}
+            height={2380}
+            sizes="(min-width: 640px) 20rem, 76vw"
+            className="h-auto w-auto max-h-[24rem] max-w-full rounded-xl shadow-lg shadow-slate-900/15 ring-1 ring-slate-900/5"
+          />
+        </div>
+        <figcaption className="border-t border-slate-100 px-4 py-3 text-center text-xs leading-5 text-slate-500 sm:px-5">
+          {copy.qr.note}
+        </figcaption>
+      </figure>
+    </div>
   );
 }
 
@@ -376,9 +446,8 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
       />
 
       <div
-        className={`relative flex max-h-[94vh] w-full flex-col overflow-hidden rounded-t-3xl border border-white/70 bg-white shadow-2xl shadow-slate-950/30 sm:max-h-[92vh] sm:flex-row sm:rounded-3xl ${
-          projectId ? "max-w-3xl" : "max-w-lg"
-        }`}
+        className={`relative flex max-h-[94vh] w-full flex-col overflow-hidden rounded-t-3xl border border-white/70 bg-white shadow-2xl shadow-slate-950/30 sm:max-h-[92vh] sm:flex-row sm:rounded-3xl ${projectId ? "max-w-6xl" : "max-w-4xl"
+          }`}
       >
         <div className="flex min-h-0 flex-1 flex-col">
           <div className="relative shrink-0 overflow-hidden bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-5 py-5 sm:px-8 sm:py-6">
@@ -406,11 +475,13 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
               </div>
               <button
                 type="button"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 text-lg leading-none text-white transition hover:border-cyan-200 hover:bg-white/20 sm:h-10 sm:w-10 sm:text-xl"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white transition hover:rotate-90 hover:border-cyan-200 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 sm:h-10 sm:w-10"
                 aria-label={copy.closeAria}
                 onClick={onClose}
               >
-                x
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4 sm:h-4.5 sm:w-4.5" aria-hidden="true">
+                  <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+                </svg>
               </button>
             </div>
           </div>
@@ -437,9 +508,10 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
               </Link>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 grid items-stretch gap-5 lg:grid-cols-2">
+            <div className="order-2 flex flex-col lg:order-1">
               <SectionHeading icon={<BankIcon />}>{copy.bankTransfer}</SectionHeading>
-              <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+              <div className="mt-3 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
                 <div className="relative flex flex-wrap items-center justify-between gap-3 bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-4 py-4 sm:flex-nowrap sm:gap-4 sm:px-6">
                   <Image
                     src="/footer-logo.webp"
@@ -452,12 +524,15 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
                     {copy.officialAccount}
                   </span>
                 </div>
-                <dl className="grid gap-px bg-slate-100 sm:grid-cols-2">
+                <dl className="flex flex-1 flex-col gap-px bg-slate-100">
                   {BANK_DETAILS.map((item) => (
                     <DetailRow key={item.label} item={item} highlight={item.label === "Account No"} />
                   ))}
                 </dl>
               </div>
+            </div>
+
+            <QrPanel copy={copy} />
             </div>
 
             <div className="mt-6 flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
