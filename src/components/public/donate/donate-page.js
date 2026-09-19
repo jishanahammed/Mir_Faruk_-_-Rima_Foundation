@@ -208,18 +208,17 @@ export function DonatePage({ projects = [] }) {
   const donateHero = copy.donateHero;
   const fp = copy.featuredProjects;
   const [modalProject, setModalProject] = useState(null);
-  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
 
   // The registration email links here as /donate?donate=1&ref=100001, so the
-  // donor lands on the site with the donation details already open and their
-  // reference in front of them.
+  // donor lands with the donation details already open and their reference in
+  // front of them. Read during render and used as the initial state, so the
+  // dialog is present in the first paint rather than flashing in after an
+  // effect runs — which also keeps it working if hydration is slow.
   const searchParams = useSearchParams();
   const donorRef = searchParams.get("ref") ?? "";
   const shouldAutoOpen = searchParams.get("donate") === "1" || Boolean(donorRef);
 
-  useEffect(() => {
-    if (shouldAutoOpen) setIsDonateModalOpen(true);
-  }, [shouldAutoOpen]);
+  const [isDonateModalOpen, setIsDonateModalOpen] = useState(shouldAutoOpen);
   const [activeIndex, setActiveIndex] = useState(0);
   const [desktopIndex, setDesktopIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
