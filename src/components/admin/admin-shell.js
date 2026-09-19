@@ -37,6 +37,7 @@ const navSections = [
       { label: "Donor List", href: "/admin/donors", icon: "users" },
       { label: "Beneficiary List", href: "/admin/beneficiaries", icon: "list" },
       { label: "Payment History", href: "/admin/donersPayment", icon: "payment" },
+      { label: "Donation Queries", href: "/admin/donation-queries", icon: "receipt" },
       { label: "Amount Assignment", href: "/admin/amount-assignment", icon: "payment" },
       { label: "Customer Feedback", href: "/admin/customer-feedback", icon: "list" },
     ],
@@ -220,6 +221,15 @@ function Icon({ name }) {
     );
   }
 
+  if (name === "receipt") {
+    return (
+      <svg {...common}>
+        <path d="M6 3.5h12v17l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4Z" strokeLinejoin="round" />
+        <path d="M9.5 8.5h5M9.5 12h5" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
   if (name === "accounting") {
     return (
       <svg {...common}>
@@ -375,7 +385,7 @@ function Icon({ name }) {
   );
 }
 
-function NavLink({ item, onNavigate, indent = false }) {
+function NavLink({ item, onNavigate, indent = false, badgeCount = 0 }) {
   const pathname = usePathname();
   const isActive =
     item.href === "/admin" ? pathname === item.href : pathname.startsWith(item.href.split("?")[0]);
@@ -392,7 +402,15 @@ function NavLink({ item, onNavigate, indent = false }) {
         }`}
     >
       <Icon name={item.icon} />
-      <span>{item.label}</span>
+      <span className="flex-1">{item.label}</span>
+      {badgeCount > 0 && (
+        <span
+          className="inline-flex min-w-5 items-center justify-center rounded-full bg-amber-500 px-1.5 py-0.5 text-[0.62rem] font-bold tabular-nums text-white shadow-sm"
+          aria-label={`${badgeCount} unseen`}
+        >
+          {badgeCount > 99 ? "99+" : badgeCount}
+        </span>
+      )}
     </Link>
   );
 }
@@ -561,6 +579,7 @@ function SidebarContent({
   onToggle,
   isCollapsed = false,
   user = adminUser,
+  unseenDonationQueries = 0,
 }) {
   const pathname = usePathname();
 
@@ -662,7 +681,12 @@ function SidebarContent({
                     item.children ? (
                       <NavGroup key={item.label} group={item} onNavigate={onNavigate} />
                     ) : (
-                      <NavLink key={item.href} item={item} onNavigate={onNavigate} />
+                      <NavLink
+                        key={item.href}
+                        item={item}
+                        onNavigate={onNavigate}
+                        badgeCount={item.href === "/admin/donation-queries" ? unseenDonationQueries : 0}
+                      />
                     )
                   )}
                 </div>
@@ -682,7 +706,7 @@ function SidebarContent({
   );
 }
 
-export function AdminShell({ children, user = adminUser }) {
+export function AdminShell({ children, user = adminUser, unseenDonationQueries = 0 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const pathname = usePathname();
@@ -742,6 +766,7 @@ export function AdminShell({ children, user = adminUser }) {
       >
         <SidebarContent
           user={user}
+          unseenDonationQueries={unseenDonationQueries}
           isCollapsed={!isSidebarVisible}
           onToggle={() => updateSidebarVisibility(!isSidebarVisible)}
         />
@@ -783,7 +808,7 @@ export function AdminShell({ children, user = adminUser }) {
           className={`relative h-full w-[min(20rem,86vw)] border-r border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
             }`}
         >
-          <SidebarContent user={user} onNavigate={() => setIsOpen(false)} />
+          <SidebarContent user={user} unseenDonationQueries={unseenDonationQueries} onNavigate={() => setIsOpen(false)} />
         </aside>
       </div>
 

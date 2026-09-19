@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetchProjectAssistancesAction } from "@/app/(public)/actions";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
+import { DonationTransactionQueryForm } from "@/components/public/donate/donation-transaction-query-form";
 
 const modalCopy = {
   en: {
@@ -13,6 +14,22 @@ const modalCopy = {
     contributionPrefix: "Your contribution will support",
     bankTransfer: "Bank Transfer",
     officialAccount: "Official Account",
+    transaction: {
+      heading: "Already Donated?",
+      intro: "Send us your transaction details so we can match your payment and record it against your name.",
+      name: "Full Name",
+      email: "Email",
+      mobile: "Mobile",
+      reference: "Donor Reference ID",
+      referenceHint: "If you are registered, add it so we can link this to your record.",
+      message: "Transaction Details",
+      messagePlaceholder: "Transaction ID, amount, date, and any other details…",
+      submit: "Send Details",
+      sending: "Sending…",
+      sentTitle: "Details received",
+      sentNote: "Our team will verify the transaction and record your contribution. Thank you.",
+      error: "Could not send your details. Please try again.",
+    },
     reference: {
       label: "Your Donation Reference ID",
       note: "Please quote this reference whenever you make a donation, so we can record your contribution correctly. We have also emailed it to you.",
@@ -44,6 +61,22 @@ const modalCopy = {
     contributionPrefix: "আপনার অনুদান সহায়তা করবে",
     bankTransfer: "ব্যাংক ট্রান্সফার",
     officialAccount: "অফিসিয়াল অ্যাকাউন্ট",
+    transaction: {
+      heading: "ইতিমধ্যে দান করেছেন?",
+      intro: "আপনার লেনদেনের তথ্য পাঠান, যাতে আমরা পেমেন্টটি মিলিয়ে আপনার নামে রেকর্ড করতে পারি।",
+      name: "পূর্ণ নাম",
+      email: "ইমেইল",
+      mobile: "মোবাইল",
+      reference: "ডোনার রেফারেন্স আইডি",
+      referenceHint: "নিবন্ধিত হলে এটি দিন, যাতে আমরা আপনার রেকর্ডের সঙ্গে যুক্ত করতে পারি।",
+      message: "লেনদেনের বিবরণ",
+      messagePlaceholder: "ট্রানজেকশন আইডি, পরিমাণ, তারিখ এবং অন্যান্য তথ্য…",
+      submit: "বিবরণ পাঠান",
+      sending: "পাঠানো হচ্ছে…",
+      sentTitle: "বিবরণ পাওয়া গেছে",
+      sentNote: "আমাদের দল লেনদেনটি যাচাই করে আপনার অবদান রেকর্ড করবে। ধন্যবাদ।",
+      error: "বিবরণ পাঠানো যায়নি। আবার চেষ্টা করুন।",
+    },
     reference: {
       label: "আপনার ডোনেশন রেফারেন্স আইডি",
       note: "দান করার সময় এই রেফারেন্সটি উল্লেখ করুন, যাতে আমরা আপনার অবদান সঠিকভাবে রেকর্ড করতে পারি। এটি আপনার ইমেইলেও পাঠানো হয়েছে।",
@@ -75,6 +108,22 @@ const modalCopy = {
     contributionPrefix: "Dit bidrag vil stotte",
     bankTransfer: "Bankoverfoersel",
     officialAccount: "Officiel konto",
+    transaction: {
+      heading: "Har du allerede doneret?",
+      intro: "Send dine transaktionsoplysninger, saa vi kan matche betalingen og registrere den i dit navn.",
+      name: "Fulde navn",
+      email: "E-mail",
+      mobile: "Mobil",
+      reference: "Donationsreferencenummer",
+      referenceHint: "Er du registreret, saa angiv det, saa vi kan knytte det til din profil.",
+      message: "Transaktionsoplysninger",
+      messagePlaceholder: "Transaktions-id, beloeb, dato og andre oplysninger…",
+      submit: "Send oplysninger",
+      sending: "Sender…",
+      sentTitle: "Oplysninger modtaget",
+      sentNote: "Vores team verificerer transaktionen og registrerer dit bidrag. Tak.",
+      error: "Oplysningerne kunne ikke sendes. Proev igen.",
+    },
     reference: {
       label: "Dit donationsreferencenummer",
       note: "Angiv venligst denne reference, naar du donerer, saa vi kan registrere dit bidrag korrekt. Vi har ogsaa sendt den til din e-mail.",
@@ -102,7 +151,11 @@ const modalCopy = {
   },
 };
 
-function resolveModalCopy(htmlLang) {
+/**
+ * Shared so other surfaces (e.g. the public BankInfo section) can render the
+ * same localized donation copy without duplicating the strings.
+ */
+export function resolveModalCopy(htmlLang) {
   if (htmlLang === "bn") return modalCopy.bn;
   if (htmlLang === "da" || htmlLang === "dk") return modalCopy.da;
   return modalCopy.en;
@@ -164,7 +217,7 @@ function CopyButton({ value }) {
 function DetailRow({ item, highlight = false }) {
   return (
     <div
-      className={`flex flex-1 items-center justify-between gap-3 py-3 pr-4 transition-colors sm:pr-5 ${highlight
+      className={`flex flex-1 items-center justify-between gap-3 py-2 pr-4 transition-colors sm:pr-5 ${highlight
         ? "border-l-[3px] border-cyan-500 bg-cyan-50/70 pl-[calc(1rem-3px)] sm:pl-[calc(1.25rem-3px)]"
         : "bg-white pl-4 hover:bg-slate-50/70 sm:pl-5"
         }`}
@@ -175,7 +228,7 @@ function DetailRow({ item, highlight = false }) {
           {item.label}
         </dt>
         <dd
-          className={`mt-1 break-words font-semibold text-slate-900 ${item.mono
+          className={`mt-0.5 break-words font-semibold text-slate-900 ${item.mono
             ? `font-mono tracking-wide tabular-nums ${highlight ? "text-base sm:text-[1.05rem]" : "text-[0.85rem]"}`
             : "text-[0.85rem]"
             }`}
@@ -243,14 +296,14 @@ function QrPanel({ copy }) {
             {copy.qr.badge}
           </span>
         </div>
-        <div className="flex flex-1 items-center justify-center bg-[radial-gradient(circle_at_50%_30%,rgba(8,145,178,0.07),transparent_70%)] px-6 py-6">
+        <div className="flex flex-1 items-center justify-center bg-[radial-gradient(circle_at_50%_30%,rgba(8,145,178,0.07),transparent_70%)] px-2 py-3 sm:px-3 sm:py-4">
           <Image
             src="/qr.png"
             alt="Mutual Trust Bank Bangla QR code for Mir Faruk & Rima Foundation. Merchant ID 105100105101199."
             width={1680}
             height={2380}
-            sizes="(min-width: 640px) 20rem, 76vw"
-            className="h-auto w-auto max-h-[24rem] max-w-full rounded-xl shadow-lg shadow-slate-900/15 ring-1 ring-slate-900/5"
+            sizes="(min-width: 640px) 20rem, 80vw"
+            className="h-auto w-full max-w-[19rem] rounded-xl shadow-lg shadow-slate-900/15 ring-1 ring-slate-900/5 sm:max-h-[22rem] sm:w-auto sm:max-w-full"
           />
         </div>
         <figcaption className="border-t border-slate-100 px-4 py-3 text-center text-xs leading-5 text-slate-500 sm:px-5">
@@ -258,6 +311,15 @@ function QrPanel({ copy }) {
         </figcaption>
       </figure>
     </div>
+  );
+}
+
+function ReceiptIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden="true">
+      <path d="M6 3.5h12v17l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4Z" strokeLinejoin="round" />
+      <path d="M9.5 8.5h5M9.5 12h5" strokeLinecap="round" />
+    </svg>
   );
 }
 
@@ -510,7 +572,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId, donor
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/55 px-4 py-4 backdrop-blur-sm sm:items-center sm:py-8"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/55 px-3 py-4 backdrop-blur-sm sm:items-center sm:px-4 sm:py-8"
       role="dialog"
       aria-modal="true"
       aria-labelledby="donate-bank-info-title"
@@ -523,7 +585,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId, donor
       />
 
       <div
-        className={`relative flex max-h-[94vh] w-full flex-col overflow-hidden rounded-t-3xl border border-white/70 bg-white shadow-2xl shadow-slate-950/30 sm:max-h-[92vh] sm:flex-row sm:rounded-3xl ${projectId ? "max-w-6xl" : "max-w-4xl"
+        className={`relative my-auto flex w-full max-w-full min-w-0 flex-col overflow-hidden rounded-3xl border border-white/70 bg-white shadow-2xl shadow-slate-950/30 sm:max-h-[92vh] sm:flex-row ${projectId ? "sm:max-w-6xl" : "sm:max-w-4xl"
           }`}
       >
         <div className="flex min-h-0 flex-1 flex-col">
@@ -563,57 +625,65 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId, donor
             </div>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-7 sm:py-6">
+          <div className="min-h-0 flex-1 px-4 py-5 sm:overflow-y-auto sm:px-7 sm:py-6">
             {donorId ? <DonationReferenceCard donorId={donorId} copy={copy} /> : null}
 
             <AssistanceSection projectId={projectId} variant="inline" />
 
             {!donorId && (
-            <div className="flex flex-col gap-2.5 rounded-2xl border border-cyan-200 bg-cyan-50/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5">
-              <div className="flex items-start gap-2.5">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-600 text-white">
-                  <ShieldCheckIcon />
-                </span>
-                <p className="text-xs leading-5 text-slate-700">
-                  <span className="mr-1 font-bold text-cyan-800">{copy.verify.title}:</span>
-                  {copy.verify.note}
-                </p>
+              <div className="flex flex-col gap-2.5 rounded-2xl border border-cyan-200 bg-cyan-50/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5">
+                <div className="flex items-start gap-2.5">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-600 text-white">
+                    <ShieldCheckIcon />
+                  </span>
+                  <p className="text-xs leading-5 text-slate-700">
+                    <span className="mr-1 font-bold text-cyan-800">{copy.verify.title}:</span>
+                    {copy.verify.note}
+                  </p>
+                </div>
+                <Link
+                  href="/register/donor"
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 self-start rounded-full bg-[linear-gradient(135deg,#0f766e,#0891b2)] px-4 py-2 text-xs font-semibold text-white! shadow-md shadow-cyan-900/15 visited:text-white! hover:text-white! focus:text-white! active:text-white! transition hover:-translate-y-0.5 hover:shadow-lg sm:self-auto"
+                >
+                  {copy.verify.registerCta}
+                  <span aria-hidden="true">&rarr;</span>
+                </Link>
               </div>
-              <Link
-                href="/register/donor"
-                className="inline-flex shrink-0 items-center justify-center gap-1.5 self-start rounded-full bg-[linear-gradient(135deg,#0f766e,#0891b2)] px-4 py-2 text-xs font-semibold text-white! shadow-md shadow-cyan-900/15 visited:text-white! hover:text-white! focus:text-white! active:text-white! transition hover:-translate-y-0.5 hover:shadow-lg sm:self-auto"
-              >
-                {copy.verify.registerCta}
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </div>
             )}
 
             <div className="mt-6 grid items-stretch gap-5 lg:grid-cols-2">
-            <div className="order-2 flex flex-col lg:order-1">
-              <SectionHeading icon={<BankIcon />}>{copy.bankTransfer}</SectionHeading>
-              <div className="mt-3 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-                <div className="relative flex flex-wrap items-center justify-between gap-3 bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-4 py-4 sm:flex-nowrap sm:gap-4 sm:px-6">
-                  <Image
-                    src="/footer-logo.webp"
-                    alt="Mutual Trust Bank PLC"
-                    width={297}
-                    height={60}
-                    className="h-7 w-auto sm:h-9"
-                  />
-                  <span className="shrink-0 rounded-full border border-cyan-300/40 bg-cyan-400/10 px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.15em] text-cyan-100 sm:px-3 sm:text-[0.62rem] sm:tracking-[0.2em]">
-                    {copy.officialAccount}
-                  </span>
+              <div className="order-2 flex flex-col lg:order-1">
+                <SectionHeading icon={<BankIcon />}>{copy.bankTransfer}</SectionHeading>
+                <div className="mt-3 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+                  <div className="relative flex flex-wrap items-center justify-between gap-3 bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-4 py-4 sm:flex-nowrap sm:gap-4 sm:px-6">
+                    <Image
+                      src="/footer-logo.webp"
+                      alt="Mutual Trust Bank PLC"
+                      width={297}
+                      height={60}
+                      className="h-7 w-auto sm:h-9"
+                    />
+                    <span className="shrink-0 rounded-full border border-cyan-300/40 bg-cyan-400/10 px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.15em] text-cyan-100 sm:px-3 sm:text-[0.62rem] sm:tracking-[0.2em]">
+                      {copy.officialAccount}
+                    </span>
+                  </div>
+                  <dl className="flex flex-1 flex-col gap-px bg-slate-100">
+                    {BANK_DETAILS.map((item) => (
+                      <DetailRow key={item.label} item={item} highlight={item.label === "Account No"} />
+                    ))}
+                  </dl>
                 </div>
-                <dl className="flex flex-1 flex-col gap-px bg-slate-100">
-                  {BANK_DETAILS.map((item) => (
-                    <DetailRow key={item.label} item={item} highlight={item.label === "Account No"} />
-                  ))}
-                </dl>
               </div>
+
+              <QrPanel copy={copy} />
             </div>
 
-            <QrPanel copy={copy} />
+            <div className="mt-6">
+              <SectionHeading icon={<ReceiptIcon />}>{copy.transaction.heading}</SectionHeading>
+              <div className="mt-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+                <p className="mb-4 text-xs leading-5 text-slate-500">{copy.transaction.intro}</p>
+                <DonationTransactionQueryForm copy={copy} donorId={donorId} />
+              </div>
             </div>
 
             <div className="mt-6 flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">

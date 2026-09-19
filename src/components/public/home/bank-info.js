@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useSiteLocale } from "@/components/public/providers/locale-provider";
+import { resolveModalCopy } from "@/components/public/donate/donate-bank-info-modal";
+import { DonationTransactionQueryForm } from "@/components/public/donate/donation-transaction-query-form";
 
 // Ordered the way someone fills in a transfer form: who the account belongs to,
 // then the numbers they actually type, then the bank and branch behind them.
@@ -61,6 +64,9 @@ function CopyButton({ value, label }) {
 // labelled divider between them marks an either/or rather than decoration.
 // On phones the QR leads, since scanning is faster with the device in hand.
 export function BankInfo() {
+  const { copy: siteCopy } = useSiteLocale();
+  const copy = resolveModalCopy(siteCopy?.htmlLang);
+
   return (
     <section
       id="bank-info"
@@ -188,6 +194,20 @@ export function BankInfo() {
                 </ul>
               </figcaption>
             </figure>
+          </div>
+        </div>
+
+        {/* Reporting a transaction follows the payment options, since a donor
+            only has details to send once they have actually given. */}
+        <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-[0_18px_50px_-18px_rgba(15,23,42,0.28)]">
+          <div className="border-b border-slate-100 px-6 py-4">
+            <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              {copy.transaction.heading}
+            </p>
+            <p className="mt-1 text-sm leading-6 text-slate-600">{copy.transaction.intro}</p>
+          </div>
+          <div className="px-6 py-5">
+            <DonationTransactionQueryForm copy={copy} />
           </div>
         </div>
       </div>
