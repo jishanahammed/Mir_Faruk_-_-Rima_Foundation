@@ -13,6 +13,12 @@ const modalCopy = {
     contributionPrefix: "Your contribution will support",
     bankTransfer: "Bank Transfer",
     officialAccount: "Official Account",
+    reference: {
+      label: "Your Donation Reference ID",
+      note: "Please quote this reference whenever you make a donation, so we can record your contribution correctly. We have also emailed it to you.",
+      copy: "Copy",
+      copied: "Copied",
+    },
     qr: {
       heading: "Scan to Pay",
       panelLabel: "Quick Pay",
@@ -26,7 +32,7 @@ const modalCopy = {
     },
     verify: {
       title: "Verify Registration",
-      note: "Already registered? Use your mobile number as the reference. Not yet? Register first to link your donation.",
+      note: "Already registered? Quote your Donation Reference ID when you give. Not yet? Register first to link your donation.",
       registerCta: "Register Now",
     },
     close: "Close",
@@ -38,6 +44,12 @@ const modalCopy = {
     contributionPrefix: "আপনার অনুদান সহায়তা করবে",
     bankTransfer: "ব্যাংক ট্রান্সফার",
     officialAccount: "অফিসিয়াল অ্যাকাউন্ট",
+    reference: {
+      label: "আপনার ডোনেশন রেফারেন্স আইডি",
+      note: "দান করার সময় এই রেফারেন্সটি উল্লেখ করুন, যাতে আমরা আপনার অবদান সঠিকভাবে রেকর্ড করতে পারি। এটি আপনার ইমেইলেও পাঠানো হয়েছে।",
+      copy: "কপি",
+      copied: "কপি হয়েছে",
+    },
     qr: {
       heading: "স্ক্যান করে পেমেন্ট",
       panelLabel: "দ্রুত পেমেন্ট",
@@ -51,7 +63,7 @@ const modalCopy = {
     },
     verify: {
       title: "নিবন্ধন যাচাই করুন",
-      note: "ইতিমধ্যে নিবন্ধিত? রেফারেন্স হিসেবে আপনার মোবাইল নম্বর ব্যবহার করুন। এখনও করেননি? আগে নিবন্ধন করুন।",
+      note: "ইতিমধ্যে নিবন্ধিত? দান করার সময় আপনার ডোনেশন রেফারেন্স আইডি উল্লেখ করুন। এখনও করেননি? আগে নিবন্ধন করুন।",
       registerCta: "এখনই নিবন্ধন করুন",
     },
     close: "বন্ধ করুন",
@@ -63,6 +75,12 @@ const modalCopy = {
     contributionPrefix: "Dit bidrag vil stotte",
     bankTransfer: "Bankoverfoersel",
     officialAccount: "Officiel konto",
+    reference: {
+      label: "Dit donationsreferencenummer",
+      note: "Angiv venligst denne reference, naar du donerer, saa vi kan registrere dit bidrag korrekt. Vi har ogsaa sendt den til din e-mail.",
+      copy: "Kopier",
+      copied: "Kopieret",
+    },
     qr: {
       heading: "Scan og betal",
       panelLabel: "Hurtig betaling",
@@ -76,7 +94,7 @@ const modalCopy = {
     },
     verify: {
       title: "Bekraeft registrering",
-      note: "Allerede registreret? Brug dit mobilnummer som reference. Ikke endnu? Registrer dig forst.",
+      note: "Allerede registreret? Angiv dit donationsreferencenummer, naar du giver. Ikke endnu? Registrer dig forst.",
       registerCta: "Registrer nu",
     },
     close: "Luk",
@@ -403,7 +421,66 @@ function AssistanceSection({ projectId, variant }) {
   );
 }
 
-export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
+/**
+ * Shown right after a donor registers. The reference is the one thing they must
+ * keep from this screen, so it leads the modal and can be copied in one tap.
+ */
+function DonationReferenceCard({ donorId, copy }) {
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(donorId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard unavailable (e.g. non-secure context) — silently ignore.
+    }
+  }
+
+  return (
+    <div className="mb-5 overflow-hidden rounded-2xl border border-teal-200 bg-[linear-gradient(135deg,#f0fdfa,#ecfeff)] shadow-sm">
+      <div className="flex flex-col items-center gap-3 px-5 py-5 text-center sm:px-6">
+        <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-teal-700">
+          {copy.reference.label}
+        </p>
+
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-3xl font-extrabold tracking-[0.12em] tabular-nums text-teal-900">
+            {donorId}
+          </span>
+          <button
+            type="button"
+            onClick={handleCopy}
+            aria-label={copy.reference.copy}
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[0.65rem] font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 ${copied
+              ? "border-teal-300 bg-teal-100 text-teal-800"
+              : "border-teal-200 bg-white text-teal-700 hover:bg-teal-50"
+              }`}
+          >
+            {copied ? (
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.2" className="h-3 w-3" aria-hidden="true">
+                <path d="m5 10.5 3.2 3.2L15 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-3 w-3" aria-hidden="true">
+                <rect x="7.2" y="7.2" width="9" height="9" rx="2" />
+                <path d="M12.8 4.5H5.8a1.3 1.3 0 0 0-1.3 1.3v7" strokeLinecap="round" />
+              </svg>
+            )}
+            {copied ? copy.reference.copied : copy.reference.copy}
+          </button>
+        </div>
+
+        <p className="max-w-md text-xs leading-5 text-slate-600">
+          {copy.reference.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export function DonateBankInfoModal({ isOpen, onClose, project, projectId, donorId }) {
   const { copy: siteCopy } = useSiteLocale();
   const copy = resolveModalCopy(siteCopy?.htmlLang);
 
@@ -487,8 +564,11 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-7 sm:py-6">
+            {donorId ? <DonationReferenceCard donorId={donorId} copy={copy} /> : null}
+
             <AssistanceSection projectId={projectId} variant="inline" />
 
+            {!donorId && (
             <div className="flex flex-col gap-2.5 rounded-2xl border border-cyan-200 bg-cyan-50/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5">
               <div className="flex items-start gap-2.5">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-600 text-white">
@@ -507,6 +587,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId }) {
                 <span aria-hidden="true">&rarr;</span>
               </Link>
             </div>
+            )}
 
             <div className="mt-6 grid items-stretch gap-5 lg:grid-cols-2">
             <div className="order-2 flex flex-col lg:order-1">

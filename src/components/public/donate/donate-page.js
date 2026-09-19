@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
@@ -208,6 +209,17 @@ export function DonatePage({ projects = [] }) {
   const fp = copy.featuredProjects;
   const [modalProject, setModalProject] = useState(null);
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
+
+  // The registration email links here as /donate?donate=1&ref=100001, so the
+  // donor lands on the site with the donation details already open and their
+  // reference in front of them.
+  const searchParams = useSearchParams();
+  const donorRef = searchParams.get("ref") ?? "";
+  const shouldAutoOpen = searchParams.get("donate") === "1" || Boolean(donorRef);
+
+  useEffect(() => {
+    if (shouldAutoOpen) setIsDonateModalOpen(true);
+  }, [shouldAutoOpen]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [desktopIndex, setDesktopIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
@@ -399,6 +411,7 @@ export function DonatePage({ projects = [] }) {
 
       <DonateBankInfoModal
         isOpen={isDonateModalOpen}
+        donorId={donorRef}
         project={modalProject?.title ?? null}
         projectId={modalProject?.id}
         onClose={() => setIsDonateModalOpen(false)}

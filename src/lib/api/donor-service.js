@@ -19,6 +19,8 @@ export async function registerDonor(data) {
     message: pickMessage(payload),
     userId: payload?.userId ?? payload?.data?.userId ?? null,
     donorProfileId: payload?.donorProfileId ?? payload?.data?.donorProfileId ?? null,
+    // Public donor reference (e.g. 100001), shown on the confirmation popup.
+    donorId: payload?.donorId ?? payload?.DonorId ?? payload?.data?.donorId ?? "",
     roleName: payload?.roleName ?? payload?.data?.roleName ?? "Donor",
     raw: payload,
   };

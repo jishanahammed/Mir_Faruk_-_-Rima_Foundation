@@ -408,6 +408,7 @@ export function DonorRegistrationForm() {
   const [submitMessage, setSubmitMessage] = useState("");
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
   const [isBankInfoOpen, setIsBankInfoOpen] = useState(false);
+  const [registeredDonorId, setRegisteredDonorId] = useState("");
 
   const updateField = (field) => (event) => {
     const value =
@@ -482,6 +483,7 @@ export function DonorRegistrationForm() {
       );
       setForm(initialFormState);
       setSubmitMessage(payload?.message || payload?.Message || copy.successText);
+      setRegisteredDonorId(payload?.donorId || payload?.DonorId || "");
       setIsBankInfoOpen(true);
     } catch (error) {
       const message =
@@ -914,6 +916,7 @@ export function DonorRegistrationForm() {
       </section>
 
       <DonateBankInfoModal
+        donorId={registeredDonorId}
         isOpen={isBankInfoOpen}
         onClose={() => setIsBankInfoOpen(false)}
       />

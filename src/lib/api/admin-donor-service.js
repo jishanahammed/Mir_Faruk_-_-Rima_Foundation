@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { ApiError } from "@/lib/api/api-error";
 import { apiDelete, apiGetById, apiPost, apiPut } from "@/lib/api/api-service";
 import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
+import { apiTimeouts } from "@/lib/api/server-client";
 
 export const DONOR_PAGE_SIZE_OPTIONS = [10, 20, 30, 50, 80, 100];
 
@@ -33,6 +34,8 @@ function normalizeDonor(payload) {
   return {
     id: pickValue(payload, "id", "Id", 0),
     userId: pickValue(payload, "userId", "UserId", ""),
+    // Public-facing donor reference (e.g. 100001), distinct from the row id.
+    donorId: pickValue(payload, "donorId", "DonorId", ""),
     fullName: pickValue(payload, "fullName", "FullName", ""),
     email: pickValue(payload, "email", "Email", ""),
     mobile: pickValue(payload, "mobile", "Mobile", ""),
@@ -45,6 +48,11 @@ function normalizeDonor(payload) {
     contactMobile: pickValue(payload, "contactMobile", "ContactMobile", ""),
     contactTelephone: pickValue(payload, "contactTelephone", "ContactTelephone", ""),
     isApprove: Boolean(pickValue(payload, "isApprove", "IsApprove", false)),
+    ledgerId: pickValue(payload, "ledgerId", "LedgerId", null),
+    ledgerCode: pickValue(payload, "ledgerCode", "LedgerCode", null),
+    ledgerName: pickValue(payload, "ledgerName", "LedgerName", null),
+    // Set once the accounting ledger exists; locks approval and delete.
+    hasLedger: Boolean(pickValue(payload, "hasLedger", "HasLedger", false)),
     isPublic: Boolean(pickValue(payload, "isPublic", "IsPublic", false)),
     createdAt: pickValue(payload, "createdAt", "CreatedAt", null),
     updatedAt: pickValue(payload, "updatedAt", "UpdatedAt", null),
@@ -108,7 +116,11 @@ export async function updateAdminDonor(id, data) {
 }
 
 export async function updateAdminDonorApproval(id, isApprove) {
-  return normalizeDonor(await apiPut(`Donors/${id}/approval`, { IsApprove: isApprove }, await getAdminAuthConfig()));
+  // Approving creates the donor's ledger in the accounting system, which takes
+  // far longer than a normal save — the default timeout cuts it off mid-flight
+  // and the error arrives with no response body to explain why.
+  const config = { ...(await getAdminAuthConfig()), timeout: apiTimeouts.donorApproval };
+  return normalizeDonor(await apiPut(`Donors/${id}/approval`, { IsApprove: isApprove }, config));
 }
 
 export async function updateAdminDonorVisibility(id, isPublic) {

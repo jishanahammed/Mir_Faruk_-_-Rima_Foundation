@@ -72,6 +72,19 @@ const navSections = [
       },
     ],
   },
+  {
+    section: "Accounting",
+    items: [
+      {
+        label: "Accounting Setting",
+        icon: "accounting",
+        children: [
+          { label: "Accounting Credentials", href: "/admin/accounting-credentials", icon: "accounting" },
+          { label: "Ledger Configuration", href: "/admin/ledger-configuration", icon: "ledger" },
+        ],
+      },
+    ],
+  },
 
 
 ];
@@ -197,6 +210,24 @@ function Icon({ name }) {
     viewBox: "0 0 24 24",
     "aria-hidden": "true",
   };
+
+  if (name === "ledger") {
+    return (
+      <svg {...common}>
+        <rect x="4" y="3.5" width="16" height="17" rx="2" />
+        <path d="M8 8h8M8 12h8M8 16h5" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (name === "accounting") {
+    return (
+      <svg {...common}>
+        <circle cx="8" cy="12" r="3.2" />
+        <path d="M11.2 12H21l-2 2.4M17 12v2.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
 
   if (name === "list") {
     return (

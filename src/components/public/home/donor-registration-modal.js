@@ -411,6 +411,7 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
   const [submitMessage, setSubmitMessage] = useState("");
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
   const [isBankInfoOpen, setIsBankInfoOpen] = useState(false);
+  const [registeredDonorId, setRegisteredDonorId] = useState("");
 
   useEffect(() => {
     if (!isOpen) {
@@ -439,6 +440,7 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
   if (isBankInfoOpen) {
     return (
       <DonateBankInfoModal
+        donorId={registeredDonorId}
         isOpen={isBankInfoOpen}
         onClose={() => {
           setIsBankInfoOpen(false);
@@ -521,6 +523,7 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
       );
       setForm(initialFormState);
       setSubmitMessage(payload?.message || payload?.Message || copy.successText);
+      setRegisteredDonorId(payload?.donorId || payload?.DonorId || "");
       setIsBankInfoOpen(true);
     } catch (error) {
       const message =

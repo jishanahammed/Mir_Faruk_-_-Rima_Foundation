@@ -30,11 +30,18 @@ const beneficiaryRegistrationTimeout = getTimeoutMs(
   process.env.AUTH_API_BENEFICIARY_REGISTRATION_TIMEOUT_MS,
   120000,
 );
+// Approving a donor signs in to the accounting system, creates the ledger and
+// reads it back — three round trips to a remote host, well past the default.
+const donorApprovalTimeout = getTimeoutMs(
+  process.env.AUTH_API_DONOR_APPROVAL_TIMEOUT_MS,
+  120000,
+);
 const allowSelfSigned = process.env.AUTH_API_ALLOW_SELF_SIGNED === "true";
 
 export const apiTimeouts = {
   default: timeout,
   donorRegistration: donorRegistrationTimeout,
+  donorApproval: donorApprovalTimeout,
   beneficiaryRegistration: beneficiaryRegistrationTimeout,
 };
 

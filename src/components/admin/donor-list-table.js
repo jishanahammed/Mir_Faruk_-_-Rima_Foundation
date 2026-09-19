@@ -240,23 +240,40 @@ function DonorRowActions({ donor, returnPath }) {
       <div className="flex items-center divide-x divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <DonorDetailsModal donor={donor} />
 
-        <form action={updateDonorApprovalAction}>
-          <input type="hidden" name="id" value={donor.id} />
-          <input type="hidden" name="isApprove" value={String(!donor.isApprove)} />
-          <input type="hidden" name="returnPath" value={returnPath} />
-          <button
-            type="submit"
-            className={`group relative inline-flex h-9 w-9 items-center justify-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset ${
-              donor.isApprove
-                ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 focus-visible:ring-emerald-400"
-                : "bg-white text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 focus-visible:ring-emerald-400"
-            }`}
-            aria-label={donor.isApprove ? "Unapprove donor" : "Approve donor"}
+        {donor.hasLedger ? (
+          // A ledger exists in the accounting system and cannot be withdrawn
+          // there, so approval is locked rather than togglable.
+          <span
+            className="group relative inline-flex h-9 w-9 cursor-not-allowed items-center justify-center bg-emerald-50 text-emerald-600"
+            aria-label="Approved — locked by accounting ledger"
+            title="Approved. A ledger exists in the accounting system, so this cannot be reversed."
           >
-            <Tooltip>{donor.isApprove ? "Unapprove" : "Approve"}</Tooltip>
-            <ActionIcon type={donor.isApprove ? "unapprove" : "approve"} />
-          </button>
-        </form>
+            <Tooltip>Locked by ledger</Tooltip>
+            <ActionIcon type="approve" />
+          </span>
+        ) : (
+          <form action={updateDonorApprovalAction}>
+            <input type="hidden" name="id" value={donor.id} />
+            <input type="hidden" name="isApprove" value={String(!donor.isApprove)} />
+            <input type="hidden" name="returnPath" value={returnPath} />
+            <ConfirmSubmitButton
+              confirmMessage={
+                donor.isApprove
+                  ? "Remove approval for this donor?"
+                  : "Donor is being Approved. A ledger will be created in the Accounting System, so this process may take a few moments."
+              }
+              className={`group relative inline-flex h-9 w-9 items-center justify-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset ${donor.isApprove
+                  ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 focus-visible:ring-emerald-400"
+                  : "bg-white text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 focus-visible:ring-emerald-400"
+                }`}
+              ariaLabel={donor.isApprove ? "Unapprove donor" : "Approve donor"}
+              title={donor.isApprove ? "Unapprove" : "Approve"}
+            >
+              <Tooltip>{donor.isApprove ? "Unapprove" : "Approve"}</Tooltip>
+              <ActionIcon type={donor.isApprove ? "unapprove" : "approve"} />
+            </ConfirmSubmitButton>
+          </form>
+        )}
 
         <form action={updateDonorVisibilityAction}>
           <input type="hidden" name="id" value={donor.id} />
@@ -264,11 +281,10 @@ function DonorRowActions({ donor, returnPath }) {
           <input type="hidden" name="returnPath" value={returnPath} />
           <button
             type="submit"
-            className={`group relative inline-flex h-9 w-9 items-center justify-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset ${
-              donor.isPublic
+            className={`group relative inline-flex h-9 w-9 items-center justify-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset ${donor.isPublic
                 ? "bg-sky-50 text-sky-600 hover:bg-sky-100 focus-visible:ring-sky-400"
                 : "bg-white text-slate-400 hover:bg-sky-50 hover:text-sky-600 focus-visible:ring-sky-400"
-            }`}
+              }`}
             aria-label={donor.isPublic ? "Make private" : "Make public"}
           >
             <Tooltip>{donor.isPublic ? "Make Private" : "Make Public"}</Tooltip>
@@ -286,21 +302,34 @@ function DonorRowActions({ donor, returnPath }) {
         </Link>
       </div>
 
-      <form action={deleteDonorAction}>
-        <input type="hidden" name="id" value={donor.id} />
-        <input type="hidden" name="returnPath" value={returnPath} />
-        <ConfirmSubmitButton
-          confirmMessage="Delete this donor from the active list?"
-          className="group relative inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-red-100 bg-white text-red-400 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-          ariaLabel="Delete donor"
-          title="Delete"
+      {donor.hasLedger ? (
+        <span
+          className="group relative inline-flex h-9 w-9 cursor-not-allowed items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50 text-slate-300 shadow-sm"
+          aria-label="Delete disabled — donor has an accounting ledger"
+          title="This donor has a ledger in the accounting system and can no longer be deleted."
         >
-          <Tooltip>Delete</Tooltip>
+          <Tooltip>Ledger created</Tooltip>
           <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </ConfirmSubmitButton>
-      </form>
+        </span>
+      ) : (
+        <form action={deleteDonorAction}>
+          <input type="hidden" name="id" value={donor.id} />
+          <input type="hidden" name="returnPath" value={returnPath} />
+          <ConfirmSubmitButton
+            confirmMessage="Delete this donor from the active list?"
+            className="group relative inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-red-100 bg-white text-red-400 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+            ariaLabel="Delete donor"
+            title="Delete"
+          >
+            <Tooltip>Delete</Tooltip>
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </ConfirmSubmitButton>
+        </form>
+      )}
     </div>
   );
 }
@@ -313,6 +342,10 @@ function MobileDonorCard({ donor }) {
         <StatusBadge approved={donor.isApprove} />
       </div>
       <div className="grid gap-4 p-4 sm:grid-cols-2">
+        <div className="space-y-1">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Donor ID</p>
+          <p className="font-mono text-sm font-semibold tabular-nums text-slate-800">{donor.donorId || "—"}</p>
+        </div>
         <div className="space-y-1">
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Contact</p>
           <p className="text-sm font-semibold text-slate-800">{donor.mobile}</p>
@@ -543,6 +576,7 @@ export function DonorListTable({ donors, filters }) {
               <table className="min-w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/60">
+                    <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">Donor ID</th>
                     <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">Donor</th>
                     <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">Contact</th>
                     <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">Type</th>
@@ -557,6 +591,11 @@ export function DonorListTable({ donors, filters }) {
                       key={item.id}
                       className={`group transition-colors hover:bg-cyan-50/40 ${index % 2 === 0 ? "bg-white" : "bg-slate-50/30"}`}
                     >
+                      <td className="px-5 py-3.5">
+                        <span className="font-mono text-sm font-semibold tabular-nums text-slate-700">
+                          {item.donorId || "—"}
+                        </span>
+                      </td>
                       <td className="px-5 py-3.5">
                         <DonorIdentity donor={item} compact />
                       </td>
@@ -584,7 +623,7 @@ export function DonorListTable({ donors, filters }) {
                       </td>
                       <td className="px-5 py-3.5">
                         <p className="text-sm font-medium text-slate-700">{formatDate(item.createdAt)}</p>
-                        <p className="mt-0.5 text-[11px] text-slate-400">ID #{item.id}</p>
+                        <p className="mt-0.5 text-[11px] text-slate-400">Record #{item.id}</p>
                       </td>
                       <td className="px-5 py-3.5">
                         <DonorRowActions donor={item} returnPath={currentListHref} />
@@ -609,11 +648,10 @@ export function DonorListTable({ donors, filters }) {
               <Link
                 href={buildDonorListHref(filters, { page: Math.max(1, donors.pageNumber - 1) })}
                 aria-disabled={!donors.hasPreviousPage}
-                className={`inline-flex h-9 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold transition ${
-                  donors.hasPreviousPage
+                className={`inline-flex h-9 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold transition ${donors.hasPreviousPage
                     ? "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300"
                     : "cursor-not-allowed border border-slate-100 bg-slate-50 text-slate-300"
-                }`}
+                  }`}
               >
                 <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                   <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -636,11 +674,10 @@ export function DonorListTable({ donors, filters }) {
                     href={buildDonorListHref(filters, { page: item })}
                     prefetch={false}
                     aria-current={isActive ? "page" : undefined}
-                    className={`inline-flex h-9 min-w-9 items-center justify-center rounded-xl px-2.5 text-sm font-semibold transition ${
-                      isActive
+                    className={`inline-flex h-9 min-w-9 items-center justify-center rounded-xl px-2.5 text-sm font-semibold transition ${isActive
                         ? "bg-cyan-600 text-white shadow-sm shadow-cyan-200"
                         : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                    }`}
+                      }`}
                   >
                     {item}
                   </Link>
@@ -650,11 +687,10 @@ export function DonorListTable({ donors, filters }) {
               <Link
                 href={buildDonorListHref(filters, { page: Math.min(donors.totalPages, donors.pageNumber + 1) })}
                 aria-disabled={!donors.hasNextPage}
-                className={`inline-flex h-9 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold transition ${
-                  donors.hasNextPage
+                className={`inline-flex h-9 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold transition ${donors.hasNextPage
                     ? "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300"
                     : "cursor-not-allowed border border-slate-100 bg-slate-50 text-slate-300"
-                }`}
+                  }`}
               >
                 Next
                 <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
