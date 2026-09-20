@@ -38,7 +38,7 @@ function Field({ label, htmlFor, optional, hint, children }) {
  * reference or email matches one, so anyone can send details and still be
  * traced back correctly.
  */
-export function DonationTransactionQueryForm({ copy, donorId = "" }) {
+export function DonationTransactionQueryForm({ copy, donorId = "", prefill = null }) {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState(null);
   const [sent, setSent] = useState(false);
@@ -49,12 +49,20 @@ export function DonationTransactionQueryForm({ copy, donorId = "" }) {
     setIsPending(true);
 
     const fd = new FormData(event.currentTarget);
+    const email = String(fd.get("email") ?? "").trim();
+    const mobile = String(fd.get("mobile") ?? "").trim();
+
+    if (!email && !mobile) {
+      setError(copy.transaction.contactRequired);
+      setIsPending(false);
+      return;
+    }
 
     try {
       const result = await submitDonationTransactionQueryAction({
         fullName: String(fd.get("fullName") ?? "").trim(),
-        email: String(fd.get("email") ?? "").trim(),
-        mobile: String(fd.get("mobile") ?? "").trim(),
+        email,
+        mobile,
         donorReference: String(fd.get("donorReference") ?? "").trim(),
         message: String(fd.get("message") ?? "").trim(),
       });
@@ -88,16 +96,43 @@ export function DonationTransactionQueryForm({ copy, donorId = "" }) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label={copy.transaction.name} htmlFor="dtq-fullName">
-          <input id="dtq-fullName" name="fullName" type="text" required maxLength={150} className={inputClass} />
+          <input
+            id="dtq-fullName"
+            name="fullName"
+            type="text"
+            required
+            maxLength={150}
+            defaultValue={prefill?.fullName ?? ""}
+            className={inputClass}
+          />
         </Field>
-        <Field label={copy.transaction.email} htmlFor="dtq-email">
-          <input id="dtq-email" name="email" type="email" required maxLength={200} className={inputClass} />
+        <Field label={copy.transaction.email} htmlFor="dtq-email" optional>
+          <input
+            id="dtq-email"
+            name="email"
+            type="email"
+            maxLength={200}
+            defaultValue={prefill?.email ?? ""}
+            className={inputClass}
+          />
         </Field>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field label={copy.transaction.mobile} htmlFor="dtq-mobile" optional>
-          <input id="dtq-mobile" name="mobile" type="tel" maxLength={30} className={inputClass} />
+        <Field
+          label={copy.transaction.mobile}
+          htmlFor="dtq-mobile"
+          optional
+          hint={copy.transaction.contactHint}
+        >
+          <input
+            id="dtq-mobile"
+            name="mobile"
+            type="tel"
+            maxLength={30}
+            defaultValue={prefill?.mobile ?? ""}
+            className={inputClass}
+          />
         </Field>
         <Field
           label={copy.transaction.reference}

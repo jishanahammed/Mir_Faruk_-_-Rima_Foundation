@@ -306,9 +306,8 @@ function validateForm(form, language) {
     errors.email = messages.emailInvalid;
   }
 
-  if (!mobile) {
-    errors.mobile = messages.mobileRequired;
-  } else {
+  // Mobile is optional, but a value that is given must still look valid.
+  if (mobile) {
     const digitCount = mobile.match(/\p{Nd}/gu)?.length ?? 0;
 
     if (!/^\+?[\p{Nd}\s\-()]+$/u.test(mobile) || digitCount < 7 || digitCount > 15) {
@@ -350,9 +349,8 @@ function validateForm(form, language) {
     }
   }
 
-  if (!address) {
-    errors.address = messages.addressRequired;
-  } else if (address.length < 8) {
+  // Address is optional; only a too-short entry is rejected.
+  if (address && address.length < 8) {
     errors.address = messages.addressInvalid;
   }
 
@@ -629,14 +627,12 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
               id="donor-mobile"
               label={copy.fields.mobile}
               error={validationErrors.mobile}
-              required
             >
               <input
                 id="donor-mobile"
                 name="mobile"
                 type="tel"
                 autoComplete="tel"
-                required
                 disabled={isSubmitting}
                 value={form.mobile}
                 onChange={updateField("mobile")}
@@ -649,14 +645,12 @@ export function DonorRegistrationModal({ isOpen, language, onClose }) {
               id="donor-address"
               label={copy.fields.address}
               error={validationErrors.address}
-              required
             >
               <input
                 id="donor-address"
                 name="address"
                 type="text"
                 autoComplete="street-address"
-                required
                 disabled={isSubmitting}
                 value={form.address}
                 onChange={updateField("address")}

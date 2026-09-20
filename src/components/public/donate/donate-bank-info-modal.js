@@ -24,6 +24,8 @@ const modalCopy = {
       referenceHint: "If you are registered, add it so we can link this to your record.",
       message: "Transaction Details",
       messagePlaceholder: "Transaction ID, amount, date, and any other details…",
+      contactHint: "Give an email or a mobile number so we can reach you.",
+      contactRequired: "Please provide an email address or a mobile number so we can reach you.",
       submit: "Send Details",
       sending: "Sending…",
       sentTitle: "Details received",
@@ -71,6 +73,8 @@ const modalCopy = {
       referenceHint: "নিবন্ধিত হলে এটি দিন, যাতে আমরা আপনার রেকর্ডের সঙ্গে যুক্ত করতে পারি।",
       message: "লেনদেনের বিবরণ",
       messagePlaceholder: "ট্রানজেকশন আইডি, পরিমাণ, তারিখ এবং অন্যান্য তথ্য…",
+      contactHint: "যোগাযোগের জন্য ইমেইল অথবা মোবাইল নম্বর দিন।",
+      contactRequired: "অনুগ্রহ করে ইমেইল অথবা মোবাইল নম্বর দিন, যাতে আমরা যোগাযোগ করতে পারি।",
       submit: "বিবরণ পাঠান",
       sending: "পাঠানো হচ্ছে…",
       sentTitle: "বিবরণ পাওয়া গেছে",
@@ -118,6 +122,8 @@ const modalCopy = {
       referenceHint: "Er du registreret, saa angiv det, saa vi kan knytte det til din profil.",
       message: "Transaktionsoplysninger",
       messagePlaceholder: "Transaktions-id, beloeb, dato og andre oplysninger…",
+      contactHint: "Angiv en e-mail eller et mobilnummer, saa vi kan kontakte dig.",
+      contactRequired: "Angiv venligst en e-mail eller et mobilnummer, saa vi kan kontakte dig.",
       submit: "Send oplysninger",
       sending: "Sender…",
       sentTitle: "Oplysninger modtaget",
@@ -542,7 +548,7 @@ function DonationReferenceCard({ donorId, copy }) {
   );
 }
 
-export function DonateBankInfoModal({ isOpen, onClose, project, projectId, donorId }) {
+export function DonateBankInfoModal({ isOpen, onClose, project, projectId, donorId, donorPrefill }) {
   const { copy: siteCopy } = useSiteLocale();
   const copy = resolveModalCopy(siteCopy?.htmlLang);
 
@@ -682,7 +688,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId, donor
               <SectionHeading icon={<ReceiptIcon />}>{copy.transaction.heading}</SectionHeading>
               <div className="mt-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
                 <p className="mb-4 text-xs leading-5 text-slate-500">{copy.transaction.intro}</p>
-                <DonationTransactionQueryForm copy={copy} donorId={donorId} />
+                <DonationTransactionQueryForm copy={copy} donorId={donorId} prefill={donorPrefill} />
               </div>
             </div>
 

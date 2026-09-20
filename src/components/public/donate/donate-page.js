@@ -216,6 +216,12 @@ export function DonatePage({ projects = [] }) {
   // effect runs — which also keeps it working if hydration is slow.
   const searchParams = useSearchParams();
   const donorRef = searchParams.get("ref") ?? "";
+  // Carried from the registration email so the transaction form pre-fills.
+  const donorPrefill = {
+    fullName: searchParams.get("name") ?? "",
+    email: searchParams.get("email") ?? "",
+    mobile: searchParams.get("mobile") ?? "",
+  };
   const shouldAutoOpen = searchParams.get("donate") === "1" || Boolean(donorRef);
 
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(shouldAutoOpen);
@@ -411,6 +417,7 @@ export function DonatePage({ projects = [] }) {
       <DonateBankInfoModal
         isOpen={isDonateModalOpen}
         donorId={donorRef}
+        donorPrefill={donorPrefill}
         project={modalProject?.title ?? null}
         projectId={modalProject?.id}
         onClose={() => setIsDonateModalOpen(false)}
