@@ -80,6 +80,9 @@ export async function getAdminDonorList(filters = {}) {
     PageSize: normalizePageSize(filters.pageSize),
     SearchText: normalizeSearchText(filters.search) || null,
     IsPublic: filters.isPublic === "true" ? true : filters.isPublic === "false" ? false : null,
+    // Both default to null, which leaves the server-side filter off.
+    IsApprove: typeof filters.isApprove === "boolean" ? filters.isApprove : null,
+    HasLedger: typeof filters.hasLedger === "boolean" ? filters.hasLedger : null,
   };
 
   const payload = await apiPost(

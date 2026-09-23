@@ -82,6 +82,8 @@ const navSections = [
         children: [
           { label: "Accounting Credentials", href: "/admin/accounting-credentials", icon: "accounting" },
           { label: "Ledger Configuration", href: "/admin/ledger-configuration", icon: "ledger" },
+          { label: "Accounting Endpoints", href: "/admin/accounting-endpoints", icon: "ledger" },
+          { label: "Voucher Settings", href: "/admin/voucher-settings", icon: "receipt" },
         ],
       },
     ],
@@ -174,6 +176,14 @@ const routeTitles = {
   "/admin/settings": {
     eyebrow: "Control Center",
     title: "Settings",
+  },
+  "/admin/accounting-endpoints": {
+    eyebrow: "Accounting Setting",
+    title: "Accounting Endpoints",
+  },
+  "/admin/voucher-settings": {
+    eyebrow: "Accounting Setting",
+    title: "Voucher Settings",
   },
 };
 

@@ -25,6 +25,7 @@ function normalizeQuery(p) {
     mobile: pick(p, "mobile", "Mobile", null),
     donorReference: pick(p, "donorReference", "DonorReference", null),
     message: pick(p, "message", "Message", ""),
+    attachmentUrl: pick(p, "attachmentUrl", "AttachmentUrl", null),
     donorProfileId: pick(p, "donorProfileId", "DonorProfileId", null),
     donorName: pick(p, "donorName", "DonorName", null),
     donorId: pick(p, "donorId", "DonorId", null),

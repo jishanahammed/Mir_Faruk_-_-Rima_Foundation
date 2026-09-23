@@ -73,8 +73,18 @@ function readRequiredDate(formData, name, label) {
   return { value };
 }
 
+function readOptionalPositiveNumber(formData, name) {
+  const value = Number(formData.get(name));
+  return Number.isFinite(value) && value > 0 ? value : null;
+}
+
 export async function addPaymentHistoryAction(_state, formData) {
   const donorId = readRequiredPositiveNumber(formData, "donorId", "Donor");
+  const receiveLedgerId = readRequiredPositiveNumber(
+    formData,
+    "receiveLedgerId",
+    "Received in account",
+  );
   const transactionId = readRequiredText(formData, "transactionId", "Transaction ID");
   const donationType = readRequiredOption(
     formData,
@@ -91,29 +101,17 @@ export async function addPaymentHistoryAction(_state, formData) {
   const paymentDate = readRequiredDate(formData, "paymentDate", "payment date");
   const amount = readRequiredPositiveNumber(formData, "amount", "Amount");
   const currency = readRequiredText(formData, "currency", "Currency");
-  const paymentStatus = readRequiredOption(
-    formData,
-    "paymentStatus",
-    "payment status",
-    PAYMENT_STATUS_OPTIONS,
-  );
-  const adminApprovalStatus = readRequiredOption(
-    formData,
-    "adminApprovalStatus",
-    "admin approval status",
-    ADMIN_APPROVAL_STATUS_OPTIONS,
-  );
-
+  // Payment and approval status are not read from the form: the server always
+  // starts a new record Pending / Waiting.
   const validationError = [
     donorId,
+    receiveLedgerId,
     transactionId,
     donationType,
     paymentMethod,
     paymentDate,
     amount,
     currency,
-    paymentStatus,
-    adminApprovalStatus,
   ].find((item) => item.error);
 
   if (validationError) {
@@ -129,10 +127,16 @@ export async function addPaymentHistoryAction(_state, formData) {
       PaymentDate: paymentDate.value,
       Amount: amount.value,
       Currency: currency.value.toUpperCase(),
-      PaymentStatus: paymentStatus.value,
-      AdminApprovalStatus: adminApprovalStatus.value,
       ReceiptUrl: String(formData.get("receiptUrl") ?? "").trim(),
       Remarks: String(formData.get("remarks") ?? "").trim(),
+      ReceiveLedgerId: receiveLedgerId.value,
+      // The sub-ledger is only meaningful when the account has one; the server
+      // drops it otherwise, so the flag travels with it.
+      HaveSubLedger: String(formData.get("haveSubLedger") ?? "") === "true",
+      ReceiveSubLedgerId: readOptionalPositiveNumber(formData, "receiveSubLedgerId"),
+      ReceiveLedgerCode: String(formData.get("receiveLedgerCode") ?? "").trim(),
+      ReceiveLedgerName: String(formData.get("receiveLedgerName") ?? "").trim(),
+      ReceiveLedgerType: String(formData.get("receiveLedgerType") ?? "").trim(),
     });
 
     revalidatePath("/admin/donersPayment");

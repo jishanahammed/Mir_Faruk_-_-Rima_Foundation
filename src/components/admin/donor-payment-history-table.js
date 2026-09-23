@@ -262,7 +262,12 @@ function EmptyState() {
   );
 }
 
-export function DonorPaymentHistoryTable({ paymentHistories, filters, donorOptions = [] }) {
+export function DonorPaymentHistoryTable({
+  paymentHistories,
+  filters,
+  donorOptions = [],
+  paymentLedgers = [],
+}) {
   const items = paymentHistories.items ?? [];
   const startItem =
     paymentHistories.totalCount === 0
@@ -304,7 +309,7 @@ export function DonorPaymentHistoryTable({ paymentHistories, filters, donorOptio
                 <Badge className="border-slate-200 bg-slate-100 text-slate-700">
                   Payment date descending
                 </Badge>
-                <AddDonorPaymentHistoryModal donors={donorOptions} />
+                <AddDonorPaymentHistoryModal donors={donorOptions} paymentLedgers={paymentLedgers} />
               </div>
             </div>
 

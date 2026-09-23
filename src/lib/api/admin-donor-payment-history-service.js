@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { ApiError } from "@/lib/api/api-error";
 import { apiDelete, apiGetById, apiPost, apiPut } from "@/lib/api/api-service";
 import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
+import { apiTimeouts } from "@/lib/api/server-client";
 import {
   ADMIN_APPROVAL_STATUS_OPTIONS,
   DONATION_TYPE_OPTIONS,
@@ -136,6 +137,12 @@ function normalizePaymentHistory(payload) {
     receiptUrl,
     receiptLink: buildAssetUrl(receiptUrl),
     remarks: pickValue(payload, "remarks", "Remarks", ""),
+    // Receiving account, captured as it read when the payment was recorded.
+    receiveLedgerId: pickValue(payload, "receiveLedgerId", "ReceiveLedgerId", null),
+    receiveSubLedgerId: pickValue(payload, "receiveSubLedgerId", "ReceiveSubLedgerId", null),
+    receiveLedgerCode: pickValue(payload, "receiveLedgerCode", "ReceiveLedgerCode", ""),
+    receiveLedgerName: pickValue(payload, "receiveLedgerName", "ReceiveLedgerName", ""),
+    receiveLedgerType: pickValue(payload, "receiveLedgerType", "ReceiveLedgerType", ""),
     createdAt: pickValue(payload, "createdAt", "CreatedAt", null),
     updatedAt: pickValue(payload, "updatedAt", "UpdatedAt", null),
   };
@@ -245,7 +252,9 @@ export async function updateAdminDonorPaymentApprovalStatus(id, adminApprovalSta
           ADMIN_APPROVAL_STATUS_OPTIONS[0],
         ),
       },
-      await getAdminAuthConfig(),
+      // Approving posts the receipt voucher to the accounting system and sends
+      // the invoice email, which runs far past the default timeout.
+      { ...(await getAdminAuthConfig()), timeout: apiTimeouts.paymentApproval },
     ),
   );
 }

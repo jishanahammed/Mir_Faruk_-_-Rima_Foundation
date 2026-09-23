@@ -7,6 +7,13 @@ import {
   deleteDonationQueryAction,
 } from "@/app/admin/donation-queries/actions";
 
+/** Media URLs come back as "~/folder/file.png"; the asset route serves them. */
+function buildAssetUrl(rawPath) {
+  if (!rawPath) return null;
+  const clean = String(rawPath).replace(/\\/g, "/").replace(/^~\//, "").replace(/^\/+/, "");
+  return `/api/asset?path=${encodeURIComponent(clean)}`;
+}
+
 function formatDateTime(value) {
   if (!value) return "—";
   const d = new Date(value);
@@ -95,6 +102,27 @@ function QueryDetail({ query, onClose }) {
               {query.message}
             </p>
           </div>
+
+          {query.attachmentUrl && (
+            <div>
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                Transaction Screenshot
+              </p>
+              <a
+                href={buildAssetUrl(query.attachmentUrl)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 block overflow-hidden rounded-2xl border border-slate-200 transition hover:border-cyan-300"
+                title="Open full size"
+              >
+                <img
+                  src={buildAssetUrl(query.attachmentUrl)}
+                  alt="Transaction screenshot"
+                  className="max-h-80 w-full bg-slate-50 object-contain"
+                />
+              </a>
+            </div>
+          )}
 
           <p className="text-xs text-slate-400">Received {formatDateTime(query.createdAt)}</p>
 
@@ -199,7 +227,20 @@ export function DonationQueryTable({ items }) {
                   )}
                 </td>
                 <td className="max-w-[260px] px-4 py-3">
-                  <p className="truncate text-xs text-slate-600">{q.message}</p>
+                  <div className="flex items-center gap-2">
+                    {q.attachmentUrl && (
+                      <span
+                        className="inline-flex shrink-0 items-center gap-1 rounded-md bg-cyan-50 px-1.5 py-0.5 text-[0.6rem] font-bold text-cyan-700"
+                        title="Has a transaction screenshot"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3 w-3" aria-hidden="true">
+                          <path d="M21 12.5 12.5 21a5 5 0 0 1-7-7l8-8a3.5 3.5 0 1 1 5 5l-8 8a2 2 0 1 1-3-3l7.5-7.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        IMG
+                      </span>
+                    )}
+                    <p className="min-w-0 flex-1 truncate text-xs text-slate-600">{q.message}</p>
+                  </div>
                 </td>
                 <td className="px-4 py-3">
                   <p className="text-xs text-slate-500">{formatDateTime(q.createdAt)}</p>

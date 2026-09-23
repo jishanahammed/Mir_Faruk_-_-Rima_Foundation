@@ -8,6 +8,7 @@ import {
   PAYMENT_STATUS_OPTIONS,
 } from "@/lib/api/admin-donor-payment-history-service";
 import { getAdminDonorList } from "@/lib/api/admin-donor-service";
+import { getPaymentLedgers } from "@/lib/api/admin-accounting-dropdown-service";
 
 export const metadata = {
   title: "Donation / Payment History | Mir Faruk & Rima Foundation",
@@ -92,15 +93,24 @@ export default async function AdminDonerPaymentHistoryPage({ searchParams }) {
   }
 
   try {
+    // Only approved donors that already hold an accounting ledger can take a
+    // payment — the ledger is what the money posts against. Filtered in the
+    // query rather than here, so a page of 100 is 100 payable donors.
     const donors = await getAdminDonorList({
       page: 1,
       pageSize: 100,
+      isApprove: true,
+      hasLedger: true,
     });
 
     donorOptions = donors.items ?? [];
   } catch (error) {
     donorErrorMessage = getApiErrorMessage(error);
   }
+
+  // Never throws: a provider-side failure reports itself so the page still
+  // renders with the reason shown instead of an empty dropdown.
+  const paymentLedgers = await getPaymentLedgers();
 
   return (
     <div className="space-y-5 xl:space-y-6">
@@ -118,10 +128,18 @@ export default async function AdminDonerPaymentHistoryPage({ searchParams }) {
         </section>
       ) : null}
 
+      {!paymentLedgers.success ? (
+        <section className="rounded-[24px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-700 sm:px-5 sm:py-4">
+          <strong className="block font-semibold">Unable to load payment accounts</strong>
+          {paymentLedgers.message}
+        </section>
+      ) : null}
+
       <DonorPaymentHistoryTable
         paymentHistories={paymentHistories}
         filters={filters}
         donorOptions={donorOptions}
+        paymentLedgers={paymentLedgers.list}
       />
     </div>
   );

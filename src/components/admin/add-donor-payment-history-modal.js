@@ -4,10 +4,8 @@ import { useActionState, useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { addPaymentHistoryAction } from "@/app/admin/donersPayment/actions";
 import {
-  ADMIN_APPROVAL_STATUS_OPTIONS,
   DONATION_TYPE_OPTIONS,
   PAYMENT_METHOD_OPTIONS,
-  PAYMENT_STATUS_OPTIONS,
 } from "@/lib/donor-payment-history-options";
 
 function formatLabel(value) {
@@ -83,6 +81,111 @@ function SelectField({ name, label, options, required = false, defaultValue = ""
           </option>
         ))}
       </select>
+    </label>
+  );
+}
+
+/**
+ * Shows a value the admin cannot change, so the starting state of a new record
+ * is visible without implying it is a choice.
+ *
+ * Deliberately not a disabled input: the value is fixed server-side, so posting
+ * it back would only invite the form and the server to disagree.
+ */
+function ReadOnlyField({ label, value, hint }) {
+  return (
+    <div className="block">
+      <FieldLabel>{label}</FieldLabel>
+      <div className="flex h-12 w-full items-center gap-2 rounded-2xl border border-slate-200 bg-slate-100 px-4">
+        <span className="inline-flex items-center rounded-lg bg-white px-2.5 py-1 text-sm font-semibold text-slate-600 shadow-sm">
+          {value}
+        </span>
+        <svg
+          className="ml-auto h-4 w-4 shrink-0 text-slate-400"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <rect x="4" y="11" width="16" height="9" rx="2" />
+          <path d="M8 11V8a4 4 0 1 1 8 0v3" strokeLinecap="round" />
+        </svg>
+      </div>
+      {hint ? <p className="mt-1.5 text-xs leading-5 text-slate-500">{hint}</p> : null}
+    </div>
+  );
+}
+
+/**
+ * Picks the cash or bank account the money was received into.
+ *
+ * The chosen ledger's details ride along in hidden fields rather than being
+ * looked up again server-side: the account name is stored as it read at the
+ * time, so a later rename in the accounting system cannot rewrite old records.
+ */
+function ReceiveLedgerSelectField({ ledgers }) {
+  const [selectedId, setSelectedId] = useState("");
+  const selected = ledgers.find((ledger) => String(ledger.id) === selectedId);
+
+  // Grouped so a long list stays readable; the API already sorts within each.
+  const groups = ledgers.reduce((acc, ledger) => {
+    const key = ledger.ledgerType || "Other";
+    (acc[key] ??= []).push(ledger);
+    return acc;
+  }, {});
+
+  return (
+    <label className="block">
+      <FieldLabel required>Received In (Cash / Bank)</FieldLabel>
+
+      <select
+        name="receiveLedgerId"
+        required
+        disabled={!ledgers.length}
+        value={selectedId}
+        onChange={(event) => setSelectedId(event.target.value)}
+        className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
+      >
+        <option value="">
+          {ledgers.length ? "Select payment account" : "No payment accounts available"}
+        </option>
+        {Object.entries(groups).map(([type, items]) => (
+          <optgroup key={type} label={type}>
+            {items.map((ledger) => (
+              <option key={ledger.id} value={String(ledger.id)}>
+                {ledger.accountCode} - {ledger.accountName}
+              </option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+
+      {/* Sent only when the account actually carries a sub-ledger, so the
+          server never stores one against an account that cannot post to it. */}
+      <input type="hidden" name="haveSubLedger" value={selected?.haveSubLedger ? "true" : "false"} />
+      <input
+        type="hidden"
+        name="receiveSubLedgerId"
+        value={selected?.haveSubLedger && selected?.subLedgerId ? String(selected.subLedgerId) : ""}
+      />
+      <input type="hidden" name="receiveLedgerCode" value={selected?.accountCode ?? ""} />
+      <input type="hidden" name="receiveLedgerName" value={selected?.accountName ?? ""} />
+      <input type="hidden" name="receiveLedgerType" value={selected?.ledgerType ?? ""} />
+
+      {selected ? (
+        <span className="mt-2 flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500">
+          <span className="inline-flex items-center rounded-lg bg-cyan-50 px-2 py-1 font-semibold text-cyan-700">
+            {selected.ledgerType}
+          </span>
+          <span className="font-mono text-slate-600">{selected.accountCode}</span>
+          {selected.haveSubLedger && selected.subLedgerId ? (
+            <span className="inline-flex items-center rounded-lg bg-emerald-50 px-2 py-1 font-semibold text-emerald-700">
+              Sub-ledger #{selected.subLedgerId}
+            </span>
+          ) : null}
+        </span>
+      ) : null}
     </label>
   );
 }
@@ -201,7 +304,7 @@ function DonorSelectField({ donors }) {
   );
 }
 
-export function AddDonorPaymentHistoryModal({ donors = [] }) {
+export function AddDonorPaymentHistoryModal({ donors = [], paymentLedgers = [] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [state, formAction, pending] = useActionState(addPaymentHistoryAction, null);
   const titleId = useId();
@@ -269,7 +372,8 @@ export function AddDonorPaymentHistoryModal({ donors = [] }) {
                     Add payment history
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-slate-600">
-                    Record a donor transaction and set the initial payment and approval status.
+                    Record a donor transaction. Payment and approval status are set
+                    automatically — update them from the list once the money is confirmed.
                   </p>
                 </div>
                 <button
@@ -308,6 +412,7 @@ export function AddDonorPaymentHistoryModal({ donors = [] }) {
                   required
                   defaultValue={PAYMENT_METHOD_OPTIONS[0]}
                 />
+                <ReceiveLedgerSelectField ledgers={paymentLedgers} />
                 <TextField
                   name="paymentDate"
                   label="Payment Date"
@@ -331,19 +436,18 @@ export function AddDonorPaymentHistoryModal({ donors = [] }) {
                   defaultValue="BDT"
                   placeholder="BDT"
                 />
-                <SelectField
-                  name="paymentStatus"
+                {/* Shown so the starting state is clear, but fixed: the server
+                    always creates the record Pending / Waiting, and both move
+                    on from the list — which is what sends the invoice email. */}
+                <ReadOnlyField
                   label="Payment Status"
-                  options={PAYMENT_STATUS_OPTIONS}
-                  required
-                  defaultValue="Success"
+                  value="Pending"
+                  hint="Set automatically. Update it from the list once the payment is confirmed."
                 />
-                <SelectField
-                  name="adminApprovalStatus"
+                <ReadOnlyField
                   label="Admin Approval Status"
-                  options={ADMIN_APPROVAL_STATUS_OPTIONS}
-                  required
-                  defaultValue="Waiting"
+                  value="Waiting"
+                  hint="Set automatically. Approving from the list sends the donor their invoice."
                 />
                 <TextField
                   name="receiptUrl"

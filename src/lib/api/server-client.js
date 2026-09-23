@@ -36,12 +36,20 @@ const donorApprovalTimeout = getTimeoutMs(
   process.env.AUTH_API_DONOR_APPROVAL_TIMEOUT_MS,
   120000,
 );
+// Approving a payment sends the invoice email, then signs in to the accounting
+// system and posts the receipt voucher — SMTP plus two remote round trips, so
+// the default cuts it off mid-flight.
+const paymentApprovalTimeout = getTimeoutMs(
+  process.env.AUTH_API_PAYMENT_APPROVAL_TIMEOUT_MS,
+  120000,
+);
 const allowSelfSigned = process.env.AUTH_API_ALLOW_SELF_SIGNED === "true";
 
 export const apiTimeouts = {
   default: timeout,
   donorRegistration: donorRegistrationTimeout,
   donorApproval: donorApprovalTimeout,
+  paymentApproval: paymentApprovalTimeout,
   beneficiaryRegistration: beneficiaryRegistrationTimeout,
 };
 
