@@ -37,6 +37,8 @@ function MemberPortrait({ member }) {
   );
 }
 
+
+
 function MemberCard({ member, copy }) {
   return (
     <article className="group grid h-full min-w-0 grid-cols-1 grid-rows-[auto_auto_1fr] overflow-hidden rounded-[2rem] border border-slate-200 bg-white px-6 pb-8 pt-7 text-center shadow-[0_18px_48px_rgba(15,23,42,0.09)] transition duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-[0_24px_60px_rgba(8,96,112,0.12)] sm:px-7 sm:pt-8">
