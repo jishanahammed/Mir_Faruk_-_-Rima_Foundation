@@ -25,6 +25,7 @@ const navSections = [
     section: "Organization",
     items: [
       { label: "Board Members", href: "/admin/Board_Member_Page", icon: "board" },
+      { label: "Advisory Council", href: "/admin/advisory-council", icon: "users" },
       { label: "Locations", href: "/admin/location-page", icon: "location" },
       { label: "CEO Bani", href: "/admin/CeoBani", icon: "profile" },
       { label: "Video Speech", href: "/admin/video-speech", icon: "folder" }
@@ -124,6 +125,10 @@ const routeTitles = {
   "/admin/Board_Member_Page": {
     eyebrow: "Board Management",
     title: "Board members",
+  },
+  "/admin/advisory-council": {
+    eyebrow: "Organization",
+    title: "Advisory Council",
   },
   "/admin/location-page": {
     eyebrow: "Master Data",
