@@ -144,7 +144,7 @@ export function AdvisoryCouncilManager({ members, loadError }) {
           <form key={selected?.id ?? "new"} onSubmit={submit} className="space-y-4">
             <input type="hidden" name="id" value={selected?.id ?? ""} />
             {fields.map((field) => <label key={field.name} className="block text-xs font-semibold text-slate-600">{field.label}{field.required && <span className="text-red-600"> *</span>}<input className={inputClass} name={field.name} type={field.type ?? "text"} maxLength={field.maxLength} required={field.required} defaultValue={selected?.[field.name] ?? ""} /></label>)}
-            <label className="block text-xs font-semibold text-slate-600">Objective <span className="text-red-600">*</span><textarea className={inputClass} name="objective" rows={3} maxLength={1000} required defaultValue={selected?.objective ?? ""} /></label>
+            <label className="block text-xs font-semibold text-slate-600">Objective<textarea className={inputClass} name="objective" rows={3} maxLength={1000} defaultValue={selected?.objective ?? ""} /></label>
             <label className="block text-xs font-semibold text-slate-600">Description<textarea className={inputClass} name="description" rows={4} maxLength={4000} defaultValue={selected?.description ?? ""} /></label>
             <label className="block text-xs font-semibold text-slate-600">Order number<input className={inputClass} name="orderNo" type="number" min="0" step="1" required defaultValue={selected?.orderNo ?? 0} /></label>
             <label className="block text-xs font-semibold text-slate-600">Profile image<input className={inputClass} name="image" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => {

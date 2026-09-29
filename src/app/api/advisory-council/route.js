@@ -49,8 +49,8 @@ export async function POST(request) {
   const orderNo = Number(formData.get("orderNo"));
   if (!Number.isSafeInteger(id) || id < 0) return errorResponse("Invalid council member ID.", 400);
   if (!Number.isSafeInteger(orderNo) || orderNo < 0) return errorResponse("Order number must be zero or greater.", 400);
-  if (["name", "designation", "objective"].some((field) => !String(formData.get(field) ?? "").trim())) {
-    return errorResponse("Name, designation, and objective are required.", 400);
+  if (["name", "designation"].some((field) => !String(formData.get(field) ?? "").trim())) {
+    return errorResponse("Name and designation are required.", 400);
   }
 
   const payload = new FormData();

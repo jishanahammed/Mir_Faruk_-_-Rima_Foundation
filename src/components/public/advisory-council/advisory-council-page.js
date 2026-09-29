@@ -40,7 +40,7 @@ function MemberPortrait({ member }) {
 
 
 
-function MemberCard({ member, copy }) {
+function MemberCard({ member }) {
   return (
     <article className="group grid h-full min-w-0 grid-cols-1 grid-rows-[auto_auto_1fr] overflow-hidden rounded-[2rem] border border-slate-200 bg-white px-6 pb-8 pt-7 text-center shadow-[0_18px_48px_rgba(15,23,42,0.09)] transition duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-[0_24px_60px_rgba(8,96,112,0.12)] sm:px-7 sm:pt-8">
       <div className="relative row-start-1 mx-auto h-52 w-52 min-w-0 overflow-hidden rounded-full bg-[conic-gradient(from_180deg,#b68d2d,#14264f_42%,#14264f_75%,#b68d2d)] p-[2px] sm:h-56 sm:w-56">
@@ -52,29 +52,15 @@ function MemberCard({ member, copy }) {
       <div className="row-start-2 mt-5 flex min-w-0 flex-col">
         <h3 className="break-words text-2xl font-bold leading-tight tracking-tight text-[#14264f]">{member.name}</h3>
         {member.designation && (
-          <div className="mt-3 flex items-center justify-center gap-2">
-            <span className="h-px w-5 shrink-0 bg-[#b68d2d]" aria-hidden="true" />
-            <span className="h-1 w-1 shrink-0 rounded-full bg-[#b68d2d]" aria-hidden="true" />
-            <p className="min-w-0 text-sm font-medium leading-6 text-slate-700">{member.designation}</p>
-            <span className="h-1 w-1 shrink-0 rounded-full bg-[#b68d2d]" aria-hidden="true" />
-            <span className="h-px w-5 shrink-0 bg-[#b68d2d]" aria-hidden="true" />
-          </div>
+          <p className="mt-3 min-w-0 text-sm font-bold leading-6 text-slate-700">{member.designation}</p>
         )}
       </div>
 
       <div className="row-start-3 min-w-0 pt-6">
-        <div className="mb-6 flex items-center gap-3" aria-hidden="true">
-          <span className="h-px flex-1 bg-[#b68d2d]/60" />
-          <span className="h-1.5 w-1.5 rotate-45 bg-[#b68d2d]" />
-          <span className="h-px flex-1 bg-[#b68d2d]/60" />
-        </div>
         {member.objective && (
-          <div>
-            <p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-[#9a7420]">{copy.objectiveLabel}</p>
-            <p className="mt-2 whitespace-pre-line break-words text-base font-semibold leading-7 text-[#14264f]">{member.objective}</p>
-          </div>
+          <p className="whitespace-pre-line break-words text-sm font-normal leading-7 text-[#14264f]">{member.objective}</p>
         )}
-        {member.description && <p className="mt-5 whitespace-pre-line break-words text-sm leading-7 text-slate-600">{member.description}</p>}
+        {member.description && <p className="mt-5 whitespace-pre-line break-words text-sm font-normal leading-7 text-slate-600">{member.description}</p>}
       </div>
     </article>
   );
@@ -144,7 +130,7 @@ export function AdvisoryCouncilPage({ members, loadError }) {
             <NoticePanel title={t.emptyTitle} description={t.emptyDescription} aboutLabel={copy.header.about.menuLabel} />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-8">
-              {members.map((member) => <MemberCard key={member.id} member={member} copy={t} />)}
+              {members.map((member) => <MemberCard key={member.id} member={member} />)}
             </div>
           )}
         </div>
