@@ -278,20 +278,23 @@ export function DonorShell({ children, user }) {
 
       <header className="sticky top-0 z-20 border-b border-emerald-100 bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
         <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
               {route.eyebrow}
             </p>
-            <p className="text-base font-black text-slate-950">{route.title}</p>
+            <p className="truncate text-base font-black text-slate-950">{route.title}</p>
           </div>
-          <button
-            type="button"
-            aria-label={isOpen ? "Close donor menu" : "Open donor menu"}
-            onClick={() => setIsOpen((value) => !value)}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700"
-          >
-            <Icon name={isOpen ? "close" : "menu"} />
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            <LogoutButton />
+            <button
+              type="button"
+              aria-label={isOpen ? "Close donor menu" : "Open donor menu"}
+              onClick={() => setIsOpen((value) => !value)}
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700"
+            >
+              <Icon name={isOpen ? "close" : "menu"} />
+            </button>
+          </div>
         </div>
       </header>
 
