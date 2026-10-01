@@ -131,7 +131,7 @@ export function SiteFooter() {
               {registration.options.map((item) => (
                 <Link
                   key={item.id}
-                  href={`/register#${item.id}`}
+                  href={item.id === "volunteer-registration" ? "/register/volunteer" : `/register#${item.id}`}
                   className="text-sm font-medium text-slate-300 transition hover:text-cyan-200"
                 >
                   {item.title}

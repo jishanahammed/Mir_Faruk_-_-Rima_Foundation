@@ -54,6 +54,8 @@ export function RegistrationSection() {
                       href={
                         item.id === "beneficiary-registration"
                           ? "/register/beneficiary"
+                          : item.id === "volunteer-registration"
+                            ? "/register/volunteer"
                           : "/contact"
                       }
                       className="mt-5 inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,#0e7490,#06b6d4_50%,#0d9488)] px-6 py-2.5 text-sm font-extrabold text-white! shadow-lg shadow-cyan-500/40 ring-2 ring-cyan-300/60 transition hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/50 hover:brightness-110 lg:mt-6"

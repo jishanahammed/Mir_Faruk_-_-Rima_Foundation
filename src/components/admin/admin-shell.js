@@ -37,6 +37,7 @@ const navSections = [
     items: [
       { label: "Donor List", href: "/admin/donors", icon: "users" },
       { label: "Beneficiary List", href: "/admin/beneficiaries", icon: "list" },
+      { label: "Volunteer List", href: "/admin/volunteers", icon: "users" },
       { label: "Payment History", href: "/admin/donersPayment", icon: "payment" },
       { label: "Donation Queries", href: "/admin/donation-queries", icon: "receipt" },
       { label: "Amount Assignment", href: "/admin/amount-assignment", icon: "payment" },
@@ -98,6 +99,10 @@ function flattenNavItems(sections) {
 }
 
 const routeTitles = {
+  "/admin/volunteers": {
+    eyebrow: "Volunteer Management",
+    title: "Volunteer registrations",
+  },
   "/admin": {
     eyebrow: "Admin Dashboard",
     title: "Foundation operations",

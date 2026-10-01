@@ -9,5 +9,5 @@ export function SiteBottomSections({ children }) {
     return null;
   }
 
-  return children;
+  return <div className="mx-auto w-full max-w-[1536px]">{children}</div>;
 }

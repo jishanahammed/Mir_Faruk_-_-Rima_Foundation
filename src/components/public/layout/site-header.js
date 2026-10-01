@@ -42,6 +42,9 @@ function splitPrimaryNavItems(items) {
 }
 
 function getRegistrationOptionHref(optionId) {
+  if (optionId === "volunteer-registration") {
+    return "/register/volunteer";
+  }
   if (optionId === "beneficiary-registration") {
     return "/register/beneficiary";
   }
@@ -65,7 +68,9 @@ export function SiteHeader() {
   const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
 
   const { header, members, registration } = copy;
-  const aboutDropdown = header.about;
+  const aboutDropdownItems = header.about.items.filter(
+    (item) => item.id !== "about-advisory-council"
+  );
   const programmesDropdown = header.programmes;
 
   useEffect(() => {
@@ -134,7 +139,8 @@ export function SiteHeader() {
   const isMembersActive = pathname.startsWith("/members");
   const isRegistrationActive = pathname.startsWith("/register");
   const isLoginActive = pathname === "/login";
-  const isAboutActive = pathname.startsWith("/about");
+  const isAdvisoryCouncilActive = pathname.startsWith("/about/advisory-council");
+  const isAboutActive = pathname.startsWith("/about") && !isAdvisoryCouncilActive;
   const isProgrammesActive =
     pathname.startsWith("/our-work") ||
     pathname.startsWith("/donor-impact-info-update");
@@ -155,7 +161,7 @@ export function SiteHeader() {
     <>
       <div ref={headerRef} className="relative h-24 lg:h-28">
         <header className={`${shellClassName} transition-all duration-300 ease-out`}>
-          <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex w-full max-w-[1536px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
             <Link href="/" className="flex items-center" aria-label={header.homeAriaLabel}>
               <span
                 className={`flex items-center justify-center rounded-[1.75rem] transition-all duration-300 ${isPinned
@@ -379,6 +385,24 @@ export function SiteHeader() {
                   ) : null}
                 </div>
 
+                <Link
+                  href="/about/advisory-council"
+                  aria-current={isAdvisoryCouncilActive ? "page" : undefined}
+                  className={`rounded-full px-4 py-2 transition ${isAdvisoryCouncilActive
+                    ? "border border-cyan-300 bg-white/70 text-cyan-800 shadow-sm shadow-cyan-100"
+                    : "hover:bg-cyan-50 hover:text-cyan-700"
+                    }`}
+                  onClick={() => {
+                    setIsMembersOpen(false);
+                    setIsRegistrationOpen(false);
+                    setIsAboutOpen(false);
+                    setIsProgrammesOpen(false);
+                    setIsProfileOpen(false);
+                  }}
+                >
+                  {copy.advisoryCouncil.title}
+                </Link>
+
                 {/* About dropdown */}
                 <div className="relative">
                   <button
@@ -410,7 +434,7 @@ export function SiteHeader() {
                       id="about-menu"
                       className="absolute right-0 top-[calc(100%+0.75rem)] w-72 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-200/80"
                     >
-                      {aboutDropdown.items.map((item) => (
+                      {aboutDropdownItems.map((item) => (
                         <Link
                           key={item.id}
                           href={item.href}
@@ -689,7 +713,7 @@ export function SiteHeader() {
                 : "border-cyan-100 bg-white/96 backdrop-blur-xl"
                 }`}
             >
-              <div className="mx-auto flex w-full max-w-7xl flex-col gap-3">
+              <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-3">
                 {leadingItems.map((item) =>
                   item.href === "/our-work" ? (
                     <div
@@ -858,7 +882,7 @@ export function SiteHeader() {
 
                   {isAboutOpen ? (
                     <div className="mt-2 space-y-2">
-                      {aboutDropdown.items.map((item) => (
+                      {aboutDropdownItems.map((item) => (
                         <Link
                           key={item.id}
                           href={item.href}
@@ -984,6 +1008,27 @@ export function SiteHeader() {
                     </div>
                   ) : null}
                 </div>
+
+                <Link
+                  href="/about/advisory-council"
+                  aria-current={isAdvisoryCouncilActive ? "page" : undefined}
+                  className={`rounded-2xl px-4 py-3 text-sm font-medium ${isAdvisoryCouncilActive
+                    ? "border border-cyan-300 bg-white text-cyan-800"
+                    : isPinned
+                      ? "border border-slate-200 bg-slate-50 text-slate-700"
+                      : "border border-cyan-100 bg-slate-50 text-slate-700"
+                    }`}
+                  onClick={() => {
+                    setIsMobileOpen(false);
+                    setIsMembersOpen(false);
+                    setIsRegistrationOpen(false);
+                    setIsAboutOpen(false);
+                    setIsProgrammesOpen(false);
+                    setIsProfileOpen(false);
+                  }}
+                >
+                  {copy.advisoryCouncil.title}
+                </Link>
 
                 <div
                   className={`rounded-3xl p-3 ${isPinned

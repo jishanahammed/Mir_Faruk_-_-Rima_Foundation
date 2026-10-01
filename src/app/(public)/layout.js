@@ -10,7 +10,7 @@ export default function PublicLayout({ children }) {
     <LocaleProvider>
       <div className="relative flex min-h-screen flex-col overflow-hidden">
         <SiteHeader />
-        <main className="flex-1">{children}</main>
+        <main className="mx-auto w-full max-w-[1536px] flex-1">{children}</main>
         <SiteBottomSections>
           <FeedbackPage />
           <BankInfo />
