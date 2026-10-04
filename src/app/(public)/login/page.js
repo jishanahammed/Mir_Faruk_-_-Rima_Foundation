@@ -77,13 +77,126 @@ export default function LoginPage() {
   }, [router, state]);
 
   return (
-    <section className="relative isolate overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
+    <section className="relative isolate overflow-hidden px-3 py-5 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,#ecfeff_0%,#f8fafc_44%,#ffffff_100%)]" />
       <div className="absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.25),_transparent_42%),radial-gradient(circle_at_top_right,_rgba(14,165,233,0.18),_transparent_36%)]" />
       <div className="absolute left-1/2 top-16 -z-10 h-64 w-64 -translate-x-1/2 rounded-full bg-cyan-200/30 blur-3xl" />
 
-      <div className="mx-auto grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_30px_80px_rgba(15,23,42,0.12)] backdrop-blur xl:grid-cols-[1.05fr_0.95fr]">
-        <div className="relative overflow-hidden bg-slate-950 px-6 py-8 text-white sm:px-8 sm:py-10 lg:px-10">
+      <div className="mx-auto grid w-full max-w-6xl overflow-hidden rounded-3xl border border-white/70 bg-white/80 shadow-[0_30px_80px_rgba(15,23,42,0.12)] backdrop-blur sm:rounded-[2rem] xl:grid-cols-[1.05fr_0.95fr]">
+        <div className="min-w-0 bg-white px-4 py-6 sm:px-8 sm:py-10 lg:px-10 xl:col-start-2 xl:row-start-1">
+          <div className="mx-auto w-full max-w-md">
+            <div className="rounded-full bg-cyan-50 px-4 py-1.5 text-xs font-semibold tracking-[0.24em] text-cyan-700 uppercase">
+              Welcome back
+            </div>
+
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-950 sm:mt-5 sm:text-3xl">
+              Sign in to your account
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-slate-600 sm:mt-3 sm:leading-7">
+              Use your registered email address and password to continue.
+            </p>
+
+            <form action={formAction} className="mt-6 space-y-4 sm:mt-8 sm:space-y-5">
+              <div className="space-y-2">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-semibold text-slate-800"
+                >
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  required
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100 sm:text-sm"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-3">
+                  <label
+                    htmlFor="password"
+                    className="text-sm font-semibold text-slate-800"
+                  >
+                    Password
+                  </label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs font-semibold text-cyan-700 transition hover:text-cyan-900"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    placeholder="Enter your password"
+                    required
+
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 pr-13 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100 sm:text-sm"
+                  />
+                  <button
+                    type="button"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    onClick={() => setShowPassword((value) => !value)}
+                    className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-slate-500 transition hover:text-cyan-700"
+                  >
+                    <EyeIcon open={showPassword} />
+                  </button>
+                </div>
+              </div>
+
+              <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  name="remember"
+                  className="h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500"
+                />
+                <span>Keep me signed in on this device</span>
+              </label>
+
+              <button
+                type="submit"
+                disabled={pending}
+                className="w-full rounded-2xl bg-slate-950 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {pending ? "Signing in..." : copy.header.loginLabel}
+              </button>
+
+              {state?.message ? (
+                <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                  {state.message}
+                </div>
+              ) : null}
+            </form>
+
+            <div className="mt-6 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
+              <p className="text-sm font-semibold text-slate-900">
+                New to the foundation portal?
+              </p>
+              <p className="mt-2 text-sm leading-7 text-slate-600">
+                Create your registration first, then come back here to access
+                your account.
+              </p>
+              <Link
+                href="/register/donor"
+                className="mt-4 inline-flex rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75)] px-4 py-2 text-sm font-semibold !text-white visited:!text-white hover:!text-white focus-visible:!text-white active:!text-white shadow-md shadow-slate-900/10 transition hover:brightness-110"
+              >
+                Go to registration
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden bg-slate-950 px-6 py-8 text-white sm:px-8 sm:py-10 lg:px-10 xl:col-start-1 xl:row-start-1">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.22),_transparent_42%),linear-gradient(160deg,_rgba(2,6,23,0.92),_rgba(8,47,73,0.96))]" />
           <div className="relative">
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-white/10 px-4 py-1.5 text-[0.7rem] font-semibold tracking-[0.28em] text-cyan-100 uppercase">
@@ -141,119 +254,6 @@ export default function LoginPage() {
                   Contact
                 </Link>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
-          <div className="mx-auto w-full max-w-md">
-            <div className="rounded-full bg-cyan-50 px-4 py-1.5 text-xs font-semibold tracking-[0.24em] text-cyan-700 uppercase">
-              Welcome back
-            </div>
-
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-slate-950">
-              Sign in to your account
-            </h2>
-
-            <p className="mt-3 text-sm leading-7 text-slate-600">
-              Use your registered email address and password to continue.
-            </p>
-
-            <form action={formAction} className="mt-8 space-y-5">
-              <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-semibold text-slate-800"
-                >
-                  Email address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  required
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between gap-3">
-                  <label
-                    htmlFor="password"
-                    className="text-sm font-semibold text-slate-800"
-                  >
-                    Password
-                  </label>
-                  <Link
-                    href="/forgot-password"
-                    className="text-xs font-semibold text-cyan-700 transition hover:text-cyan-900"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-
-                <div className="relative">
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    placeholder="Enter your password"
-                    required
-
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 pr-13 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100"
-                  />
-                  <button
-                    type="button"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                    onClick={() => setShowPassword((value) => !value)}
-                    className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-slate-500 transition hover:text-cyan-700"
-                  >
-                    <EyeIcon open={showPassword} />
-                  </button>
-                </div>
-              </div>
-
-              <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
-                <input
-                  type="checkbox"
-                  name="remember"
-                  className="h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500"
-                />
-                <span>Keep me signed in on this device</span>
-              </label>
-
-              <button
-                type="submit"
-                disabled={pending}
-                className="w-full rounded-2xl bg-slate-950 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {pending ? "Signing in..." : copy.header.loginLabel}
-              </button>
-
-              {state?.message ? (
-                <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                  {state.message}
-                </div>
-              ) : null}
-            </form>
-
-            <div className="mt-6 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
-              <p className="text-sm font-semibold text-slate-900">
-                New to the foundation portal?
-              </p>
-              <p className="mt-2 text-sm leading-7 text-slate-600">
-                Create your registration first, then come back here to access
-                your account.
-              </p>
-              <Link
-                href="/register/donor"
-                className="mt-4 inline-flex rounded-full bg-[linear-gradient(135deg,#0f172a,#155e75)] px-4 py-2 text-sm font-semibold !text-white visited:!text-white hover:!text-white focus-visible:!text-white active:!text-white shadow-md shadow-slate-900/10 transition hover:brightness-110"
-              >
-                Go to registration
-              </Link>
             </div>
           </div>
         </div>

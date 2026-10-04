@@ -1030,58 +1030,27 @@ export function SiteHeader() {
                   {copy.advisoryCouncil.title}
                 </Link>
 
-                <div
-                  className={`rounded-3xl p-3 ${isPinned
-                    ? "border border-slate-200 bg-slate-50"
-                    : "border border-cyan-100 bg-slate-50"
+                <Link
+                  href="/login"
+                  aria-current={isLoginActive ? "page" : undefined}
+                  className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold ${isLoginActive
+                    ? "border border-cyan-300 bg-white text-cyan-800"
+                    : isPinned
+                      ? "border border-slate-200 bg-slate-50 text-slate-700"
+                      : "border border-cyan-100 bg-slate-50 text-slate-700"
                     }`}
+                  onClick={() => {
+                    setIsMobileOpen(false);
+                    setIsMembersOpen(false);
+                    setIsRegistrationOpen(false);
+                    setIsAboutOpen(false);
+                    setIsProgrammesOpen(false);
+                    setIsProfileOpen(false);
+                  }}
                 >
-                  <button
-                    type="button"
-                    className={`flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-sm font-semibold ${isLoginActive
-                      ? "border border-cyan-300 bg-white text-cyan-800"
-                      : "text-slate-900"
-                      }`}
-                    aria-label={header.profileMenuLabel}
-                    aria-expanded={isProfileOpen}
-                    aria-controls="mobile-profile-menu"
-                    aria-current={isLoginActive ? "page" : undefined}
-                    onClick={() => {
-                      setIsProfileOpen(!isProfileOpen);
-                      setIsMembersOpen(false);
-                      setIsRegistrationOpen(false);
-                    }}
-                  >
-                    <span className="flex items-center gap-3">
-                      <ProfileIcon />
-                      <span>{header.profileLabel}</span>
-                    </span>
-                    <span
-                      className={`mt-[-0.15rem] block h-2.5 w-2.5 rotate-45 border-b border-r border-current transition ${isProfileOpen ? "-translate-y-px" : "translate-y-0"
-                        }`}
-                      aria-hidden="true"
-                    />
-                  </button>
-
-                  {isProfileOpen ? (
-                    <div id="mobile-profile-menu" className="mt-2 space-y-2">
-                      <Link
-                        href="/login"
-                        className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold ${isLoginActive
-                          ? "border border-cyan-300 bg-white text-cyan-800"
-                          : "bg-white text-slate-900"
-                          }`}
-                        onClick={() => {
-                          setIsProfileOpen(false);
-                          setIsMobileOpen(false);
-                        }}
-                      >
-                        <ProfileIcon />
-                        <span>{header.loginLabel}</span>
-                      </Link>
-                    </div>
-                  ) : null}
-                </div>
+                  <ProfileIcon />
+                  <span>{header.loginLabel}</span>
+                </Link>
               </div>
             </div>
           ) : null}
