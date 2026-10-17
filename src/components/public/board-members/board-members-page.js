@@ -18,14 +18,14 @@ function PeopleIcon({ className = "h-6 w-6" }) {
   );
 }
 
-function MemberPortrait({ name, imageUrl, compact = false }) {
+function MemberPortrait({ name, imageUrl }) {
   const [imageFailed, setImageFailed] = useState(false);
   const initials = String(name).trim().split(/\s+/).slice(0, 2).map((word) => Array.from(word)[0] || "").join("").toUpperCase();
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-full bg-[#e2f1ef]">
-      <div className={`flex h-full w-full items-center justify-center bg-[linear-gradient(145deg,#e9f6f3,#dbeaf5)] font-semibold text-[#163b4a] ${compact ? "text-sm" : "text-5xl sm:text-6xl"}`}>
-        {initials || <PeopleIcon className={compact ? "h-5 w-5" : "h-14 w-14"} />}
+    <div className="relative aspect-square h-full w-full overflow-hidden rounded-full bg-[#e2f1ef]">
+      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(145deg,#e9f6f3,#dbeaf5)] text-6xl font-semibold text-[#163b4a]">
+        {initials || <PeopleIcon className="h-14 w-14" />}
       </div>
       {imageUrl && !imageFailed && (
         // Member photos are served through the existing local asset proxy.
@@ -35,8 +35,11 @@ function MemberPortrait({ name, imageUrl, compact = false }) {
           alt=""
           loading="lazy"
           decoding="async"
+          width={208}
+          height={208}
           onError={() => setImageFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover object-top motion-safe:transition-transform motion-safe:duration-700 motion-safe:group-hover:scale-105"
+          // Keep one crop position and scale; hover must not change the framing.
+          className="absolute inset-0 h-full w-full object-cover object-[50%_35%]"
         />
       )}
     </div>
@@ -60,7 +63,7 @@ function MemberCard({ member, locale, t, index, numberFormat }) {
         </span>
       </div>
 
-      <div className="relative mx-auto mt-3 h-48 w-48 rounded-full bg-white p-2 shadow-[0_8px_28px_rgba(15,65,75,0.12)] ring-1 ring-teal-900/5 sm:h-52 sm:w-52">
+      <div className="relative mx-auto mt-3 h-52 w-52 shrink-0 rounded-full bg-white p-2 shadow-[0_8px_28px_rgba(15,65,75,0.12)] ring-1 ring-teal-900/5">
         <div className="h-full w-full rounded-full border border-teal-100 p-1">
           <MemberPortrait key={member.profileImageAbsoluteUrl || "placeholder"} name={name} imageUrl={member.profileImageAbsoluteUrl} />
         </div>
@@ -133,13 +136,7 @@ export function BoardMembersPage({ members = [], loadError = false }) {
                 <p className="mt-3 text-sm leading-7 text-teal-100/75">{t.purposeDescription}</p>
                 {!loadError && boardMembers.length > 0 && (
                   <div className="mt-6 flex items-center gap-4 border-t border-white/15 pt-5">
-                    <div className="flex -space-x-3" aria-hidden="true">
-                      {boardMembers.slice(0, 3).map((member, index) => (
-                        <div key={`${member.id}-${index}`} className="h-11 w-11 rounded-full border-2 border-[#123d46]">
-                          <MemberPortrait key={member.profileImageAbsoluteUrl || "placeholder"} name={pick(member.nameEn, member.nameBn, member.nameDk, locale)} imageUrl={member.profileImageAbsoluteUrl} compact />
-                        </div>
-                      ))}
-                    </div>
+                    <div aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-teal-200"><PeopleIcon /></div>
                     <p className="text-sm font-medium text-teal-50"><span className="font-bold text-white">{memberCount}</span> {boardMembers.length === 1 ? t.memberSingular : t.memberPlural}</p>
                   </div>
                 )}
