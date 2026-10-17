@@ -39,8 +39,13 @@ export async function getPublicBoardMembers() {
   try {
     const payload = await apiGet("BoardMembers/public");
     const items = Array.isArray(payload) ? payload : (payload?.items ?? payload?.Items ?? []);
-    return items.map(normalizeMember).filter(Boolean);
+    if (!Array.isArray(items)) throw new Error("Invalid board members response.");
+
+    return {
+      members: items.map(normalizeMember).filter(Boolean).sort((a, b) => a.serialNo - b.serialNo),
+      loadError: false,
+    };
   } catch {
-    return [];
+    return { members: [], loadError: true };
   }
 }

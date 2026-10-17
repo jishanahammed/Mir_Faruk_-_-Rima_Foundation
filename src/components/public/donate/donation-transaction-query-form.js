@@ -127,12 +127,6 @@ export function DonationTransactionQueryForm({ copy, donorId = "", prefill = nul
     const email = String(fd.get("email") ?? "").trim();
     const mobile = String(fd.get("mobile") ?? "").trim();
 
-    if (!email && !mobile) {
-      setError(copy.transaction.contactRequired);
-      setIsPending(false);
-      return;
-    }
-
     try {
       const result = await submitDonationTransactionQueryAction({
         fullName: String(fd.get("fullName") ?? "").trim(),

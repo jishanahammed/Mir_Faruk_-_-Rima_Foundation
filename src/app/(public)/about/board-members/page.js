@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { BoardMembersPage } from "@/components/public/board-members/board-members-page";
 import { getPublicBoardMembers } from "@/lib/api/public-board-member-service";
 
@@ -8,6 +9,7 @@ export const metadata = {
 };
 
 export default async function BoardMembersPublicPage() {
-  const members = await getPublicBoardMembers();
-  return <BoardMembersPage members={members} />;
+  await connection();
+  const { members, loadError } = await getPublicBoardMembers();
+  return <BoardMembersPage members={members} loadError={loadError} />;
 }
