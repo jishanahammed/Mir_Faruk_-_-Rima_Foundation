@@ -25,7 +25,7 @@ export default async function AdminVolunteersPage({ searchParams }) {
   return (
     <div className="space-y-6">
       <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-cyan-100 bg-cyan-50 p-5 sm:p-6">
-        <div><h1 className="text-2xl font-bold text-slate-900">Volunteer registrations</h1><p className="mt-2 text-sm text-slate-600">Review applications, update contact details and manage approval and active status.</p></div>
+        <div><h1 className="text-2xl font-bold text-slate-900">Volunteer registrations</h1><p className="mt-2 text-sm text-slate-600">Add volunteers, review applications, and manage leader accounts and approval status.</p></div>
         <Link href="/register/volunteer" target="_blank" rel="noopener noreferrer" className="rounded-full bg-cyan-700 px-5 py-3 text-sm font-semibold text-white!">Open registration form ↗</Link>
       </section>
       <form action="/admin/volunteers" className="grid items-end gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2 xl:grid-cols-[2fr_1fr_1fr_auto]">

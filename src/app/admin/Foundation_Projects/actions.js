@@ -26,6 +26,16 @@ function readId(fd) {
 
 function buildPayload(fd) {
   const imagePaths = fd.getAll("imagePaths").map((v) => String(v).trim()).filter(Boolean);
+  const localGovernmentId = fd.has("unionParishadorPourashavaId")
+    ? num(fd, "unionParishadorPourashavaId")
+    : 1;
+  if (localGovernmentId !== null && (!Number.isSafeInteger(localGovernmentId) || localGovernmentId <= 0)) {
+    throw new Error("Select a valid Union Parishad / Pourashava.");
+  }
+  const wardId = num(fd, "wardId");
+  if (wardId !== null && (!Number.isSafeInteger(wardId) || wardId <= 0)) {
+    throw new Error("Select a valid Ward.");
+  }
   return {
     ProjectCode:        str(fd, "projectCode"),
     ProjectCategoryId:  Number(str(fd, "projectCategoryId")) || 0,
@@ -48,6 +58,8 @@ function buildPayload(fd) {
     DivisionId:         num(fd, "divisionId"),
     DistrictId:         num(fd, "districtId"),
     UpazilaId:          num(fd, "upazilaId"),
+    UnionParishadorPourashavaId: localGovernmentId,
+    WardId:             wardId,
     EstimatedBudget:    num(fd, "estimatedBudget"),
     CollectedAmount:    num(fd, "collectedAmount"),
     DistributedAmount:  num(fd, "distributedAmount"),

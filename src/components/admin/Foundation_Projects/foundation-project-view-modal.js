@@ -43,7 +43,7 @@ function buildImageUrl(rawPath) {
   return `/api/asset?path=${encodeURIComponent(clean)}`;
 }
 
-export function FoundationProjectViewModal({ params, allProjects }) {
+export function FoundationProjectViewModal({ params, allProjects, localGovernments, wards }) {
   const router = useRouter();
   const viewId = params?.view ? Number(params.view) : null;
   const project = viewId ? allProjects.find((p) => p.id === viewId) : null;
@@ -56,6 +56,8 @@ export function FoundationProjectViewModal({ params, allProjects }) {
 
   const status = project.status ?? "draft";
   const images = project.images ?? [];
+  const localGovernment = localGovernments.find((item) => String(item.id) === String(project.unionParishadorPourashavaId));
+  const ward = wards.find((item) => String(item.id) === String(project.wardId));
 
   return (
     <div
@@ -151,6 +153,8 @@ export function FoundationProjectViewModal({ params, allProjects }) {
               <Row label="Location (EN)" value={project.projectLocationEn} />
               <Row label="Location (BN)" value={project.projectLocationBn} />
               <Row label="Location (DK)" value={project.projectLocationDk} />
+              <Row label="Union Parishad / Pourashava" value={localGovernment?.nameEn ?? project.unionParishadorPourashavaId} />
+              <Row label="Ward" value={ward ? `Ward ${ward.wardNo}${ward.nameEn ? ` — ${ward.nameEn}` : ""}` : project.wardId ? `Saved ward (ID ${project.wardId})` : null} />
             </div>
             {(project.divisionId || project.districtId || project.upazilaId) && (
               <div className="grid grid-cols-3 gap-4">

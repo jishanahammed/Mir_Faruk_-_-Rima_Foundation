@@ -2,7 +2,6 @@ import Link from "next/link";
 import { getApiErrorMessage } from "@/lib/api/api-error";
 import { getAdminProjectAssistances } from "@/lib/api/admin-project-assistance-service";
 import { getAdminFoundationProjects } from "@/lib/api/admin-foundation-project-service";
-import { getAdminAssistanceTypes } from "@/lib/api/admin-assistance-type-service";
 import { ProjectAssistanceTable } from "@/components/admin/project_assistance/project-assistance-table";
 import { ProjectAssistanceModal } from "@/components/admin/project_assistance/project-assistance-modal";
 import {
@@ -26,7 +25,7 @@ function readParam(params, key, fallback = "") {
 function paginate(items, page, pageSize, search) {
   const filtered = search
     ? items.filter((a) =>
-        [a.donationCode, a.nameEn, a.nameBn, a.projectTitleEn, a.assistanceTypeNameEn]
+        [a.donationCode, a.nameEn, a.nameBn, a.projectTitleEn]
           .join(" ").toLowerCase().includes(search.toLowerCase())
       )
     : items;
@@ -51,13 +50,12 @@ export default async function AdminProjectAssistancePage({ searchParams }) {
     ? Number(readParam(params, "pageSize", "10"))
     : 10;
 
-  let allAssistances = [], projects = [], assistanceTypes = [], error = null;
+  let allAssistances = [], projects = [], error = null;
 
   try {
-    [allAssistances, projects, assistanceTypes] = await Promise.all([
+    [allAssistances, projects] = await Promise.all([
       getAdminProjectAssistances(),
       getAdminFoundationProjects(),
-      getAdminAssistanceTypes(),
     ]);
   } catch (err) {
     error = getApiErrorMessage(err);
@@ -116,7 +114,6 @@ export default async function AdminProjectAssistancePage({ searchParams }) {
         params={params}
         allAssistances={allAssistances}
         projects={projects}
-        assistanceTypes={assistanceTypes}
         createAction={createProjectAssistanceAction}
         updateAction={updateProjectAssistanceAction}
       />

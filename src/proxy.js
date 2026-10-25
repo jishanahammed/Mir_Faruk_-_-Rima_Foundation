@@ -5,6 +5,7 @@ import {
   getUserHomePath,
   isAdminUser,
   isDonorUser,
+  isVolunteerUser,
   isValidAdminSession,
   parseAdminUser,
 } from "@/lib/admin-auth";
@@ -21,6 +22,10 @@ export function proxy(request) {
   const user = parseAdminUser(request.cookies.get(ADMIN_USER_COOKIE)?.value);
   const pathname = request.nextUrl.pathname;
 
+  if (pathname.startsWith("/volunteer") && !isVolunteerUser(user)) {
+    return NextResponse.redirect(new URL(getUserHomePath(user), request.url));
+  }
+
   if (
     (pathname.startsWith("/doner") || pathname.startsWith("/api/doner")) &&
     !isDonorUser(user)
@@ -36,5 +41,5 @@ export function proxy(request) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/doner/:path*", "/api/doner/:path*"],
+  matcher: ["/admin/:path*", "/doner/:path*", "/api/doner/:path*", "/volunteer/:path*"],
 };

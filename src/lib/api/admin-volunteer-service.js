@@ -1,18 +1,24 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
+import { ADMIN_SESSION_COOKIE, ADMIN_USER_COOKIE, isAdminUser, parseAdminUser } from "@/lib/admin-auth";
 import { ApiError } from "@/lib/api/api-error";
-import { apiGet, apiPut, apiDelete } from "@/lib/api/api-service";
+import { apiGet, apiPost, apiPut, apiDelete } from "@/lib/api/api-service";
 
 async function authConfig() {
-  const token = (await cookies()).get(ADMIN_SESSION_COOKIE)?.value;
-  if (!token) throw new ApiError("Please sign in as an administrator.", { status: 401 });
+  const store = await cookies();
+  const token = store.get(ADMIN_SESSION_COOKIE)?.value;
+  const user = parseAdminUser(store.get(ADMIN_USER_COOKIE)?.value);
+  if (!token || !isAdminUser(user)) throw new ApiError("Please sign in as an administrator.", { status: 401 });
   return { headers: { Authorization: `Bearer ${token}` } };
 }
 
 export async function getAdminVolunteers(params) {
   return apiGet(`Volunteers?${new URLSearchParams(params)}`, await authConfig());
+}
+
+export async function createAdminVolunteer(payload) {
+  return apiPost("Volunteers", payload, await authConfig());
 }
 
 export async function updateAdminVolunteer(id, payload) {

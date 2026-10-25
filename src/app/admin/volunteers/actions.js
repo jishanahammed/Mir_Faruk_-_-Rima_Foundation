@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { deleteAdminVolunteer, updateAdminVolunteer, updateAdminVolunteerStatus } from "@/lib/api/admin-volunteer-service";
+import { createAdminVolunteer, deleteAdminVolunteer, updateAdminVolunteer, updateAdminVolunteerStatus } from "@/lib/api/admin-volunteer-service";
 import { volunteerPayload, volunteerErrorMessage } from "@/lib/volunteer-registration";
 
 async function mutate(id, action) {
@@ -14,7 +14,20 @@ async function mutate(id, action) {
 }
 
 export async function saveVolunteerAction(id, input) {
-  return mutate(id, () => updateAdminVolunteer(id, volunteerPayload(input)));
+  return mutate(id, () => updateAdminVolunteer(id, adminPayload(input)));
+}
+
+function adminPayload(input) {
+  return { ...volunteerPayload(input), isLeader: input?.isLeader === true,
+    ...(typeof input?.password === "string" && input.password ? { password: input.password } : {}) };
+}
+
+export async function createVolunteerAction(input) {
+  try {
+    await createAdminVolunteer(adminPayload(input));
+    revalidatePath("/admin/volunteers");
+    return { ok: true };
+  } catch (error) { return { ok: false, message: volunteerErrorMessage(error) }; }
 }
 
 export async function setVolunteerStatusAction(id, key, value) {

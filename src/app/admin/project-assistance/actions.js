@@ -26,7 +26,6 @@ function readId(fd) {
 function buildPayload(fd) {
   return {
     ProjectId:              num(fd, "projectId"),
-    AssistanceTypeId:       num(fd, "assistanceTypeId"),
     NameEn:                 str(fd, "nameEn"),
     NameBn:                 str(fd, "nameBn"),
     NameDk:                 str(fd, "nameDk") || null,

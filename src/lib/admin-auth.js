@@ -83,11 +83,18 @@ export function isDonorUser(user) {
   return isDonorRole(user?.role);
 }
 
+export function isVolunteerUser(user) {
+  return normalizeRoleName(user?.role) === "volunteer";
+}
+
 export function isAdminUser(user) {
   return isAdminRole(user?.role) && !isDonorUser(user);
 }
 
 export function getUserHomePath(user) {
+  if (isVolunteerUser(user)) {
+    return "/volunteer";
+  }
   if (isDonorUser(user)) {
     return "/doner";
   }

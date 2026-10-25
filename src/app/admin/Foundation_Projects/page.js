@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getApiErrorMessage } from "@/lib/api/api-error";
 import { getAdminFoundationProjects } from "@/lib/api/admin-foundation-project-service";
 import { getAdminProjectCategories } from "@/lib/api/admin-project-category-service";
-import { getAdminDivisions, getAdminDistricts, getAdminUpazilas } from "@/lib/api/admin-location-service";
+import { getAdminDivisions, getAdminDistricts, getAdminUpazilas, getAdminLocalGovernments, getAdminWards } from "@/lib/api/admin-location-service";
 import { FoundationProjectTable } from "@/components/admin/Foundation_Projects/foundation-project-table";
 import { FoundationProjectModal } from "@/components/admin/Foundation_Projects/foundation-project-modal";
 import { FoundationProjectViewModal } from "@/components/admin/Foundation_Projects/foundation-project-view-modal";
@@ -54,15 +54,17 @@ export default async function AdminFoundationProjectsPage({ searchParams }) {
     ? Number(readParam(params, "pageSize", "10"))
     : 10;
 
-  let allProjects = [], categories = [], divisions = [], districts = [], upazilas = [], error = null;
+  let allProjects = [], categories = [], divisions = [], districts = [], upazilas = [], localGovernments = [], wards = [], error = null;
 
   try {
-    [allProjects, categories, divisions, districts, upazilas] = await Promise.all([
+    [allProjects, categories, divisions, districts, upazilas, localGovernments, wards] = await Promise.all([
       getAdminFoundationProjects(),
       getAdminProjectCategories(),
       getAdminDivisions(),
       getAdminDistricts(),
       getAdminUpazilas(),
+      getAdminLocalGovernments(),
+      getAdminWards(),
     ]);
   } catch (err) {
     error = getApiErrorMessage(err);
@@ -122,16 +124,19 @@ export default async function AdminFoundationProjectsPage({ searchParams }) {
       </section>
 
       {/* View Modal */}
-      <FoundationProjectViewModal params={params} allProjects={allProjects} />
+      <FoundationProjectViewModal params={params} allProjects={allProjects} localGovernments={localGovernments} wards={wards} />
 
       {/* Add / Edit Modal */}
       <FoundationProjectModal
+        key={`${params?.edit ?? "new"}:${params?.add ?? ""}`}
         params={params}
         allProjects={allProjects}
         categories={categories}
         divisions={divisions}
         districts={districts}
         upazilas={upazilas}
+        localGovernments={localGovernments}
+        wards={wards}
         createAction={createFoundationProjectAction}
         updateAction={updateFoundationProjectAction}
         uploadAction={uploadProjectImagesAction}

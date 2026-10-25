@@ -382,7 +382,6 @@ const SUPPORT_MODE_LABEL = {
 function AssistanceItem({ item, locale }) {
   const name = pick(item.nameEn, item.nameBn, item.nameDk, locale);
   const description = pick(item.descriptionEn, item.descriptionBn, item.descriptionDk, locale);
-  const typeName = pick(item.assistanceTypeNameEn, item.assistanceTypeNameBn, item.assistanceTypeNameDk, locale);
   const progress = Math.min(100, Number(item.progressPercent) || 0);
 
   return (
@@ -390,11 +389,6 @@ function AssistanceItem({ item, locale }) {
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <h4 className="text-sm font-bold text-slate-900">{name}</h4>
-          {typeName && (
-            <span className="mt-1 inline-flex items-center rounded-full bg-cyan-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-cyan-700">
-              {typeName}
-            </span>
-          )}
         </div>
         <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">
           {SUPPORT_MODE_LABEL[item.supportMode] ?? item.supportMode}

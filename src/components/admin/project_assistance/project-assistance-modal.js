@@ -53,7 +53,6 @@ export function ProjectAssistanceModal({
   params,
   allAssistances,
   projects,
-  assistanceTypes,
   createAction,
   updateAction,
 }) {
@@ -116,18 +115,12 @@ export function ProjectAssistanceModal({
 
           {/* Section 1: Links */}
           <div className="flex flex-col gap-4">
-            <SectionLabel>Linked Project & Type</SectionLabel>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <SectionLabel>Linked Project</SectionLabel>
+            <div className="grid grid-cols-1 gap-4">
               <Field label="Foundation Project" name="projectId" required>
                 <select name="projectId" defaultValue={editing?.projectId ?? ""} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-100">
                   <option value="" disabled>Select project…</option>
                   {projects.map((p) => <option key={p.id} value={p.id}>{p.projectTitleEn}</option>)}
-                </select>
-              </Field>
-              <Field label="Assistance Type" name="assistanceTypeId" required>
-                <select name="assistanceTypeId" defaultValue={editing?.assistanceTypeId ?? ""} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-100">
-                  <option value="" disabled>Select type…</option>
-                  {assistanceTypes.map((t) => <option key={t.id} value={t.id}>{t.nameEn}</option>)}
                 </select>
               </Field>
             </div>

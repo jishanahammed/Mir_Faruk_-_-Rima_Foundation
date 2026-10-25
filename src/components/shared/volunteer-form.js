@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState, useTransition } from "react";
 import { volunteerCopy, volunteerPayload } from "@/lib/volunteer-registration";
 
 const fields = [
@@ -52,12 +52,15 @@ function LocationSelect({ field, values, initial, onChange, copy, locale, prefix
   );
 }
 
-export function VolunteerForm({ initial, locale = "EN", onSave, onCancel, onSuccess }) {
+export function VolunteerForm({ initial, locale = "EN", manageAccount = false, onSave, onCancel, onSuccess }) {
   const copy = volunteerCopy[locale] || volunteerCopy.EN;
   const prefix = useId();
   const [values, setValues] = useState(() => Object.fromEntries(fields.map(([key]) => [key, initial?.[key] || ""])));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [isLeader, setIsLeader] = useState(initial?.isLeader === true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [, startTransition] = useTransition();
 
   function changeLocation(key, value) {
     const index = fields.findIndex(([name]) => name === key);
@@ -68,21 +71,25 @@ export function VolunteerForm({ initial, locale = "EN", onSave, onCancel, onSucc
   async function submit(event) {
     event.preventDefault();
     if (busy) return;
-    const payload = volunteerPayload({ ...Object.fromEntries(new FormData(event.currentTarget)), ...values });
+    const formData = new FormData(event.currentTarget);
+    const payload = { ...volunteerPayload({ ...Object.fromEntries(formData), ...values }),
+      ...(manageAccount ? { isLeader, ...(isLeader ? { password: String(formData.get("password") ?? "") } : {}) } : {}) };
     setBusy(true); setError("");
-    try {
-      if (fields.some(([key]) => !payload[key])) throw new Error("Please select your complete location.");
-      if (onSave) {
-        const result = await onSave(payload);
-        if (!result.ok) throw new Error(result.message);
-      } else {
-        const response = await fetch("/api/volunteers/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || "Unable to submit registration.");
-      }
-      onSuccess?.();
-    } catch (err) { setError(err.message || "Unable to save. Please try again."); }
-    finally { setBusy(false); }
+    startTransition(async () => {
+      try {
+        if (fields.some(([key]) => !payload[key])) throw new Error("Please select your complete location.");
+        if (onSave) {
+          const result = await onSave(payload);
+          if (!result.ok) throw new Error(result.message);
+        } else {
+          const response = await fetch("/api/volunteers/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.message || "Unable to submit registration.");
+        }
+        onSuccess?.();
+      } catch (err) { setError(err.message || "Unable to save. Please try again."); }
+      finally { setBusy(false); }
+    });
   }
 
   return (
@@ -106,9 +113,22 @@ export function VolunteerForm({ initial, locale = "EN", onSave, onCancel, onSucc
         <div className="grid gap-5 sm:grid-cols-2">
           {fields.map((field) => <LocationSelect key={field[0]} field={field} values={values} initial={initial} onChange={changeLocation} copy={copy} locale={locale} prefix={prefix} />)}
         </div>
+        {manageAccount || initial?.isLeader ? <p className="mt-3 text-xs leading-6 text-slate-500">Each Ward can have only one Volunteer leader.</p> : null}
       </fieldset>
+      {manageAccount ? <fieldset disabled={busy} className="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-5">
+        <legend className="px-1 text-lg font-bold text-slate-900">Volunteer portal access</legend>
+        <label className="flex items-start gap-3 text-sm font-semibold text-slate-800">
+          <input type="checkbox" name="isLeader" checked={isLeader} onChange={(event) => setIsLeader(event.target.checked)} className="mt-0.5 h-4 w-4 accent-cyan-700" />
+          <span>Volunteer leader<span className="mt-1 block font-normal text-slate-500">Leaders receive a login account with the Volunteer role.</span></span>
+        </label>
+        {isLeader ? <div>
+          <label htmlFor={`${prefix}-password`} className="text-sm font-semibold text-slate-700">{initial?.userId ? "Assigned password" : "Initial password"}{!initial?.userId ? <span aria-hidden="true"> *</span> : null}</label>
+          <div className="flex items-center gap-3"><input id={`${prefix}-password`} name="password" type={showPassword ? "text" : "password"} required={!initial?.userId} minLength={6} maxLength={200} defaultValue={initial?.plainPassword || ""} autoComplete="new-password" className={inputClass} aria-describedby={`${prefix}-password-hint`} /><button type="button" aria-label={showPassword ? "Hide assigned password" : "Show assigned password"} aria-pressed={showPassword} onClick={() => setShowPassword((value) => !value)} className="mt-2 rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold">{showPassword ? "Hide" : "Show"}</button></div>
+          <p id={`${prefix}-password-hint`} className="mt-2 text-xs text-slate-500">{initial?.userId ? "Enter a password to update the linked login account. Leave blank to keep its current password." : "At least 6 characters. The leader signs in using their email address."}</p>
+        </div> : initial?.userId ? <p className="text-xs text-slate-500">Volunteer portal access will be removed. The linked account is retained.</p> : null}
+      </fieldset> : null}
       <div className="flex flex-wrap gap-3">
-        <button type="submit" disabled={busy || fields.some(([key]) => !values[key])} className="rounded-full bg-cyan-700 px-6 py-3 text-sm font-bold text-white! transition hover:bg-cyan-800 disabled:cursor-not-allowed disabled:opacity-50">{busy ? copy.saving : initial ? copy.save : copy.submit}</button>
+        <button type="submit" disabled={busy || fields.some(([key]) => !values[key])} className="rounded-full bg-cyan-700 px-6 py-3 text-sm font-bold text-white! transition hover:bg-cyan-800 disabled:cursor-not-allowed disabled:opacity-50">{busy ? copy.saving : initial ? copy.save : manageAccount ? "Add volunteer" : copy.submit}</button>
         {onCancel ? <button type="button" disabled={busy} onClick={onCancel} className="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold">{copy.cancel}</button> : null}
       </div>
     </form>

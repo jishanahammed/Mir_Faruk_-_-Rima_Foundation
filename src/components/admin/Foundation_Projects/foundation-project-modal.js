@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition, useEffect } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ProjectImageUploader } from "./project-image-uploader";
 
@@ -24,17 +24,17 @@ function SectionLabel({ children }) {
   );
 }
 
-function Field({ label, name, defaultValue, multiline, type = "text", required, step, min, children }) {
+function Field({ label, name, defaultValue, multiline, type = "text", required, step, min, maxLength, children }) {
   const base = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:border-cyan-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cyan-100 transition";
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-xs font-semibold text-slate-600">
+      <label htmlFor={name} className="text-xs font-semibold text-slate-600">
         {label}{required && <span className="ml-0.5 text-rose-500">*</span>}
       </label>
       {children ? children : multiline ? (
-        <textarea name={name} defaultValue={defaultValue ?? ""} rows={3} className={base} />
+        <textarea id={name} name={name} defaultValue={defaultValue ?? ""} required={required} maxLength={maxLength} rows={3} className={base} />
       ) : (
-        <input name={name} type={type} defaultValue={defaultValue ?? ""} step={step} min={min} className={base} />
+        <input id={name} name={name} type={type} defaultValue={defaultValue ?? ""} required={required} step={step} min={min} maxLength={maxLength} className={base} />
       )}
     </div>
   );
@@ -42,10 +42,17 @@ function Field({ label, name, defaultValue, multiline, type = "text", required, 
 
 const SELECT_CLS = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-100 disabled:opacity-50 disabled:cursor-not-allowed transition";
 
-function LocationCascade({ divisions, districts, upazilas, defaultDivisionId, defaultDistrictId, defaultUpazilaId }) {
-  const [divisionId, setDivisionId] = useState(defaultDivisionId ?? "");
-  const [districtId, setDistrictId] = useState(defaultDistrictId ?? "");
-  const [upazilaId, setUpazilaId] = useState(defaultUpazilaId ?? "");
+function LocationCascade({ divisions, districts, upazilas, localGovernments, wards, defaultDivisionId, defaultDistrictId, defaultUpazilaId, defaultLocalGovernmentId, defaultWardId }) {
+  const initialWard = wards.find((item) => String(item.id) === String(defaultWardId));
+  const initialLocalGovernmentId = defaultLocalGovernmentId ?? initialWard?.localGovernmentId ?? "";
+  const initialLocalGovernment = localGovernments.find((item) => String(item.id) === String(initialLocalGovernmentId));
+  const initialUpazila = upazilas.find((item) => String(item.id) === String(defaultUpazilaId ?? initialLocalGovernment?.upazilaId));
+  const initialDistrict = districts.find((item) => String(item.id) === String(defaultDistrictId ?? initialUpazila?.districtId));
+  const [divisionId, setDivisionId] = useState(defaultDivisionId ?? initialDistrict?.divisionId ?? "");
+  const [districtId, setDistrictId] = useState(defaultDistrictId ?? initialUpazila?.districtId ?? "");
+  const [upazilaId, setUpazilaId] = useState(defaultUpazilaId ?? initialLocalGovernment?.upazilaId ?? "");
+  const [localGovernmentId, setLocalGovernmentId] = useState(initialLocalGovernmentId);
+  const [wardId, setWardId] = useState(defaultWardId ?? "");
 
   const filteredDistricts = divisionId
     ? districts.filter((d) => String(d.divisionId) === String(divisionId))
@@ -54,19 +61,29 @@ function LocationCascade({ divisions, districts, upazilas, defaultDivisionId, de
     ? upazilas.filter((u) => String(u.districtId) === String(districtId))
     : [];
 
-  // Reset child when parent changes
-  useEffect(() => { setDistrictId(""); setUpazilaId(""); }, [divisionId]);
-  useEffect(() => { setUpazilaId(""); }, [districtId]);
+  const filteredLocalGovernments = upazilaId
+    ? localGovernments.filter((item) => String(item.upazilaId) === String(upazilaId))
+    : localGovernments;
+  const filteredWards = localGovernmentId
+    ? wards.filter((item) => String(item.localGovernmentId) === String(localGovernmentId))
+    : [];
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {/* Division */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-semibold text-slate-600">Division</label>
+        <label htmlFor="divisionId" className="text-xs font-semibold text-slate-600">Division</label>
         <select
+          id="divisionId"
           name="divisionId"
           value={divisionId}
-          onChange={(e) => setDivisionId(e.target.value)}
+          onChange={(e) => {
+            setDivisionId(e.target.value);
+            setDistrictId("");
+            setUpazilaId("");
+            setLocalGovernmentId("");
+            setWardId("");
+          }}
           className={SELECT_CLS}
         >
           <option value="">— Select Division —</option>
@@ -78,14 +95,20 @@ function LocationCascade({ divisions, districts, upazilas, defaultDivisionId, de
 
       {/* District */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-semibold text-slate-600">
+        <label htmlFor="districtId" className="text-xs font-semibold text-slate-600">
           District
           {!divisionId && <span className="ml-1 text-[10px] font-normal text-slate-400">(select division first)</span>}
         </label>
         <select
+          id="districtId"
           name="districtId"
           value={districtId}
-          onChange={(e) => setDistrictId(e.target.value)}
+          onChange={(e) => {
+            setDistrictId(e.target.value);
+            setUpazilaId("");
+            setLocalGovernmentId("");
+            setWardId("");
+          }}
           disabled={!divisionId}
           className={SELECT_CLS}
         >
@@ -105,14 +128,19 @@ function LocationCascade({ divisions, districts, upazilas, defaultDivisionId, de
 
       {/* Upazila */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-semibold text-slate-600">
+        <label htmlFor="upazilaId" className="text-xs font-semibold text-slate-600">
           Upazila / Thana
           {!districtId && <span className="ml-1 text-[10px] font-normal text-slate-400">(select district first)</span>}
         </label>
         <select
+          id="upazilaId"
           name="upazilaId"
           value={upazilaId}
-          onChange={(e) => setUpazilaId(e.target.value)}
+          onChange={(e) => {
+            setUpazilaId(e.target.value);
+            setLocalGovernmentId("");
+            setWardId("");
+          }}
           disabled={!districtId}
           className={SELECT_CLS}
         >
@@ -129,6 +157,60 @@ function LocationCascade({ divisions, districts, upazilas, defaultDivisionId, de
           <p className="text-[10px] text-slate-400">{filteredUpazilas.length} upazila{filteredUpazilas.length !== 1 ? "s" : ""} available</p>
         )}
       </div>
+      <div className="flex flex-col gap-1 sm:col-span-2">
+        <label htmlFor="unionParishadorPourashavaId" className="text-xs font-semibold text-slate-600">Union Parishad / Pourashava</label>
+        <select
+          id="unionParishadorPourashavaId"
+          name="unionParishadorPourashavaId"
+          value={localGovernmentId}
+          onChange={(e) => {
+            const selected = localGovernments.find((item) => String(item.id) === e.target.value);
+            const selectedUpazila = upazilas.find((item) => item.id === selected?.upazilaId);
+            const selectedDistrict = districts.find((item) => item.id === selectedUpazila?.districtId);
+            setLocalGovernmentId(e.target.value);
+            setWardId("");
+            if (selectedUpazila) setUpazilaId(selectedUpazila.id);
+            if (selectedDistrict) {
+              setDistrictId(selectedDistrict.id);
+              setDivisionId(selectedDistrict.divisionId);
+            }
+          }}
+          className={SELECT_CLS}
+        >
+          <option value="">Select Union Parishad / Pourashava</option>
+          {localGovernmentId && !filteredLocalGovernments.some((item) => String(item.id) === String(localGovernmentId)) && (
+            <option value={localGovernmentId}>Union / Pourashava ID {localGovernmentId}</option>
+          )}
+          {filteredLocalGovernments.map((item) => (
+            <option key={item.id} value={item.id}>{item.nameEn}</option>
+          ))}
+        </select>
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="wardId" className="text-xs font-semibold text-slate-600">Ward</label>
+        <select
+          id="wardId"
+          name="wardId"
+          value={wardId}
+          onChange={(e) => setWardId(e.target.value)}
+          disabled={!localGovernmentId}
+          className={SELECT_CLS}
+        >
+          <option value="">
+            {!localGovernmentId
+              ? "Select Union Parishad / Pourashava first"
+              : filteredWards.length === 0 ? "No wards found" : "Select Ward"}
+          </option>
+          {wardId && !filteredWards.some((item) => String(item.id) === String(wardId)) && (
+            <option value={wardId}>Saved ward (ID {wardId})</option>
+          )}
+          {filteredWards.map((item) => (
+            <option key={item.id} value={item.id}>
+              Ward {item.wardNo}{item.nameEn ? ` — ${item.nameEn}` : ""}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
@@ -140,6 +222,8 @@ export function FoundationProjectModal({
   divisions,
   districts,
   upazilas,
+  localGovernments,
+  wards,
   createAction,
   updateAction,
   uploadAction,
@@ -276,9 +360,13 @@ export function FoundationProjectModal({
               divisions={divisions}
               districts={districts}
               upazilas={upazilas}
+              localGovernments={localGovernments}
+              wards={wards}
               defaultDivisionId={editing?.divisionId}
               defaultDistrictId={editing?.districtId}
               defaultUpazilaId={editing?.upazilaId}
+              defaultLocalGovernmentId={editing ? editing.unionParishadorPourashavaId : 1}
+              defaultWardId={editing?.wardId}
             />
           </div>
 

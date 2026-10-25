@@ -140,7 +140,6 @@ export function ProjectAssistanceTable({ data, search, updateStatusAction, delet
                 <th className="px-4 py-3 text-left">Donation Code</th>
                 <th className="px-4 py-3 text-left">Name</th>
                 <th className="px-4 py-3 text-left">Project</th>
-                <th className="px-4 py-3 text-left">Type</th>
                 <th className="px-4 py-3 text-left">Beneficiary / Mode</th>
                 <th className="px-4 py-3 text-left">Target</th>
                 <th className="px-4 py-3 text-left">Collected</th>
@@ -165,9 +164,6 @@ export function ProjectAssistanceTable({ data, search, updateStatusAction, delet
                   </td>
                   <td className="px-4 py-3 max-w-[160px]">
                     <p className="text-slate-600 truncate">{a.projectTitleEn ?? "—"}</p>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs text-slate-500">{a.assistanceTypeNameEn ?? "—"}</span>
                   </td>
                   <td className="px-4 py-3 text-xs text-slate-500">
                     {a.targetBeneficiaryType} · {a.supportMode}

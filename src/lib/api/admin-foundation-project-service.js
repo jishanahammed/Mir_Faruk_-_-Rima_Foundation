@@ -52,6 +52,8 @@ function normalizeProject(p) {
     divisionId: pick(p, "divisionId", "DivisionId", null),
     districtId: pick(p, "districtId", "DistrictId", null),
     upazilaId: pick(p, "upazilaId", "UpazilaId", null),
+    unionParishadorPourashavaId: pick(p, "unionParishadorPourashavaId", "UnionParishadorPourashavaId", null),
+    wardId: pick(p, "wardId", "WardId", null),
     estimatedBudget: pick(p, "estimatedBudget", "EstimatedBudget", null),
     collectedAmount: pick(p, "collectedAmount", "CollectedAmount", null),
     distributedAmount: pick(p, "distributedAmount", "DistributedAmount", null),
