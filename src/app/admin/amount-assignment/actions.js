@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getApiErrorMessage } from "@/lib/api/api-error";
 import {
   ASSIGNMENT_REVIEW_OPTIONS,
   reviewAdminAmountAssignment,
@@ -24,7 +25,7 @@ function readReturnPath(formData) {
     : "/admin/amount-assignment";
 }
 
-export async function reviewAmountAssignmentAction(formData) {
+export async function reviewAmountAssignmentAction(_previousState, formData) {
   const id = readId(formData);
   const returnPath = readReturnPath(formData);
   const requested = String(formData.get("assignmentStatus") ?? "").trim();
@@ -33,15 +34,26 @@ export async function reviewAmountAssignmentAction(formData) {
   );
 
   if (!assignmentStatus) {
-    throw new Error("Assignment status must be Pending, Completed, or Rejected.");
+    return { error: "Select a valid assignment status." };
   }
 
-  await reviewAdminAmountAssignment(
-    id,
-    assignmentStatus,
-    String(formData.get("adminRemarks") ?? ""),
-  );
+  const bankLedgerId = Number(formData.get("bankLedgerId"));
+  if (assignmentStatus === "Completed" && (!Number.isSafeInteger(bankLedgerId) || bankLedgerId <= 0)) {
+    return { error: "Select the bank ledger to credit before approving." };
+  }
+
+  try {
+    await reviewAdminAmountAssignment(
+      id,
+      assignmentStatus,
+      String(formData.get("adminRemarks") ?? ""),
+      bankLedgerId,
+    );
+  } catch (error) {
+    return { error: getApiErrorMessage(error) };
+  }
 
   revalidatePath("/admin/amount-assignment");
+  revalidatePath("/doner/amount-allocation");
   redirect(returnPath);
 }

@@ -43,6 +43,14 @@ const paymentApprovalTimeout = getTimeoutMs(
   process.env.AUTH_API_PAYMENT_APPROVAL_TIMEOUT_MS,
   120000,
 );
+const projectAssistanceCreateTimeout = getTimeoutMs(
+  process.env.AUTH_API_PROJECT_ASSISTANCE_CREATE_TIMEOUT_MS,
+  180000,
+);
+const beneficiaryApprovalTimeout = getTimeoutMs(
+  process.env.AUTH_API_BENEFICIARY_APPROVAL_TIMEOUT_MS,
+  180000,
+);
 const allowSelfSigned = process.env.AUTH_API_ALLOW_SELF_SIGNED === "true";
 
 export const apiTimeouts = {
@@ -51,6 +59,8 @@ export const apiTimeouts = {
   donorApproval: donorApprovalTimeout,
   paymentApproval: paymentApprovalTimeout,
   beneficiaryRegistration: beneficiaryRegistrationTimeout,
+  projectAssistanceCreate: projectAssistanceCreateTimeout,
+  beneficiaryApproval: beneficiaryApprovalTimeout,
 };
 
 export const authApiClient = axios.create({

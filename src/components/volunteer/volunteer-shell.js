@@ -10,6 +10,7 @@ import { clearLoginUserInformation, setLoginUserInformation, shouldRefreshLoginS
 const menuItems = [
   { href: "/volunteer", label: "Dashboard", icon: "dashboard" },
   { href: "/volunteer/volunteers", label: "Volunteer List", icon: "volunteers" },
+  { href: "/volunteer/send-query", label: "Send Query", icon: "message" },
   { href: "/volunteer/profile", label: "My Profile", icon: "profile" },
   { href: "/volunteer/change-password", label: "Change Password", icon: "lock" },
 ];
@@ -22,6 +23,7 @@ function Icon({ name }) {
       : name === "profile" ? <><circle cx="12" cy="8" r="4" /><path d="M5 21a7 7 0 0 1 14 0" /></>
       : name === "volunteers" ? <><circle cx="9" cy="8" r="3" /><path d="M3 21v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 4v2" /></>
       : name === "lock" ? <><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></>
+      : name === "message" ? <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z" />
       : <path d="M4 4h6v7H4zM14 4h6v5h-6zM4 15h6v5H4zM14 13h6v7h-6z" />}
   </svg>;
 }

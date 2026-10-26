@@ -4,13 +4,15 @@ import { apiTimeouts, assertApiConfigured, authApiClient } from "@/lib/api/serve
 
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(request) {
   try {
     assertApiConfigured();
+    const activeOnly = new URL(request.url).searchParams.get("activeOnly");
 
     const response = await authApiClient.request({
       method: "get",
       url: "Locations/divisions",
+      params: activeOnly !== null ? { activeOnly } : undefined,
       timeout: apiTimeouts.default,
     });
 

@@ -157,6 +157,7 @@ export function ProjectAssistanceTable({ data, search, updateStatusAction, delet
                     <span className="inline-flex items-center rounded-lg border border-cyan-200 bg-cyan-50 px-2.5 py-1 font-mono text-xs font-bold tracking-wider text-cyan-800">
                       {a.donationCode || "—"}
                     </span>
+                    {a.ledgerId ? <p className="mt-1.5 max-w-48 break-words text-[11px] font-medium text-emerald-700">Ledger: {a.ledgerCode || a.ledgerId}</p> : null}
                   </td>
                   <td className="px-4 py-3 max-w-[200px]">
                     <p className="font-semibold text-slate-800 truncate">{a.nameEn}</p>

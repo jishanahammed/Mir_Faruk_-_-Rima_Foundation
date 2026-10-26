@@ -158,6 +158,7 @@ function normalizePaymentHistory(payload) {
     remarks: pickValue(payload, "remarks", "Remarks", ""),
     isAssigned: Boolean(pickValue(payload, "isAssigned", "IsAssigned", false)),
     beneficiaryName: pickValue(payload, "beneficiaryName", "BeneficiaryName", ""),
+    projectAssistanceName: pickValue(payload, "projectAssistanceName", "ProjectAssistanceName", ""),
     createdAt: pickValue(payload, "createdAt", "CreatedAt", null),
     updatedAt: pickValue(payload, "updatedAt", "UpdatedAt", null),
   };

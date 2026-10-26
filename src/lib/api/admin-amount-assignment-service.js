@@ -86,6 +86,11 @@ function normalizeAssignment(payload) {
       pickValue(payload, "beneficiaryProfileId", "BeneficiaryProfileId", 0),
     ),
     beneficiaryName: pickValue(payload, "beneficiaryName", "BeneficiaryName", ""),
+    projectAssistanceId: pickValue(payload, "projectAssistanceId", "ProjectAssistanceId", null),
+    projectId: pickValue(payload, "projectId", "ProjectId", null),
+    projectTitleEn: pickValue(payload, "projectTitleEn", "ProjectTitleEn", ""),
+    targetType: pickValue(payload, "targetType", "TargetType", "Beneficiary"),
+    targetName: pickValue(payload, "targetName", "TargetName", ""),
     assignedAmount: normalizeNumber(pickValue(payload, "assignedAmount", "AssignedAmount", 0)),
     assignmentDate: pickValue(payload, "assignmentDate", "AssignmentDate", null),
     assignedBy: pickValue(payload, "assignedBy", "AssignedBy", ""),
@@ -99,6 +104,17 @@ function normalizeAssignment(payload) {
     approvedAt: pickValue(payload, "approvedAt", "ApprovedAt", null),
     approvedBy: pickValue(payload, "approvedBy", "ApprovedBy", ""),
     adminRemarks: pickValue(payload, "adminRemarks", "AdminRemarks", ""),
+    targetLedgerId: pickValue(payload, "targetLedgerId", "TargetLedgerId", null),
+    targetLedgerCode: pickValue(payload, "targetLedgerCode", "TargetLedgerCode", ""),
+    targetLedgerName: pickValue(payload, "targetLedgerName", "TargetLedgerName", ""),
+    bankLedgerId: pickValue(payload, "bankLedgerId", "BankLedgerId", null),
+    bankLedgerName: pickValue(payload, "bankLedgerName", "BankLedgerName", ""),
+    voucherId: pickValue(payload, "voucherId", "VoucherId", null),
+    voucherNo: pickValue(payload, "voucherNo", "VoucherNo", ""),
+    voucherPostedAt: pickValue(payload, "voucherPostedAt", "VoucherPostedAt", null),
+    isLocked: Boolean(pickValue(payload, "isLocked", "IsLocked", false)),
+    batchSize: normalizeNumber(pickValue(payload, "batchSize", "BatchSize", 1), 1),
+    batchAmount: normalizeNumber(pickValue(payload, "batchAmount", "BatchAmount", pickValue(payload, "assignedAmount", "AssignedAmount", 0))),
   };
 }
 
@@ -141,13 +157,14 @@ export async function getAdminAmountAssignmentById(id) {
   );
 }
 
-export async function reviewAdminAmountAssignment(id, assignmentStatus, adminRemarks = "") {
+export async function reviewAdminAmountAssignment(id, assignmentStatus, adminRemarks = "", bankLedgerId = null) {
   return normalizeAssignment(
     await apiPut(
       `AmountAssignments/${id}/review`,
       {
         AssignmentStatus: assignmentStatus,
         AdminRemarks: String(adminRemarks ?? "").trim() || null,
+        BankLedgerId: assignmentStatus === "Completed" ? bankLedgerId : null,
       },
       await getAdminAuthConfig(),
     ),

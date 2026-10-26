@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { updateBeneficiaryStatusAction } from "@/app/admin/beneficiaries/actions";
-import { AutoSubmitSelect } from "@/components/admin/auto-submit-select";
+import { BeneficiaryReviewControls } from "@/components/admin/beneficiary-review-controls";
 import { BeneficiaryReportDownloadButton } from "@/components/admin/beneficiary-report-download-button";
-import { BENEFICIARY_STATUS_OPTIONS } from "@/lib/api/admin-beneficiary-service";
 
 const statusClassNames = {
   Pending: "border-amber-200 bg-amber-50 text-amber-700",
@@ -237,31 +235,7 @@ function DocumentCard({ document }) {
 }
 
 function StatusControl({ beneficiary, currentPath }) {
-  return (
-    <form action={updateBeneficiaryStatusAction} className="space-y-3">
-      <input type="hidden" name="id" value={beneficiary.id} />
-      <input type="hidden" name="returnPath" value={currentPath} />
-      <label className="block">
-        <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
-          Review status
-        </span>
-        <AutoSubmitSelect
-          name="status"
-          defaultValue={beneficiary.status}
-          className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100"
-        >
-          {BENEFICIARY_STATUS_OPTIONS.map((status) => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
-        </AutoSubmitSelect>
-      </label>
-      <p className="text-xs leading-5 text-slate-500">
-        Changing the selection updates the beneficiary status immediately.
-      </p>
-    </form>
-  );
+  return <div className="space-y-3"><p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Review & approval</p><BeneficiaryReviewControls beneficiary={beneficiary} returnPath={currentPath} compact /></div>;
 }
 
 export function BeneficiaryProfileView({ beneficiary, backHref, currentPath }) {

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { ApiError } from "@/lib/api/api-error";
 import { apiGet, apiGetById, apiPost, apiPut, apiDelete } from "@/lib/api/api-service";
 import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
+import { apiTimeouts } from "@/lib/api/server-client";
 
 function pick(payload, camelKey, pascalKey, fallback) {
   return payload?.[camelKey] ?? payload?.[pascalKey] ?? fallback;
@@ -23,6 +24,11 @@ function normalizeAssistance(p) {
     projectId: pick(p, "projectId", "ProjectId", 0),
     projectTitleEn: pick(p, "projectTitleEn", "ProjectTitleEn", null),
     donationCode: pick(p, "donationCode", "DonationCode", ""),
+    ledgerId: pick(p, "ledgerId", "LedgerId", null),
+    ledgerCode: pick(p, "ledgerCode", "LedgerCode", null),
+    ledgerName: pick(p, "ledgerName", "LedgerName", null),
+    groupId: pick(p, "groupId", "GroupId", null),
+    natureId: pick(p, "natureId", "NatureId", null),
     nameEn: pick(p, "nameEn", "NameEn", ""),
     nameBn: pick(p, "nameBn", "NameBn", ""),
     nameDk: pick(p, "nameDk", "NameDk", null),
@@ -61,12 +67,18 @@ export async function getAdminProjectAssistanceById(id) {
 }
 
 export async function createAdminProjectAssistance(data) {
-  const payload = await apiPost("ProjectAssistances", data, await authConfig());
+  const payload = await apiPost("ProjectAssistances", data, {
+    ...(await authConfig()),
+    timeout: apiTimeouts.projectAssistanceCreate,
+  });
   return normalizeAssistance(payload);
 }
 
 export async function updateAdminProjectAssistance(id, data) {
-  const payload = await apiPut(`ProjectAssistances/${id}`, data, await authConfig());
+  const payload = await apiPut(`ProjectAssistances/${id}`, data, {
+    ...(await authConfig()),
+    timeout: apiTimeouts.projectAssistanceCreate,
+  });
   return normalizeAssistance(payload);
 }
 

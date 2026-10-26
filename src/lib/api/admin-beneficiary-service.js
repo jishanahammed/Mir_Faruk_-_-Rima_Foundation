@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { ApiError } from "@/lib/api/api-error";
 import { apiGetById, apiPost, apiPut } from "@/lib/api/api-service";
 import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
+import { apiTimeouts } from "@/lib/api/server-client";
 
 export const BENEFICIARY_PAGE_SIZE_OPTIONS = [10, 20, 30, 50, 80, 100];
 export const BENEFICIARY_STATUS_OPTIONS = [
@@ -123,6 +124,12 @@ function normalizeBeneficiary(payload) {
 
   return {
     id: pickValue(payload, "id", "Id", 0),
+    projectId: pickValue(payload, "projectId", "ProjectId", 5),
+    projectTitleEn: pickValue(payload, "projectTitleEn", "ProjectTitleEn", ""),
+    isApprov: normalizeBoolean(pickValue(payload, "isApprov", "IsApprov", false)),
+    ledgerId: pickValue(payload, "ledgerId", "LedgerId", null),
+    ledgerCode: pickValue(payload, "ledgerCode", "LedgerCode", ""),
+    ledgerName: pickValue(payload, "ledgerName", "LedgerName", ""),
     userId: pickValue(payload, "userId", "UserId", ""),
     fullName: pickValue(payload, "fullName", "FullName", ""),
     nidOrBirthNumber: pickValue(payload, "nidOrBirthNumber", "NidOrBirthNumber", ""),
@@ -286,7 +293,13 @@ export async function updateAdminBeneficiaryStatus(id, status) {
     await apiPut(
       `Beneficiaries/${id}/status`,
       { Status: normalizeStatus(status) },
-      await getAdminAuthConfig(),
+      { ...(await getAdminAuthConfig()), timeout: apiTimeouts.beneficiaryApproval },
     ),
   );
+}
+
+export async function approveAdminBeneficiary(id) {
+  return normalizeBeneficiary(await apiPut(`Beneficiaries/${id}/approve`, {}, {
+    ...(await getAdminAuthConfig()), timeout: apiTimeouts.beneficiaryApproval,
+  }));
 }

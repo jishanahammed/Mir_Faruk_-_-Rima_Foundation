@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AutoSubmitSelect } from "@/components/admin/auto-submit-select";
-import { updateBeneficiaryStatusAction } from "@/app/admin/beneficiaries/actions";
+import { BeneficiaryReviewControls } from "@/components/admin/beneficiary-review-controls";
 import {
   BENEFICIARY_PAGE_SIZE_OPTIONS,
   BENEFICIARY_STATUS_OPTIONS,
@@ -156,25 +156,7 @@ function BeneficiaryIdentity({ beneficiary, compact = false }) {
 }
 
 function BeneficiaryStatusForm({ beneficiary, returnPath, compact = false }) {
-  return (
-    <form action={updateBeneficiaryStatusAction} className={compact ? "space-y-2" : "space-y-1"}>
-      <input type="hidden" name="id" value={beneficiary.id} />
-      <input type="hidden" name="returnPath" value={returnPath} />
-      <AutoSubmitSelect
-        name="status"
-        defaultValue={beneficiary.status}
-        className={`rounded-xl border border-slate-200 bg-white px-3 text-sm font-medium text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100 ${
-          compact ? "h-11 w-full" : "h-9 w-[150px]"
-        }`}
-      >
-        {BENEFICIARY_STATUS_OPTIONS.map((status) => (
-          <option key={status} value={status}>
-            {status}
-          </option>
-        ))}
-      </AutoSubmitSelect>
-    </form>
-  );
+  return <BeneficiaryReviewControls beneficiary={beneficiary} returnPath={returnPath} compact={compact} />;
 }
 
 function ViewDetailsLink({ beneficiaryId, returnPath, compact = false }) {
@@ -436,7 +418,7 @@ export function BeneficiaryListTable({ beneficiaries, filters }) {
                     <th className="px-4 py-3">Beneficiary</th>
                     <th className="px-4 py-3">Contact</th>
                     <th className="px-4 py-3">Assistance</th>
-                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Status & approval</th>
                     <th className="px-4 py-3">Submitted</th>
                     <th className="px-4 py-3">Actions</th>
                   </tr>

@@ -77,8 +77,11 @@ export function ProjectAssistanceModal({
     if (editing) fd.set("id", editing.id);
     startTransition(async () => {
       try {
-        if (editing) await updateAction(fd);
-        else await createAction(fd);
+        const result = editing ? await updateAction(fd) : await createAction(fd);
+        if (result?.success === false) {
+          setError(result.message);
+          return;
+        }
         close();
       } catch (err) {
         setError(err?.message ?? "Something went wrong.");
@@ -118,10 +121,12 @@ export function ProjectAssistanceModal({
             <SectionLabel>Linked Project</SectionLabel>
             <div className="grid grid-cols-1 gap-4">
               <Field label="Foundation Project" name="projectId" required>
-                <select name="projectId" defaultValue={editing?.projectId ?? ""} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-100">
+                {editing?.ledgerId ? <input type="hidden" name="projectId" value={editing.projectId} /> : null}
+                <select name={editing?.ledgerId ? undefined : "projectId"} disabled={Boolean(editing?.ledgerId)} defaultValue={editing?.projectId ?? ""} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-100 disabled:opacity-70">
                   <option value="" disabled>Select project…</option>
                   {projects.map((p) => <option key={p.id} value={p.id}>{p.projectTitleEn}</option>)}
                 </select>
+                {editing?.ledgerId ? <p className="mt-2 text-xs leading-5 text-slate-500">This assistance is linked to ledger {editing.ledgerCode || editing.ledgerId} under this project.</p> : null}
               </Field>
             </div>
           </div>
@@ -193,7 +198,7 @@ export function ProjectAssistanceModal({
 
           {/* Error */}
           {error && (
-            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
+            <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
               {error}
             </div>
           )}

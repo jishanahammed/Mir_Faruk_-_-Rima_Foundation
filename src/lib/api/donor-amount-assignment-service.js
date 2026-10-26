@@ -3,8 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { ApiError } from "@/lib/api/api-error";
 import { apiGet, apiPost } from "@/lib/api/api-service";
-import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
-import { getAllDonorPaymentHistory, getCurrentDonorProfile } from "@/lib/api/donor-portal-service";
+import { ADMIN_SESSION_COOKIE, ADMIN_USER_COOKIE, isDonorUser, parseAdminUser } from "@/lib/admin-auth";
 
 export const AMOUNT_ASSIGNMENT_HISTORY_PAGE_SIZE_OPTIONS = [10, 20, 30, 50];
 export const BENEFICIARY_SEARCH_PAGE_SIZE_OPTIONS = [10, 20, 30, 50];
@@ -21,8 +20,9 @@ function normalizeNumber(value, fallback = 0) {
 async function getDonorAuthConfig() {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+  const rawUser = cookieStore.get(ADMIN_USER_COOKIE)?.value;
 
-  if (!accessToken) {
+  if (!accessToken || !rawUser || !isDonorUser(parseAdminUser(rawUser))) {
     throw new ApiError("Session token is missing. Please sign in again.");
   }
 
@@ -51,6 +51,7 @@ function normalizeBeneficiary(payload) {
 
   return {
     id: normalizeNumber(pickValue(payload, "id", "Id", 0)),
+    projectId: normalizeNumber(pickValue(payload, "projectId", "ProjectId", 0)),
     fullName: pickValue(payload, "fullName", "FullName", ""),
     mobile: pickValue(payload, "mobile", "Mobile", ""),
     division: pickValue(payload, "division", "Division", ""),
@@ -69,80 +70,80 @@ function normalizeBeneficiary(payload) {
 }
 
 export async function getDonorAvailableAmountSummary(user) {
-  const donor = await getCurrentDonorProfile(user);
   const summary = await apiGet("AmountAssignments/me/summary", await getDonorAuthConfig());
 
-  return normalizeSummary(summary ?? { donorId: donor.id });
-}
-
-function isApprovedPayment(payment) {
-  return String(payment?.adminApprovalStatus ?? "").trim().toLowerCase() === "approved";
+  return normalizeSummary(summary ?? {});
 }
 
 export async function getDonorAssignablePayments(user) {
-  const { items } = await getAllDonorPaymentHistory(user);
-
-  return items
-    .filter((payment) => !payment.isAssigned && isApprovedPayment(payment) && payment.amount > 0)
-    .map((payment) => ({
-      id: payment.id,
-      transactionId: payment.transactionId,
-      amount: payment.amount,
-      currency: payment.currency,
-      paymentDate: payment.paymentDate,
-      donationType: payment.donationType,
-    }));
+  const payload = await apiGet("AmountAssignments/me/payments", await getDonorAuthConfig());
+  const items = Array.isArray(payload) ? payload : [];
+  return items.map((payment) => ({
+    id: normalizeNumber(pickValue(payment, "id", "Id", 0)),
+    transactionId: pickValue(payment, "transactionId", "TransactionId", ""),
+    amount: normalizeNumber(pickValue(payment, "amount", "Amount", 0)),
+    currency: pickValue(payment, "currency", "Currency", "BDT"),
+    paymentDate: pickValue(payment, "paymentDate", "PaymentDate", null),
+  }));
 }
 
-export async function searchBeneficiariesByLocation(filters = {}) {
-  const config = await getDonorAuthConfig();
-  const payload = await apiPost(
-    "Beneficiaries/paged",
-    {
-      PageNumber: normalizeNumber(filters.page, 1) || 1,
-      PageSize: normalizeNumber(filters.pageSize, BENEFICIARY_SEARCH_PAGE_SIZE_OPTIONS[0]),
-      DivisionId: normalizeNumber(filters.divisionId, 0) || null,
-      DistrictId: normalizeNumber(filters.districtId, 0) || null,
-      UpazilaId: normalizeNumber(filters.upazilaId, 0) || null,
-      UnionParishadorPourashavaId:
-        normalizeNumber(filters.unionParishadorPourashavaId, 0) || null,
-      WardId: normalizeNumber(filters.wardId, 0) || null,
-      Status: "Approved",
-      SearchText: String(filters.search ?? "").trim() || null,
-    },
-    config,
-  );
-
-  const items = pickValue(payload, "items", "Items", []);
-
+export async function getAllocationOptions() {
+  const payload = await apiGet("AmountAssignments/me/options", await getDonorAuthConfig());
+  const projects = pickValue(payload, "projects", "Projects", []);
+  const divisions = pickValue(payload, "divisions", "Divisions", []);
   return {
-    items: Array.isArray(items) ? items.map(normalizeBeneficiary).filter(Boolean) : [],
+    projects: projects.map((x) => ({ id: pickValue(x, "id", "Id", 0), projectCode: pickValue(x, "projectCode", "ProjectCode", ""), projectTitleEn: pickValue(x, "projectTitleEn", "ProjectTitleEn", ""), status: pickValue(x, "status", "Status", "") })),
+    divisions: divisions.map((x) => ({ id: pickValue(x, "id", "Id", 0), nameEn: pickValue(x, "nameEn", "NameEn", ""), nameBn: pickValue(x, "nameBn", "NameBn", "") })),
+  };
+}
+
+function normalizePage(payload, normalizeItem) {
+  return {
+    items: pickValue(payload, "items", "Items", []).map(normalizeItem).filter(Boolean),
     totalCount: normalizeNumber(pickValue(payload, "totalCount", "TotalCount", 0)),
-    totalPages: Math.max(1, normalizeNumber(pickValue(payload, "totalPages", "TotalPages", 0))),
+    totalPages: Math.max(1, normalizeNumber(pickValue(payload, "totalPages", "TotalPages", 1))),
     pageNumber: normalizeNumber(pickValue(payload, "pageNumber", "PageNumber", 1), 1),
-    pageSize: normalizeNumber(
-      pickValue(payload, "pageSize", "PageSize", BENEFICIARY_SEARCH_PAGE_SIZE_OPTIONS[0]),
-      BENEFICIARY_SEARCH_PAGE_SIZE_OPTIONS[0],
-    ),
+    pageSize: normalizeNumber(pickValue(payload, "pageSize", "PageSize", 10), 10),
     hasNextPage: Boolean(pickValue(payload, "hasNextPage", "HasNextPage", false)),
     hasPreviousPage: Boolean(pickValue(payload, "hasPreviousPage", "HasPreviousPage", false)),
   };
 }
 
-export async function assignDonorAmount(user, { beneficiaryProfileId, paymentHistoryId, amount }) {
-  const config = await getDonorAuthConfig();
-  const payload = await apiPost(
-    "AmountAssignments/me/assign",
-    {
-      BeneficiaryProfileId: normalizeNumber(beneficiaryProfileId, 0),
-      DonorPaymentHistoryId: normalizeNumber(paymentHistoryId, 0) || null,
-      Amount: normalizeNumber(amount, 0),
-    },
-    config,
-  );
-
+function normalizeAssistance(x) {
   return {
-    message: pickValue(payload, "message", "Message", "Amount assigned successfully."),
+    id: normalizeNumber(pickValue(x, "id", "Id", 0)), projectId: normalizeNumber(pickValue(x, "projectId", "ProjectId", 0)),
+    donationCode: pickValue(x, "donationCode", "DonationCode", ""), nameEn: pickValue(x, "nameEn", "NameEn", ""),
+    descriptionEn: pickValue(x, "descriptionEn", "DescriptionEn", ""), supportMode: pickValue(x, "supportMode", "SupportMode", ""),
+    targetAmount: normalizeNumber(pickValue(x, "targetAmount", "TargetAmount", 0)),
+    totalCollectedAmount: normalizeNumber(pickValue(x, "totalCollectedAmount", "TotalCollectedAmount", 0)),
+    allocatedAmount: normalizeNumber(pickValue(x, "allocatedAmount", "AllocatedAmount", 0)),
+  };
+}
+
+export async function searchAllocationTargets(filters) {
+  const payload = await apiPost("AmountAssignments/me/search", {
+    ProjectId: filters.projectId, DivisionId: filters.divisionId, DistrictId: filters.districtId,
+    UpazilaId: filters.upazilaId, UnionParishadorPourashavaId: filters.unionParishadorPourashavaId, WardId: filters.wardId,
+    SearchText: filters.search || null, BeneficiaryPage: filters.beneficiaryPage || 1,
+    AssistancePage: filters.assistancePage || 1, PageSize: 10,
+  }, await getDonorAuthConfig());
+  return {
+    project: pickValue(payload, "project", "Project", {}),
+    beneficiaries: normalizePage(pickValue(payload, "beneficiaries", "Beneficiaries", {}), normalizeBeneficiary),
+    projectAssistances: normalizePage(pickValue(payload, "projectAssistances", "ProjectAssistances", {}), normalizeAssistance),
+  };
+}
+
+export async function assignDonorAmount(user, data) {
+  const payload = await apiPost("AmountAssignments/me/assign", {
+    ProjectId: data.projectId, DivisionId: data.divisionId, DistrictId: data.districtId,
+    UpazilaId: data.upazilaId, UnionParishadorPourashavaId: data.unionParishadorPourashavaId, WardId: data.wardId,
+    BeneficiaryProfileId: data.beneficiaryProfileId || null, ProjectAssistanceId: data.projectAssistanceId || null,
+    DonorPaymentHistoryId: data.paymentHistoryId, Amount: data.amount,
+  }, await getDonorAuthConfig());
+  return {
+    message: pickValue(payload, "message", "Message", "Amount allocated successfully."),
     summary: normalizeSummary(pickValue(payload, "summary", "Summary", {})),
+    assignment: pickValue(payload, "assignment", "Assignment", null),
   };
 }

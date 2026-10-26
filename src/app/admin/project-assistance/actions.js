@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getApiErrorMessage } from "@/lib/api/api-error";
 import {
   createAdminProjectAssistance,
   updateAdminProjectAssistance,
@@ -47,13 +48,23 @@ function revalidate() {
 }
 
 export async function createProjectAssistanceAction(fd) {
-  await createAdminProjectAssistance(buildPayload(fd));
-  revalidate();
+  try {
+    await createAdminProjectAssistance(buildPayload(fd));
+    revalidate();
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: getApiErrorMessage(error) };
+  }
 }
 
 export async function updateProjectAssistanceAction(fd) {
-  await updateAdminProjectAssistance(readId(fd), buildPayload(fd));
-  revalidate();
+  try {
+    await updateAdminProjectAssistance(readId(fd), buildPayload(fd));
+    revalidate();
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: getApiErrorMessage(error) };
+  }
 }
 
 export async function updateProjectAssistanceStatusAction(fd) {

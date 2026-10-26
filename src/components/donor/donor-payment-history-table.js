@@ -228,7 +228,7 @@ function MobilePaymentCard({ payment, serial }) {
           tone={getStatusTone(payment.adminApprovalStatus)}
         />
         {payment.isAssigned ? (
-          <StatusBadge value={payment.beneficiaryName || "Assigned"} tone="emerald" />
+          <StatusBadge value={payment.projectAssistanceName || payment.beneficiaryName || "Assigned"} tone="emerald" />
         ) : (
           <StatusBadge value="Available" tone="slate" />
         )}
@@ -476,7 +476,7 @@ export function DonorPortalPaymentHistoryTable({ paymentHistories, filters, amou
                     </td>
                     <td className="px-4 py-3">
                       {item.isAssigned ? (
-                        <StatusBadge value={item.beneficiaryName || "Assigned"} tone="emerald" />
+                        <StatusBadge value={item.projectAssistanceName || item.beneficiaryName || "Assigned"} tone="emerald" />
                       ) : (
                         <StatusBadge value="Available" tone="slate" />
                       )}

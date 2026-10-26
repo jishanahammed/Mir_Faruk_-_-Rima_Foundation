@@ -134,7 +134,7 @@ function EmptyState() {
   );
 }
 
-function MobileAssignmentCard({ assignment, serial, returnPath, batchSize }) {
+function MobileAssignmentCard({ assignment, serial, returnPath, batchSize, bankLedgers, bankLedgerError }) {
   return (
     <article className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm shadow-slate-950/5">
       <div className="flex items-start justify-between gap-4">
@@ -150,10 +150,11 @@ function MobileAssignmentCard({ assignment, serial, returnPath, batchSize }) {
 
       <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Beneficiary</p>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Allocation target</p>
           <p className="mt-1 font-bold text-slate-800">
-            {assignment.beneficiaryName || `#${assignment.beneficiaryProfileId}`}
+            {assignment.targetName || assignment.beneficiaryName || `#${assignment.projectAssistanceId || assignment.beneficiaryProfileId}`}
           </p>
+          <p className="mt-1 text-xs text-slate-500">{assignment.targetType === "ProjectAssistance" ? "Project assistance" : "Beneficiary"}{assignment.projectTitleEn ? ` · ${assignment.projectTitleEn}` : ""}</p>
         </div>
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Amount</p>
@@ -166,6 +167,8 @@ function MobileAssignmentCard({ assignment, serial, returnPath, batchSize }) {
         <AmountAssignmentReviewModal
           assignment={assignment}
           batchSize={batchSize}
+          bankLedgers={bankLedgers}
+          bankLedgerError={bankLedgerError}
           returnPath={returnPath}
         />
       </div>
@@ -189,7 +192,7 @@ function countBatchSiblings(items, assignment) {
   ).length;
 }
 
-export function AmountAssignmentTable({ assignments, filters, returnPath }) {
+export function AmountAssignmentTable({ assignments, filters, returnPath, bankLedgers = [], bankLedgerError = "" }) {
   const items = assignments.items ?? [];
   const startItem =
     assignments.totalCount === 0 ? 0 : (assignments.pageNumber - 1) * assignments.pageSize + 1;
@@ -338,6 +341,8 @@ export function AmountAssignmentTable({ assignments, filters, returnPath }) {
                 assignment={item}
                 serial={(assignments.pageNumber - 1) * assignments.pageSize + index + 1}
                 batchSize={countBatchSiblings(items, item)}
+                bankLedgers={bankLedgers}
+                bankLedgerError={bankLedgerError}
                 returnPath={returnPath}
               />
             ))}
@@ -349,7 +354,7 @@ export function AmountAssignmentTable({ assignments, filters, returnPath }) {
                 <tr>
                   <th className="px-4 py-3">SL</th>
                   <th className="px-4 py-3">Donor</th>
-                  <th className="px-4 py-3">Beneficiary</th>
+                  <th className="px-4 py-3">Allocation target</th>
                   <th className="px-4 py-3">Transaction ID</th>
                   <th className="px-4 py-3">Assigned Amount</th>
                   <th className="px-4 py-3">Assignment Date</th>
@@ -369,7 +374,8 @@ export function AmountAssignmentTable({ assignments, filters, returnPath }) {
                         {item.donorName || `#${item.donorId}`}
                       </td>
                       <td className="px-4 py-3 text-slate-700">
-                        {item.beneficiaryName || `#${item.beneficiaryProfileId}`}
+                        {item.targetName || item.beneficiaryName || `#${item.projectAssistanceId || item.beneficiaryProfileId}`}
+                        <p className="mt-1 text-[11px] text-slate-500">{item.targetType === "ProjectAssistance" ? "Project assistance" : "Beneficiary"}{item.projectTitleEn ? ` · ${item.projectTitleEn}` : ""}</p>
                       </td>
                       <td className="px-4 py-3 text-slate-600">{item.transactionId || "—"}</td>
                       <td className="px-4 py-3 font-bold text-slate-950">
@@ -395,6 +401,8 @@ export function AmountAssignmentTable({ assignments, filters, returnPath }) {
                         <AmountAssignmentReviewModal
                           assignment={item}
                           batchSize={countBatchSiblings(items, item)}
+                          bankLedgers={bankLedgers}
+                          bankLedgerError={bankLedgerError}
                           returnPath={returnPath}
                         />
                       </td>

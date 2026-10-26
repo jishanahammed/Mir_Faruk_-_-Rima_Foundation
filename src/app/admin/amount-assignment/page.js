@@ -1,5 +1,6 @@
 import { AmountAssignmentTable } from "@/components/admin/amount-assignment-table";
 import { getApiErrorMessage } from "@/lib/api/api-error";
+import { getPaymentLedgers } from "@/lib/api/admin-accounting-dropdown-service";
 import {
   AMOUNT_ASSIGNMENT_PAGE_SIZE_OPTIONS,
   getAdminAmountAssignmentList,
@@ -71,12 +72,17 @@ export default async function AdminAmountAssignmentPage({ searchParams }) {
     hasPreviousPage: false,
   };
   let errorMessage = "";
+  const paymentLedgersPromise = getPaymentLedgers();
 
   try {
     assignments = await getAdminAmountAssignmentList(filters);
   } catch (error) {
     errorMessage = getApiErrorMessage(error);
   }
+  const paymentLedgers = await paymentLedgersPromise;
+  const bankLedgers = paymentLedgers.success
+    ? paymentLedgers.list.filter((ledger) => ledger.ledgerType?.trim().toLowerCase() === "bank")
+    : [];
 
   return (
     <div className="space-y-5 xl:space-y-6">
@@ -91,6 +97,8 @@ export default async function AdminAmountAssignmentPage({ searchParams }) {
         assignments={assignments}
         filters={filters}
         returnPath={buildReturnPath(filters)}
+        bankLedgers={bankLedgers}
+        bankLedgerError={paymentLedgers.success ? "" : paymentLedgers.message}
       />
     </div>
   );

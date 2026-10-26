@@ -10,6 +10,7 @@ import {
   refreshAdminSession,
 } from "@/app/admin/actions";
 import { adminUser } from "@/lib/admin-auth";
+import { QueryNotificationLink } from "@/components/admin/volunteer_queries/query-notification-link";
 import {
   clearLoginUserInformation,
   setLoginUserInformation,
@@ -38,6 +39,7 @@ const navSections = [
       { label: "Donor List", href: "/admin/donors", icon: "users" },
       { label: "Beneficiary List", href: "/admin/beneficiaries", icon: "list" },
       { label: "Volunteer List", href: "/admin/volunteers", icon: "users" },
+      { label: "Volunteer Queries", href: "/admin/volunteer-queries", icon: "receipt" },
       { label: "Payment History", href: "/admin/donersPayment", icon: "payment" },
       { label: "Donation Queries", href: "/admin/donation-queries", icon: "receipt" },
       { label: "Amount Assignment", href: "/admin/amount-assignment", icon: "payment" },
@@ -99,6 +101,10 @@ function flattenNavItems(sections) {
 }
 
 const routeTitles = {
+  "/admin/volunteer-queries": {
+    eyebrow: "Volunteer Support",
+    title: "Volunteer queries",
+  },
   "/admin/volunteers": {
     eyebrow: "Volunteer Management",
     title: "Volunteer registrations",
@@ -600,6 +606,7 @@ function SidebarContent({
   isCollapsed = false,
   user = adminUser,
   unseenDonationQueries = 0,
+  unseenVolunteerQueries = null,
 }) {
   const pathname = usePathname();
 
@@ -636,12 +643,13 @@ function SidebarContent({
                   aria-label={item.label}
                   aria-current={isActive ? "page" : undefined}
                   onClick={onNavigate}
-                  className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${isActive
+                  className={`relative flex h-11 w-11 items-center justify-center rounded-xl border transition ${isActive
                     ? "border-cyan-200 bg-cyan-50 text-cyan-800 shadow-sm shadow-cyan-100/80"
                     : "border-transparent text-slate-600 hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-800"
                     }`}
                 >
                   <Icon name={item.icon} />
+                  {item.href === "/admin/volunteer-queries" && unseenVolunteerQueries > 0 ? <span aria-label={`${unseenVolunteerQueries} unseen queries`} className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-black text-slate-950">{unseenVolunteerQueries > 99 ? "99+" : unseenVolunteerQueries}</span> : null}
                 </Link>
               );
             })}
@@ -705,7 +713,7 @@ function SidebarContent({
                         key={item.href}
                         item={item}
                         onNavigate={onNavigate}
-                        badgeCount={item.href === "/admin/donation-queries" ? unseenDonationQueries : 0}
+                        badgeCount={item.href === "/admin/donation-queries" ? unseenDonationQueries : item.href === "/admin/volunteer-queries" ? unseenVolunteerQueries : 0}
                       />
                     )
                   )}
@@ -726,12 +734,49 @@ function SidebarContent({
   );
 }
 
-export function AdminShell({ children, user = adminUser, unseenDonationQueries = 0 }) {
+export function AdminShell({ children, user = adminUser, unseenDonationQueries = 0, initialVolunteerQueryCount = null }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [unseenVolunteerQueries, setUnseenVolunteerQueries] = useState(initialVolunteerQueryCount);
+  const [queryNotificationsUnavailable, setQueryNotificationsUnavailable] = useState(initialVolunteerQueryCount == null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
   const route = resolveRoute(pathname);
+
+  useEffect(() => {
+    let cancelled = false;
+    let request = null;
+    async function refreshQueryNotifications() {
+      if (document.visibilityState === "hidden") return;
+      request?.abort();
+      const controller = new AbortController();
+      request = controller;
+      try {
+        const response = await fetch("/api/admin/volunteer-queries/summary", { cache: "no-store", signal: controller.signal });
+        if (!response.ok) throw new Error("Unable to load notifications");
+        const summary = await response.json();
+        if (!cancelled && !controller.signal.aborted) {
+          setUnseenVolunteerQueries(summary.unseen);
+          setQueryNotificationsUnavailable(false);
+        }
+      } catch {
+        if (!cancelled && !controller.signal.aborted) setQueryNotificationsUnavailable(true);
+      }
+    }
+    void refreshQueryNotifications();
+    const timer = window.setInterval(refreshQueryNotifications, 30_000);
+    window.addEventListener("focus", refreshQueryNotifications);
+    window.addEventListener("volunteer-queries-updated", refreshQueryNotifications);
+    document.addEventListener("visibilitychange", refreshQueryNotifications);
+    return () => {
+      cancelled = true;
+      request?.abort();
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refreshQueryNotifications);
+      window.removeEventListener("volunteer-queries-updated", refreshQueryNotifications);
+      document.removeEventListener("visibilitychange", refreshQueryNotifications);
+    };
+  }, []);
 
   useEffect(() => {
     const storedValue = window.localStorage.getItem("mir_admin_sidebar_visible");
@@ -787,6 +832,7 @@ export function AdminShell({ children, user = adminUser, unseenDonationQueries =
         <SidebarContent
           user={user}
           unseenDonationQueries={unseenDonationQueries}
+          unseenVolunteerQueries={unseenVolunteerQueries}
           isCollapsed={!isSidebarVisible}
           onToggle={() => updateSidebarVisibility(!isSidebarVisible)}
         />
@@ -801,6 +847,7 @@ export function AdminShell({ children, user = adminUser, unseenDonationQueries =
             <p className="text-base font-bold text-slate-950">{route.title}</p>
           </div>
           <div className="flex items-center gap-2">
+            <QueryNotificationLink count={unseenVolunteerQueries} unavailable={queryNotificationsUnavailable} />
             <SettingsDropdown user={user} />
             <button
               type="button"
@@ -828,7 +875,7 @@ export function AdminShell({ children, user = adminUser, unseenDonationQueries =
           className={`relative h-full w-[min(20rem,86vw)] border-r border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
             }`}
         >
-          <SidebarContent user={user} unseenDonationQueries={unseenDonationQueries} onNavigate={() => setIsOpen(false)} />
+          <SidebarContent user={user} unseenDonationQueries={unseenDonationQueries} unseenVolunteerQueries={unseenVolunteerQueries} onNavigate={() => setIsOpen(false)} />
         </aside>
       </div>
 
@@ -845,6 +892,7 @@ export function AdminShell({ children, user = adminUser, unseenDonationQueries =
               <p className="mt-1 text-xl font-bold text-slate-950">{route.title}</p>
             </div>
             <div className="flex items-center gap-3">
+              <QueryNotificationLink count={unseenVolunteerQueries} unavailable={queryNotificationsUnavailable} />
               <Link
                 href="/"
                 className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-cyan-200 hover:text-cyan-800"

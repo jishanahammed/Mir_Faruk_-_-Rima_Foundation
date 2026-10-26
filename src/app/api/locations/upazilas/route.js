@@ -9,11 +9,12 @@ export async function GET(request) {
     assertApiConfigured();
 
     const districtId = new URL(request.url).searchParams.get("districtId");
+    const activeOnly = new URL(request.url).searchParams.get("activeOnly");
 
     const response = await authApiClient.request({
       method: "get",
       url: "Locations/upazilas",
-      params: districtId ? { districtId } : undefined,
+      params: { ...(districtId ? { districtId } : {}), ...(activeOnly !== null ? { activeOnly } : {}) },
       timeout: apiTimeouts.default,
     });
 
