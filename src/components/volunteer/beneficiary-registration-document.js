@@ -1,4 +1,5 @@
 import { Document, Font, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { isRequiredBeneficiaryField } from "@/lib/beneficiary-registration-fields";
 
 const fontFamily = "BeneficiaryRegistrationNoto";
 Font.register({
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
 function Field({ name, text, tall = false }) {
   return (
     <View style={styles.field} wrap={false}>
-      <Text style={styles.label}>{text.labels[name]}</Text>
+      <Text style={styles.label}>{text.labels[name]}{isRequiredBeneficiaryField(name) ? " *" : ""}</Text>
       <View style={tall ? styles.tallLine : styles.line} />
       {text.options[name] ? <Text style={styles.options}>{text.options[name].join(" / ")}</Text> : null}
     </View>
@@ -46,8 +47,8 @@ function Fields({ names, text, tall = false }) {
   return <View style={styles.row}>{names.map((name) => <Field key={name} name={name} text={text} tall={tall} />)}</View>;
 }
 
-function Checkbox({ children }) {
-  return <View style={styles.checkRow} wrap={false}><View style={styles.box} /><Text style={styles.checkText}>{children}</Text></View>;
+function Checkbox({ children, required = false }) {
+  return <View style={styles.checkRow} wrap={false}><View style={styles.box} /><Text style={styles.checkText}>{children}{required ? " *" : ""}</Text></View>;
 }
 
 function FormPage({ text, step, number, children }) {
@@ -61,6 +62,7 @@ function FormPage({ text, step, number, children }) {
         </View>
       </View>
       <Text style={styles.section}>{number}. {text.steps[step].title}</Text>
+      <Text style={styles.instructions}>* {text.requiredFieldNote}</Text>
       {children}
       <Text fixed style={styles.footer} render={({ pageNumber, totalPages }) => `${text.title} | ${pageNumber} / ${totalPages}`} />
     </Page>
@@ -94,9 +96,9 @@ export function BeneficiaryRegistrationDocument({ text }) {
         <Field name="expectedAssistance" text={text} tall />
         <Field name="assistanceReason" text={text} tall />
         <Field name="assistancePurpose" text={text} tall />
-        <Checkbox>{text.labels.repaymentCommitment}</Checkbox>
+        <Checkbox required={isRequiredBeneficiaryField("repaymentCommitment")}>{text.labels.repaymentCommitment}</Checkbox>
         <View style={styles.signature}>
-          <Text style={styles.label}>{text.pdf.applicantSignature}</Text><View style={styles.line} />
+          <Text style={styles.label}>{text.pdf.applicantSignature}{isRequiredBeneficiaryField("digitalSignature") ? " *" : ""}</Text><View style={styles.line} />
           <Text style={styles.options}>{text.pdf.date}: ____________________</Text>
         </View>
       </FormPage>
@@ -115,13 +117,13 @@ export function BeneficiaryRegistrationDocument({ text }) {
       </FormPage>
 
       <FormPage text={text} step="documents" number={4}>
-        {documentFields.map((name) => <Checkbox key={name}>{text.labels[name]}{text.hints[name] === text.optionalLabel ? ` (${text.optionalLabel})` : ""}</Checkbox>)}
+        {documentFields.map((name) => <Checkbox key={name} required={isRequiredBeneficiaryField(name)}>{text.labels[name]}{text.hints[name] === text.optionalLabel ? ` (${text.optionalLabel})` : ""}</Checkbox>)}
         <Text style={styles.subheading}>{text.steps.documents.title}</Text>
-        {agreements.map((name) => <Checkbox key={name}>{text.labels[name]}</Checkbox>)}
+        {agreements.map((name) => <Checkbox key={name} required={isRequiredBeneficiaryField(name)}>{text.labels[name]}</Checkbox>)}
         <View style={[styles.row, styles.signature]}>
           {[text.pdf.applicantSignature, text.pdf.guarantorSignature].map((label) => (
             <View key={label} style={styles.field}>
-              <Text style={styles.label}>{label}</Text><View style={styles.tallLine} />
+              <Text style={styles.label}>{label}{isRequiredBeneficiaryField("digitalSignature") ? " *" : ""}</Text><View style={styles.tallLine} />
               <Text style={styles.options}>{text.pdf.date}: ____________________</Text>
             </View>
           ))}

@@ -4,11 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 import { apiGet } from "@/lib/api/browser-api-service";
 import { BeneficiaryRegistrationPdfButton } from "@/components/volunteer/beneficiary-registration-pdf-button";
+import { isRequiredBeneficiaryField, locationIdLabelKeys, requiredByStep } from "@/lib/beneficiary-registration-fields";
 
 const stepKeys = ["basic", "assistance", "guarantor", "documents"];
 
 const beneficiaryFormCopy = {
   en: {
+    requiredFieldNote: "Required field",
     pdf: {
       download: "Download PDF Form",
       preparing: "Preparing PDF...",
@@ -155,6 +157,7 @@ const beneficiaryFormCopy = {
     },
   },
   bn: {
+    requiredFieldNote: "আবশ্যক তথ্য",
     pdf: {
       download: "পিডিএফ ফরম ডাউনলোড",
       preparing: "পিডিএফ তৈরি হচ্ছে...",
@@ -296,6 +299,7 @@ const beneficiaryFormCopy = {
     },
   },
   da: {
+    requiredFieldNote: "Obligatorisk felt",
     pdf: {
       download: "Download PDF-formular",
       preparing: "Forbereder PDF...",
@@ -503,63 +507,6 @@ const initialFormState = {
   digitalSignature: false,
 };
 
-const requiredByStep = {
-  0: [
-    "fullName",
-    "fatherOrHusbandName",
-    "motherName",
-    "dateOfBirth",
-    "gender",
-    "nidOrBirthNumber",
-    "mobile",
-    "presentAddress",
-    "permanentAddress",
-    "divisionId",
-    "districtId",
-    "upazilaId",
-    "unionWard",
-    "villageArea",
-    "maritalStatus",
-    "familyMembers",
-  ],
-  1: [
-    "monthlyIncome",
-    "mainOccupation",
-    "financialCondition",
-    "assistanceReason",
-    "assistanceType",
-    "expectedAssistance",
-    "assistancePurpose",
-    "repaymentCommitment",
-  ],
-  2: [
-    "guarantorName",
-    "guarantorFatherOrHusbandName",
-    "guarantorNid",
-    "guarantorMobile",
-    "guarantorOccupation",
-    "guarantorRelation",
-    "guarantorPresentAddress",
-    "guarantorPermanentAddress",
-    "guarantorDivisionId",
-    "guarantorDistrictId",
-    "guarantorUpazilaId",
-    "knownDuration",
-    "confirmsInfo",
-    "supportsVerification",
-  ],
-  3: [
-    "applicantNidCopy",
-    "applicantPhoto",
-    "guarantorNidCopy",
-    "terms",
-    "truthConfirmed",
-    "guarantorKnownConfirmed",
-    "guarantorCooperationConfirmed",
-    "digitalSignature",
-  ],
-};
-
 function inputClass(hasError = false) {
   const stateClass = hasError
     ? "border-red-300 bg-red-50 focus:border-red-400 focus:ring-red-100"
@@ -581,6 +528,7 @@ function Field({ id, label, error, hint, children }) {
     <label htmlFor={id} className="block text-sm font-semibold text-slate-800">
       <span className="flex items-center gap-2">
         {label}
+        {isRequiredBeneficiaryField(id) ? <span aria-hidden="true" className="text-red-600">*</span> : null}
         {hint ? <span className="text-xs font-medium text-slate-400">{hint}</span> : null}
       </span>
       <span className="mt-2 block">{children}</span>
@@ -609,6 +557,7 @@ function TextInput({
         id={id}
         name={id}
         type={type}
+        required={isRequiredBeneficiaryField(id)}
         autoComplete={autoComplete}
         value={form[id]}
         onChange={onChange(id)}
@@ -625,6 +574,7 @@ function TextArea({ id, form, errors, onChange, text, placeholder }) {
       <textarea
         id={id}
         name={id}
+        required={isRequiredBeneficiaryField(id)}
         value={form[id]}
         onChange={onChange(id)}
         placeholder={placeholder ?? text.labels[id]}
@@ -640,6 +590,7 @@ function SelectInput({ id, form, errors, onChange, text }) {
       <select
         id={id}
         name={id}
+        required={isRequiredBeneficiaryField(id)}
         value={form[id]}
         onChange={onChange(id)}
         className={inputClass(Boolean(errors[id]))}
@@ -927,6 +878,7 @@ function LocationCascadeFields({
         <select
           id={divisionIdField}
           name={divisionIdField}
+          required={isRequiredBeneficiaryField(divisionIdField)}
           value={form[divisionIdField]}
           onChange={handleDivisionChange}
           className={inputClass(Boolean(errors[divisionIdField]))}
@@ -959,6 +911,7 @@ function LocationCascadeFields({
         <select
           id={districtIdField}
           name={districtIdField}
+          required={isRequiredBeneficiaryField(districtIdField)}
           value={form[districtIdField]}
           onChange={handleDistrictChange}
           disabled={!form[divisionIdField]}
@@ -996,6 +949,7 @@ function LocationCascadeFields({
         <select
           id={upazilaIdField}
           name={upazilaIdField}
+          required={isRequiredBeneficiaryField(upazilaIdField)}
           value={form[upazilaIdField]}
           onChange={handleUpazilaChange}
           disabled={!form[districtIdField]}
@@ -1109,12 +1063,14 @@ function CheckboxField({ id, form, errors, onChange, text }) {
       <input
         name={id}
         type="checkbox"
+        required={isRequiredBeneficiaryField(id)}
         checked={form[id]}
         onChange={onChange(id)}
         className="mt-1 h-4 w-4 rounded border-slate-300 accent-cyan-700"
       />
       <span>
         {text.labels[id]}
+        {isRequiredBeneficiaryField(id) ? <span aria-hidden="true" className="ml-1 text-red-600">*</span> : null}
         {errors[id] ? (
           <span className="mt-1 block text-xs font-semibold text-red-600">{errors[id]}</span>
         ) : null}
@@ -1130,6 +1086,7 @@ function FileInput({ id, form, errors, onChange, text }) {
         id={id}
         name={id}
         type="file"
+        required={isRequiredBeneficiaryField(id)}
         accept="image/*,.pdf"
         onChange={onChange(id)}
         className="block w-full rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 file:mr-4 file:rounded-full file:border-0 file:bg-cyan-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-cyan-700"
@@ -1142,15 +1099,6 @@ function FileInput({ id, form, errors, onChange, text }) {
     </Field>
   );
 }
-
-const locationIdLabelKeys = {
-  divisionId: "division",
-  districtId: "district",
-  upazilaId: "upazila",
-  guarantorDivisionId: "guarantorDivision",
-  guarantorDistrictId: "guarantorDistrict",
-  guarantorUpazilaId: "guarantorUpazila",
-};
 
 function validateStep(form, stepIndex, text) {
   const errors = {};
@@ -1327,6 +1275,7 @@ export function BeneficiaryRegistrationForm({ embedded = false }) {
             </div>
             {embedded ? <BeneficiaryRegistrationPdfButton text={text} /> : null}
           </div>
+          <p className="mt-4 text-sm font-medium text-slate-600"><span className="font-bold text-red-600">*</span> {text.requiredFieldNote}</p>
 
           <div className="mt-5">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
