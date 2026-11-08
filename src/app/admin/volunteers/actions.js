@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createAdminVolunteer, deleteAdminVolunteer, updateAdminVolunteer, updateAdminVolunteerStatus } from "@/lib/api/admin-volunteer-service";
+import { createAdminVolunteer, deleteAdminVolunteer, updateAdminVolunteer, updateAdminVolunteerLeader, updateAdminVolunteerStatus } from "@/lib/api/admin-volunteer-service";
 import { volunteerPayload, volunteerErrorMessage } from "@/lib/volunteer-registration";
 
 async function mutate(id, action) {
@@ -39,4 +39,10 @@ export async function setVolunteerStatusAction(id, key, value) {
 
 export async function deleteVolunteerAction(id) {
   return mutate(id, () => deleteAdminVolunteer(id));
+}
+
+export async function setVolunteerLeaderAction(id, isLeader, password) {
+  if (typeof isLeader !== "boolean") return { ok: false, message: "Choose a valid volunteer leader status." };
+  return mutate(id, () => updateAdminVolunteerLeader(id, { isLeader,
+    ...(isLeader && typeof password === "string" && password ? { password } : {}) }));
 }

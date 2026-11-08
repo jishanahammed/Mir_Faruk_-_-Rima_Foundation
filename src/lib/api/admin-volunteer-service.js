@@ -29,6 +29,10 @@ export async function updateAdminVolunteerStatus(id, payload) {
   return apiPut(`Volunteers/${id}/status`, payload, await authConfig());
 }
 
+export async function updateAdminVolunteerLeader(id, payload) {
+  return apiPut(`Volunteers/${id}/leader`, payload, await authConfig());
+}
+
 export async function deleteAdminVolunteer(id) {
   return apiDelete("Volunteers", id, await authConfig());
 }

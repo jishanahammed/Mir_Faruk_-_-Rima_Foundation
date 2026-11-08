@@ -113,18 +113,18 @@ export function VolunteerForm({ initial, locale = "EN", manageAccount = false, o
         <div className="grid gap-5 sm:grid-cols-2">
           {fields.map((field) => <LocationSelect key={field[0]} field={field} values={values} initial={initial} onChange={changeLocation} copy={copy} locale={locale} prefix={prefix} />)}
         </div>
-        {manageAccount || initial?.isLeader ? <p className="mt-3 text-xs leading-6 text-slate-500">Each Ward can have only one Volunteer leader.</p> : null}
+        {manageAccount || initial?.isLeader ? <p className="mt-3 text-xs leading-6 text-slate-500">A ward can have multiple volunteer leaders. Each leader has a separate login account.</p> : null}
       </fieldset>
       {manageAccount ? <fieldset disabled={busy} className="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-5">
         <legend className="px-1 text-lg font-bold text-slate-900">Volunteer portal access</legend>
         <label className="flex items-start gap-3 text-sm font-semibold text-slate-800">
           <input type="checkbox" name="isLeader" checked={isLeader} onChange={(event) => setIsLeader(event.target.checked)} className="mt-0.5 h-4 w-4 accent-cyan-700" />
-          <span>Volunteer leader<span className="mt-1 block font-normal text-slate-500">Leaders receive a login account with the Volunteer role.</span></span>
+          <span>Volunteer leader<span className="mt-1 block font-normal text-slate-500">Leaders receive a login account with the Volunteer role. Portal access details are emailed when a leader is assigned.</span></span>
         </label>
         {isLeader ? <div>
-          <label htmlFor={`${prefix}-password`} className="text-sm font-semibold text-slate-700">{initial?.userId ? "Assigned password" : "Initial password"}{!initial?.userId ? <span aria-hidden="true"> *</span> : null}</label>
-          <div className="flex items-center gap-3"><input id={`${prefix}-password`} name="password" type={showPassword ? "text" : "password"} required={!initial?.userId} minLength={6} maxLength={200} defaultValue={initial?.plainPassword || ""} autoComplete="new-password" className={inputClass} aria-describedby={`${prefix}-password-hint`} /><button type="button" aria-label={showPassword ? "Hide assigned password" : "Show assigned password"} aria-pressed={showPassword} onClick={() => setShowPassword((value) => !value)} className="mt-2 rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold">{showPassword ? "Hide" : "Show"}</button></div>
-          <p id={`${prefix}-password-hint`} className="mt-2 text-xs text-slate-500">{initial?.userId ? "Enter a password to update the linked login account. Leave blank to keep its current password." : "At least 6 characters. The leader signs in using their email address."}</p>
+          <label htmlFor={`${prefix}-password`} className="text-sm font-semibold text-slate-700">{initial?.userId ? "Assigned password" : "Initial password"}</label>
+          <div className="flex items-center gap-3"><input id={`${prefix}-password`} name="password" type={showPassword ? "text" : "password"} minLength={6} maxLength={200} defaultValue={initial?.plainPassword || ""} autoComplete="new-password" className={inputClass} aria-describedby={`${prefix}-password-hint`} /><button type="button" aria-label={showPassword ? "Hide assigned password" : "Show assigned password"} aria-pressed={showPassword} onClick={() => setShowPassword((value) => !value)} className="mt-2 rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold">{showPassword ? "Hide" : "Show"}</button></div>
+          <p id={`${prefix}-password-hint`} className="mt-2 text-xs text-slate-500">{initial?.userId ? "Enter a password to update the linked login account. Leave blank to keep its current password." : "Optional. Leave blank to generate a password automatically, or enter at least 6 characters. The leader signs in using their email address."}</p>
         </div> : initial?.userId ? <p className="text-xs text-slate-500">Volunteer portal access will be removed. The linked account is retained.</p> : null}
       </fieldset> : null}
       <div className="flex flex-wrap gap-3">

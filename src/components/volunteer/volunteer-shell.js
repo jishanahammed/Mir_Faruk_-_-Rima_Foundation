@@ -10,6 +10,7 @@ import { clearLoginUserInformation, setLoginUserInformation, shouldRefreshLoginS
 const menuItems = [
   { href: "/volunteer", label: "Dashboard", icon: "dashboard" },
   { href: "/volunteer/volunteers", label: "Volunteer List", icon: "volunteers" },
+  { href: "/volunteer/register/beneficiary", label: "Beneficiary Registration", icon: "profile" },
   { href: "/volunteer/send-query", label: "Send Query", icon: "message" },
   { href: "/volunteer/profile", label: "My Profile", icon: "profile" },
   { href: "/volunteer/change-password", label: "Change Password", icon: "lock" },

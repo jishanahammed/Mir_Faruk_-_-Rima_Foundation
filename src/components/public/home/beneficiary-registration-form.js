@@ -3,11 +3,21 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSiteLocale } from "@/components/public/providers/locale-provider";
 import { apiGet } from "@/lib/api/browser-api-service";
+import { BeneficiaryRegistrationPdfButton } from "@/components/volunteer/beneficiary-registration-pdf-button";
 
 const stepKeys = ["basic", "assistance", "guarantor", "documents"];
 
 const beneficiaryFormCopy = {
   en: {
+    pdf: {
+      download: "Download PDF Form",
+      preparing: "Preparing PDF...",
+      error: "Unable to download the PDF. Please try again.",
+      instructions: "Blank form for printing and filling in by hand.",
+      applicantSignature: "Applicant signature / thumbprint",
+      guarantorSignature: "Guarantor signature / thumbprint",
+      date: "Date",
+    },
     eyebrow: "Beneficiary Account",
     title: "Beneficiary Registration",
     description:
@@ -145,6 +155,15 @@ const beneficiaryFormCopy = {
     },
   },
   bn: {
+    pdf: {
+      download: "পিডিএফ ফরম ডাউনলোড",
+      preparing: "পিডিএফ তৈরি হচ্ছে...",
+      error: "পিডিএফ ডাউনলোড করা যায়নি। আবার চেষ্টা করুন।",
+      instructions: "প্রিন্ট করে হাতে পূরণ করার জন্য খালি ফরম।",
+      applicantSignature: "আবেদনকারীর স্বাক্ষর / টিপসই",
+      guarantorSignature: "জামিনদারের স্বাক্ষর / টিপসই",
+      date: "তারিখ",
+    },
     eyebrow: "সহায়তা গ্রহণকারী অ্যাকাউন্ট",
     title: "সহায়তা গ্রহণকারী রেজিস্ট্রেশন",
     description:
@@ -277,6 +296,15 @@ const beneficiaryFormCopy = {
     },
   },
   da: {
+    pdf: {
+      download: "Download PDF-formular",
+      preparing: "Forbereder PDF...",
+      error: "PDF kunne ikke downloades. Prøv igen.",
+      instructions: "Blank formular til udskrivning og udfyldning i hånden.",
+      applicantSignature: "Ansøgers underskrift / fingeraftryk",
+      guarantorSignature: "Garantens underskrift / fingeraftryk",
+      date: "Dato",
+    },
     eyebrow: "Modtagerkonto",
     title: "Modtagerregistrering",
     description:
@@ -1162,7 +1190,7 @@ function validateStep(form, stepIndex, text) {
   return errors;
 }
 
-export function BeneficiaryRegistrationForm() {
+export function BeneficiaryRegistrationForm({ embedded = false }) {
   const { copy: siteCopy } = useSiteLocale();
   const text = beneficiaryFormCopy[siteCopy.htmlLang] ?? beneficiaryFormCopy.en;
   const steps = stepKeys.map((key) => ({
@@ -1279,22 +1307,25 @@ export function BeneficiaryRegistrationForm() {
   };
 
   return (
-    <section className="bg-slate-50 px-6 py-16 lg:px-8">
+    <section className={embedded ? undefined : "bg-slate-50 px-6 py-16 lg:px-8"}>
       <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/70">
         <div className="border-b border-slate-100 bg-[linear-gradient(135deg,_#f8fafc,_#ecfeff)] px-5 py-5 sm:px-7">
-          <div>
-            <p className="text-xs font-bold tracking-[0.24em] text-cyan-700 uppercase">
-              {text.eyebrow}
-            </p>
-            <h1
-              id="beneficiary-registration-title"
-              className="mt-2 text-2xl font-semibold text-slate-950 sm:text-3xl"
-            >
-              {text.title}
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-              {text.description}
-            </p>
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-xs font-bold tracking-[0.24em] text-cyan-700 uppercase">
+                {text.eyebrow}
+              </p>
+              <h1
+                id="beneficiary-registration-title"
+                className="mt-2 text-2xl font-semibold text-slate-950 sm:text-3xl"
+              >
+                {text.title}
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                {text.description}
+              </p>
+            </div>
+            {embedded ? <BeneficiaryRegistrationPdfButton text={text} /> : null}
           </div>
 
           <div className="mt-5">
@@ -1468,14 +1499,16 @@ export function BeneficiaryRegistrationForm() {
             </div>
           ) : null}
 
-          <div className="mt-6 flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-between">
+          <div className={`mt-6 flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row ${embedded && activeStep === 0 ? "sm:justify-end" : "sm:justify-between"}`}>
             {activeStep === 0 ? (
-              <a
-                href="/register#beneficiary-registration"
-                className="inline-flex h-12 items-center justify-center rounded-full border border-slate-200 bg-white px-6 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-              >
-                {text.backToRegistration}
-              </a>
+              !embedded && (
+                <a
+                  href="/register#beneficiary-registration"
+                  className="inline-flex h-12 items-center justify-center rounded-full border border-slate-200 bg-white px-6 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                  {text.backToRegistration}
+                </a>
+              )
             ) : (
               <button
                 type="button"

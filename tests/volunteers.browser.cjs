@@ -22,6 +22,7 @@ const expect = baseExpect.configure({ timeout: 20000 });
   const profileWrites = [];
   const passwordWrites = [];
   let failProfileSave = true;
+  let failLeaderSave = true;
   let failDirectory = false;
   const server = http.createServer(async (req, res) => {
     try {
@@ -72,21 +73,24 @@ const expect = baseExpect.configure({ timeout: 20000 });
         if (req.method === 'GET') return res.end(JSON.stringify({ items, total: items.length, page: 1, pageSize: 20 }));
         writes.push({ method: req.method, body });
         const id = Number(url.pathname.split('/').filter(Boolean).findLast(part => /^\d+$/.test(part)));
-        if (body?.isLeader && items.some(item => item.id !== id && item.wardId === body.wardId && item.isLeader)) {
-          res.statusCode = 409;
-          return res.end(JSON.stringify({ message: 'This Ward already has a Volunteer leader. Choose another Ward or remove the existing leader assignment first.' }));
-        }
         if (req.method === 'POST') {
           const { password, ...details } = body;
-          const item = { ...baseItem, ...details, plainPassword: password || null, id: items.length + 1, userId: body.isLeader ? 'leader-user' : null };
+          const item = { ...baseItem, ...details, plainPassword: body.isLeader ? password || `Generated-mock-${items.length + 1}-729!` : null, id: items.length + 1, userId: body.isLeader ? `leader-user-${items.length + 1}` : null };
           items.push(item); res.statusCode = 201; return res.end(JSON.stringify(item));
         }
         if (req.method === 'PUT') {
           const { password, ...details } = body;
           const item = items.find(item => item.id === id);
+          if (url.pathname.endsWith('/leader') && body.isLeader && failLeaderSave) {
+            failLeaderSave = false; res.statusCode = 503;
+            return res.end(JSON.stringify({ message: 'Unable to assign leader. Please try again.' }));
+          }
           Object.assign(item, details);
           if (password) item.plainPassword = password;
-          if (item.isLeader) item.userId ||= 'leader-user';
+          if (item.isLeader && !item.userId) {
+            item.userId = `leader-user-${id}`;
+            item.plainPassword = password || `Generated-mock-${id}-729!`;
+          }
           return res.end(JSON.stringify(item));
         }
         if (req.method === 'DELETE') { items = items.filter(item => item.id !== id); res.statusCode = 204; return res.end(); }
@@ -135,7 +139,7 @@ const expect = baseExpect.configure({ timeout: 20000 });
       await page.locator(`select[name=${name}]`).selectOption(value);
     }
     await page.getByRole('checkbox', { name: /Volunteer leader/ }).check();
-    await expect(page.getByLabel('Initial password')).toHaveAttribute('required', '');
+    await expect(page.getByLabel('Initial password')).toHaveJSProperty('required', false);
     await page.getByLabel('Initial password').fill('Leader-test-729!');
     await page.getByRole('button', { name: 'Add volunteer', exact: true }).last().click();
     await expect(page.getByRole('status').filter({ hasText: 'Volunteer added successfully.' })).toBeVisible();
@@ -155,16 +159,63 @@ const expect = baseExpect.configure({ timeout: 20000 });
       await expect(page.locator(`select[name=${name}]`)).toBeEnabled();
       await page.locator(`select[name=${name}]`).selectOption(value);
     }
-    await page.getByRole('checkbox', { name: /Volunteer leader/ }).check();
-    await page.getByLabel('Initial password').fill('Another-leader-729!');
-    await expect(page.getByText('Each Ward can have only one Volunteer leader.', { exact: true })).toBeVisible();
+    await expect(page.getByText('A ward can have multiple volunteer leaders. Each leader has a separate login account.', { exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'Add volunteer', exact: true }).last().click();
-    await expect(page.getByRole('alert').filter({ hasText: 'This Ward already has a Volunteer leader.' })).toBeVisible();
-    await expect(page.getByLabel('Full name')).toHaveValue('Another Leader');
-    await expect(page.locator('select[name=wardId]')).toHaveValue('5');
-    assert.equal(items.length, 1);
-    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
-    console.log('PASS: Duplicate Ward leader validation shows the API conflict and preserves the entered form details.');
+    await expect(page.getByRole('status').filter({ hasText: 'Volunteer added successfully.' })).toBeVisible();
+    const anotherRow = page.getByRole('row').filter({ has: page.getByText('Another Leader', { exact: true }) });
+    const writesBeforePromotion = writes.length;
+    await anotherRow.getByRole('button', { name: 'Make leader', exact: true }).click();
+    const leaderForm = anotherRow.getByRole('form', { name: 'Make Another Leader a leader', exact: true });
+    await expect(leaderForm.getByLabel('Leader password', { exact: true })).toBeFocused();
+    assert.equal(writes.length, writesBeforePromotion);
+    assert.equal(items[1].isLeader, false);
+    await leaderForm.getByRole('button', { name: 'Confirm leader', exact: true }).click();
+    assert.equal(writes.length, writesBeforePromotion);
+    await leaderForm.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await expect(leaderForm).toHaveCount(0);
+    assert.equal(items[1].isLeader, false);
+    await anotherRow.getByRole('button', { name: 'Make leader', exact: true }).click();
+    await leaderForm.getByLabel('Leader password', { exact: true }).fill('Chosen-leader-729!');
+    await leaderForm.getByRole('button', { name: 'Show leader password', exact: true }).click();
+    await expect(leaderForm.getByLabel('Leader password', { exact: true })).toHaveAttribute('type', 'text');
+    await leaderForm.getByRole('button', { name: 'Hide leader password', exact: true }).click();
+    await expect(leaderForm.getByLabel('Leader password', { exact: true })).toHaveAttribute('type', 'password');
+    await page.screenshot({ path: 'build/volunteer-leader-work/leader-password-form.png', fullPage: true });
+    await leaderForm.getByRole('button', { name: 'Confirm leader', exact: true }).click();
+    await expect(page.getByRole('alert').filter({ hasText: 'Unable to assign leader. Please try again.' })).toBeVisible();
+    await expect(leaderForm.getByLabel('Leader password', { exact: true })).toHaveValue('Chosen-leader-729!');
+    assert.equal(items[1].isLeader, false);
+    await leaderForm.getByRole('button', { name: 'Confirm leader', exact: true }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Volunteer is now a leader.' })).toBeVisible();
+    await expect(leaderForm).toHaveCount(0);
+    assert.deepEqual(writes.at(-1).body, { isLeader: true, password: 'Chosen-leader-729!' });
+    await expect(page.getByRole('heading', { name: /Edit volunteer:/ })).toHaveCount(0);
+    await expect(page.getByRole('cell', { name: /Login account linked/ })).toHaveCount(2);
+    assert.equal(items.length, 2);
+    assert(items.every(item => item.isLeader && item.wardId === 5));
+    assert.notEqual(items[0].userId, items[1].userId);
+    assert.equal(items[1].plainPassword, 'Chosen-leader-729!');
+    await anotherRow.getByRole('button', { name: 'Show password for Another Leader', exact: true }).click();
+    await expect(anotherRow.getByText('Chosen-leader-729!', { exact: true })).toBeVisible();
+    await anotherRow.getByRole('button', { name: 'Edit', exact: true }).click();
+    await page.getByLabel('Profession').fill('Doctor');
+    await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+    await expect(anotherRow.getByText('Doctor', { exact: true })).toBeVisible();
+    assert.equal(items[0].isLeader, true);
+    assert.equal(items[1].isLeader, true);
+    await anotherRow.getByRole('button', { name: 'Remove leader', exact: true }).click();
+    await expect(anotherRow.getByText('Portal access removed', { exact: true })).toBeVisible();
+    assert.equal(items[0].isLeader, true);
+    await anotherRow.getByRole('button', { name: 'Make leader', exact: true }).click();
+    await leaderForm.getByLabel('Leader password', { exact: true }).fill('Reassigned-leader-729!');
+    await leaderForm.getByRole('button', { name: 'Confirm leader', exact: true }).click();
+    await expect(anotherRow.getByText('Login account linked', { exact: true })).toBeVisible();
+    assert.equal(items[1].plainPassword, 'Reassigned-leader-729!');
+    await anotherRow.getByRole('button', { name: 'Delete', exact: true }).click();
+    await anotherRow.getByRole('button', { name: 'Confirm delete', exact: true }).click();
+    await expect(anotherRow).toHaveCount(0);
+    await expect(page.getByRole('cell', { name: /Login account linked/ })).toHaveCount(1);
+    console.log('PASS: Make leader asks for a password, supports cancel and retry, and saves the chosen password for new and existing accounts without affecting the other leader.');
 
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
     await expect(page.getByLabel('Initial password')).toHaveCount(0);
@@ -176,7 +227,7 @@ const expect = baseExpect.configure({ timeout: 20000 });
     await page.getByLabel('Profession').fill('Engineer');
     await page.getByRole('button', { name: 'Save changes', exact: true }).click();
     await expect(page.getByRole('status').filter({ hasText: 'Volunteer details updated.' })).toBeVisible();
-    const edit = writes.find(write => write.method === 'PUT').body;
+    const edit = writes.filter(write => write.method === 'PUT').at(-1).body;
     assert.equal(edit.isLeader, true); assert.equal(edit.profession, 'Engineer'); assert.equal(edit.password, 'Leader-updated-729!');
     assert.equal(items[0].plainPassword, 'Leader-updated-729!');
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
@@ -267,7 +318,7 @@ const expect = baseExpect.configure({ timeout: 20000 });
     await expect(statistics.locator('dl > div').first().locator('dd > p').first()).toHaveText('23');
     console.log('PASS: Dashboard keeps available profile details and shows unavailable counts instead of zero when summary requests fail.');
     const navigation = portal.getByRole('navigation', { name: 'Volunteer navigation' });
-    await expect(navigation.getByRole('link')).toHaveCount(4);
+    await expect(navigation.getByRole('link')).toHaveCount(5);
     await expect(navigation.getByRole('link', { name: 'Dashboard', exact: true })).toHaveAttribute('aria-current', 'page');
     await expect(portal.getByRole('complementary', { name: 'Volunteer sidebar' })).toBeVisible();
     await portal.screenshot({ path: 'build/volunteer-leader-work/volunteer-dashboard-desktop.png', fullPage: true });
@@ -342,7 +393,7 @@ const expect = baseExpect.configure({ timeout: 20000 });
     await expect(portal.getByRole('complementary', { name: 'Volunteer sidebar' })).toBeHidden();
     await portal.getByRole('button', { name: 'Open volunteer menu', exact: true }).click();
     await expect(portal.getByRole('dialog', { name: 'Volunteer menu', exact: true })).toBeVisible();
-    await expect(navigation.getByRole('link')).toHaveCount(4);
+    await expect(navigation.getByRole('link')).toHaveCount(5);
     await portal.screenshot({ path: 'build/volunteer-leader-work/volunteer-dashboard-mobile-menu.png', fullPage: true });
     await portal.keyboard.press('Escape');
     await expect(portal.getByRole('dialog', { name: 'Volunteer menu', exact: true })).toBeHidden();
