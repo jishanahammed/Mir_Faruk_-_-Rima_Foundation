@@ -355,8 +355,8 @@ function QrPanel({ copy, isBkash = false }) {
   return (
     <div className="order-first flex flex-col lg:order-2">
       <SectionHeading icon={<QrIcon />}>{copy.qr.heading}</SectionHeading>
-      <figure className="mt-3 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 sm:px-5">
+      <figure className="mt-2 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-2 sm:px-5">
           <p className="text-[0.82rem] font-semibold text-slate-900 sm:text-sm">
             {isBkash ? copy.payment.bkash : copy.qr.panelLabel}
           </p>
@@ -364,7 +364,7 @@ function QrPanel({ copy, isBkash = false }) {
             {copy.qr.badge}
           </span>
         </div>
-        <div className={`flex flex-1 items-center justify-center px-2 py-3 sm:px-3 sm:py-4 ${isBkash ? "bg-pink-50/60" : "bg-[radial-gradient(circle_at_50%_30%,rgba(8,145,178,0.07),transparent_70%)]"}`}>
+        <div className={`flex flex-1 items-center justify-center px-2 py-2 sm:px-3 ${isBkash ? "bg-pink-50/60" : "bg-[radial-gradient(circle_at_50%_30%,rgba(8,145,178,0.07),transparent_70%)]"}`}>
           <a href={src} target="_blank" rel="noopener noreferrer" aria-label={copy.payment.openQr} className="block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600">
             <Image
               src={src}
@@ -375,13 +375,13 @@ function QrPanel({ copy, isBkash = false }) {
               height={isBkash ? 1460 : 2380}
               sizes="(min-width: 640px) 20rem, 80vw"
               unoptimized={isBkash}
-              className={`h-auto w-auto max-w-full rounded-xl shadow-lg shadow-slate-900/15 ring-1 ring-slate-900/5 ${isBkash ? "max-h-[28rem]" : "max-h-[22rem]"}`}
+              className={`h-auto w-auto max-w-full rounded-xl shadow-lg shadow-slate-900/15 ring-1 ring-slate-900/5 ${isBkash ? "max-h-[22rem]" : "max-h-[18rem]"}`}
             />
           </a>
         </div>
-        <figcaption className="border-t border-slate-100 px-4 py-3 text-center text-xs leading-5 text-slate-500 sm:px-5">
+        <figcaption className="border-t border-slate-100 px-4 py-2 text-center text-xs leading-4 text-slate-500 sm:px-5">
           {isBkash ? copy.payment.note : copy.qr.note}
-          <a href={src} target="_blank" rel="noopener noreferrer" className="mt-2 block font-semibold text-cyan-700 underline underline-offset-2">
+          <a href={src} target="_blank" rel="noopener noreferrer" className="mt-1 block font-semibold text-cyan-700 underline underline-offset-2">
             {copy.payment.openQr}
           </a>
         </figcaption>
@@ -506,20 +506,19 @@ function DonationMethodSlider({ copy, children }) {
               style={{ height: activeIndex === index ? "auto" : 0, overflow: activeIndex === index ? "visible" : "hidden" }}
             >
               {index === 0 ? children : (
-                <div className="grid items-stretch gap-5 lg:grid-cols-2">
+                <div className="grid items-stretch gap-4 lg:grid-cols-2">
                   <div className="order-2 flex flex-col lg:order-1">
-                    <SectionHeading icon={<QrIcon />}>{copy.payment.bkash}</SectionHeading>
-                    <div className="mt-3 flex flex-1 flex-col overflow-hidden rounded-2xl border border-pink-200 bg-white shadow-sm">
-                      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 bg-white px-4 py-4 sm:px-6">
-                        <Image src="/bKash-logo.webp" alt="bKash" width={2000} height={918} className="h-10 w-auto sm:h-12" />
+                    <div className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-pink-200 bg-white shadow-sm lg:mt-8">
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 bg-white px-4 py-2 sm:px-6">
+                        <Image src="/bKash-logo.webp" alt="bKash" width={2000} height={918} className="h-8 w-auto sm:h-10" />
                         <span className="rounded-full border border-pink-200 bg-pink-50 px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-wider text-pink-700">{copy.officialAccount}</span>
                       </div>
                       <dl className="divide-y divide-pink-100">
-                        <div className="px-4 py-5 sm:px-5">
+                        <div className="px-4 py-3 sm:px-5">
                           <dt className="text-[0.6rem] font-semibold uppercase tracking-wider text-slate-400">{copy.payment.accountName}</dt>
                           <dd className="mt-1 break-words text-sm font-semibold text-slate-900">MIR FARUK &amp; RIMA FOUNDATION</dd>
                         </div>
-                        <div className="flex flex-wrap items-center justify-between gap-3 border-l-[3px] border-l-[#e2136e] bg-pink-50 px-4 py-5 sm:px-5">
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-l-[3px] border-l-[#e2136e] bg-pink-50 px-4 py-3 sm:px-5">
                           <div>
                             <dt className="text-[0.6rem] font-semibold uppercase tracking-wider text-pink-700">{copy.payment.number}</dt>
                             <dd className="mt-1 font-mono text-xl font-bold tracking-wide text-slate-900">01771528299</dd>
@@ -527,9 +526,9 @@ function DonationMethodSlider({ copy, children }) {
                           <CopyButton value="01771528299" copy={copy.reference} isBkash />
                         </div>
                       </dl>
-                      <div className="space-y-3 px-4 py-5 text-sm leading-6 text-slate-600 sm:px-5">
+                      <div className="space-y-2 px-4 py-3 text-sm leading-5 text-slate-600 sm:px-5">
                         <p>{copy.payment.note}</p>
-                        <p className="rounded-xl bg-pink-50 p-3 text-xs leading-5 text-pink-800">{copy.payment.referenceNote}</p>
+                        <p className="rounded-xl bg-pink-50 p-2 text-xs leading-4 text-pink-800">{copy.payment.referenceNote}</p>
                       </div>
                     </div>
                   </div>
@@ -554,6 +553,38 @@ function DonationMethodSlider({ copy, children }) {
         </button>
       </div>
     </section>
+  );
+}
+
+export function DonationPaymentMethods({ copy }) {
+  return (
+    <DonationMethodSlider copy={copy}>
+      <div className="grid items-stretch gap-4 lg:grid-cols-2">
+        <div className="order-2 flex flex-col lg:order-1">
+          <SectionHeading icon={<BankIcon />}>{copy.bankTransfer}</SectionHeading>
+          <div className="mt-2 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+            <div className="relative flex flex-wrap items-center justify-between gap-3 bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-4 py-2 sm:flex-nowrap sm:gap-4 sm:px-6">
+              <Image
+                src="/footer-logo.webp"
+                alt="Mutual Trust Bank PLC"
+                width={297}
+                height={60}
+                className="h-7 w-auto sm:h-9"
+              />
+              <span className="shrink-0 rounded-full border border-cyan-300/40 bg-cyan-400/10 px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.15em] text-cyan-100 sm:px-3 sm:text-[0.62rem] sm:tracking-[0.2em]">
+                {copy.officialAccount}
+              </span>
+            </div>
+            <dl className="flex flex-1 flex-col gap-px bg-slate-100">
+              {BANK_DETAILS.map((item) => (
+                <DetailRow key={item.label} item={item} highlight={item.label === "Account No"} />
+              ))}
+            </dl>
+          </div>
+        </div>
+        <QrPanel copy={copy} />
+      </div>
+    </DonationMethodSlider>
   );
 }
 
@@ -888,34 +919,7 @@ export function DonateBankInfoModal({ isOpen, onClose, project, projectId, donor
               </div>
             )}
 
-            <DonationMethodSlider copy={copy}>
-              <div className="grid items-stretch gap-5 lg:grid-cols-2">
-                <div className="order-2 flex flex-col lg:order-1">
-                  <SectionHeading icon={<BankIcon />}>{copy.bankTransfer}</SectionHeading>
-                  <div className="mt-3 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-                    <div className="relative flex flex-wrap items-center justify-between gap-3 bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-4 py-4 sm:flex-nowrap sm:gap-4 sm:px-6">
-                      <Image
-                        src="/footer-logo.webp"
-                        alt="Mutual Trust Bank PLC"
-                        width={297}
-                        height={60}
-                        className="h-7 w-auto sm:h-9"
-                      />
-                      <span className="shrink-0 rounded-full border border-cyan-300/40 bg-cyan-400/10 px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.15em] text-cyan-100 sm:px-3 sm:text-[0.62rem] sm:tracking-[0.2em]">
-                        {copy.officialAccount}
-                      </span>
-                    </div>
-                    <dl className="flex flex-1 flex-col gap-px bg-slate-100">
-                      {BANK_DETAILS.map((item) => (
-                        <DetailRow key={item.label} item={item} highlight={item.label === "Account No"} />
-                      ))}
-                    </dl>
-                  </div>
-                </div>
-
-                <QrPanel copy={copy} />
-              </div>
-            </DonationMethodSlider>
+            <DonationPaymentMethods copy={copy} />
 
             <div className="mt-6">
               <SectionHeading icon={<ReceiptIcon />}>{copy.transaction.heading}</SectionHeading>
