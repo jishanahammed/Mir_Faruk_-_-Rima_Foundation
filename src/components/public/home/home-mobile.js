@@ -7,6 +7,7 @@ import { CeoBani } from "@/components/public/home/ceo-bani";
 import { DonateBankInfoModal } from "@/components/public/donate/donate-bank-info-modal";
 import { DonorRegistrationModal } from "@/components/public/home/donor-registration-modal";
 import { HighlightCard } from "@/components/public/home/highlight-card";
+import { HomeBankInfo } from "@/components/public/home/home-bank-info";
 import { QardHasanahBanner } from "@/components/public/home/qard-hasanah-banner";
 import { RegistrationSection } from "@/components/public/home/registration-section";
 import { SupportModelPanel } from "@/components/public/home/support-model-panel";
@@ -36,6 +37,7 @@ export function HomeMobile({ featuredProjects, videoSpeech }) {
         </div>
       </section>
 
+      <HomeBankInfo />
       <CeoBani />
 
       <VideoSection videoSpeech={videoSpeech} />

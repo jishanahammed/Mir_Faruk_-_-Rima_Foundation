@@ -245,7 +245,7 @@ const BANK_DETAILS = [
   { label: "SWIFT Code", value: "MTBLBDDH", copyable: true, mono: true, fullWidth: true },
 ];
 
-function CopyButton({ value, copy, isBkash = false }) {
+function CopyButton({ value, copy, isBkash = false, spacious = false }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -263,7 +263,7 @@ function CopyButton({ value, copy, isBkash = false }) {
       type="button"
       onClick={handleCopy}
       aria-label={`${copy?.copy ?? "Copy"} ${value}`}
-      className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[0.65rem] font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-1 ${copied
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[0.65rem] font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-1 ${spacious ? "min-h-11" : ""} ${copied
         ? (isBkash ? "border-pink-200 bg-pink-50 text-pink-700" : "border-teal-200 bg-teal-50 text-teal-700")
         : (isBkash ? "border-pink-200 bg-white text-pink-700 hover:border-pink-300 hover:bg-pink-50" : "border-slate-200 bg-white text-slate-500 hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700 hover:shadow-sm")
         }`}
@@ -283,15 +283,15 @@ function CopyButton({ value, copy, isBkash = false }) {
   );
 }
 
-function DetailRow({ item, highlight = false }) {
+function DetailRow({ item, highlight = false, spacious = false }) {
   return (
     <div
-      className={`flex flex-1 items-center justify-between gap-3 py-2 pr-4 transition-colors sm:pr-5 ${highlight
+      className={`flex flex-1 items-center justify-between gap-3 pr-4 transition-colors sm:pr-5 ${spacious ? `flex-wrap py-2.5 sm:flex-nowrap ${item.fullWidth ? "lg:col-span-2" : ""}` : "py-2"} ${highlight
         ? "border-l-[3px] border-cyan-500 bg-cyan-50/70 pl-[calc(1rem-3px)] sm:pl-[calc(1.25rem-3px)]"
         : "bg-white pl-4 hover:bg-slate-50/70 sm:pl-5"
         }`}
     >
-      <div className="min-w-0">
+      <div className={spacious ? "min-w-0 flex-1 basis-40" : "min-w-0"}>
         <dt className={`text-[0.6rem] font-semibold uppercase tracking-[0.16em] ${highlight ? "text-cyan-700" : "text-slate-400"
           }`}>
           {item.label}
@@ -305,7 +305,7 @@ function DetailRow({ item, highlight = false }) {
           {item.value}
         </dd>
       </div>
-      {item.copyable ? <CopyButton value={item.value} /> : null}
+      {item.copyable ? <CopyButton value={item.value} spacious={spacious} /> : null}
     </div>
   );
 }
@@ -350,22 +350,22 @@ function QrIcon() {
 }
 
 // Keep the original posters intact and offer a full-size view for scanning.
-function QrPanel({ copy, isBkash = false }) {
+function QrPanel({ copy, isBkash = false, spacious = false }) {
   const src = isBkash ? "/bKash Bangla QR.png" : "/qr.png";
   return (
-    <div className="order-first flex flex-col lg:order-2">
+    <div className="order-first flex min-w-0 flex-col lg:order-2">
       <SectionHeading icon={<QrIcon />}>{copy.qr.heading}</SectionHeading>
       <figure className="mt-2 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-2 sm:px-5">
+        {!spacious ? <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-2 sm:px-5">
           <p className="text-[0.82rem] font-semibold text-slate-900 sm:text-sm">
             {isBkash ? copy.payment.bkash : copy.qr.panelLabel}
           </p>
           <span className="shrink-0 rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.15em] text-teal-700">
             {copy.qr.badge}
           </span>
-        </div>
-        <div className={`flex flex-1 items-center justify-center px-2 py-2 sm:px-3 ${isBkash ? "bg-pink-50/60" : "bg-[radial-gradient(circle_at_50%_30%,rgba(8,145,178,0.07),transparent_70%)]"}`}>
-          <a href={src} target="_blank" rel="noopener noreferrer" aria-label={copy.payment.openQr} className="block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600">
+        </div> : null}
+        <div className={`flex min-w-0 flex-1 items-center justify-center ${spacious ? "px-3 py-3" : "px-2 py-2 sm:px-3"} ${isBkash ? "bg-pink-50/60" : "bg-[radial-gradient(circle_at_50%_30%,rgba(8,145,178,0.07),transparent_70%)]"}`}>
+          <a href={src} target="_blank" rel="noopener noreferrer" aria-label={copy.payment.openQr} className="block min-w-0 max-w-full rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600">
             <Image
               src={src}
               alt={isBkash
@@ -375,12 +375,12 @@ function QrPanel({ copy, isBkash = false }) {
               height={isBkash ? 1460 : 2380}
               sizes="(min-width: 640px) 20rem, 80vw"
               unoptimized={isBkash}
-              className={`h-auto w-auto max-w-full rounded-xl shadow-lg shadow-slate-900/15 ring-1 ring-slate-900/5 ${isBkash ? "max-h-[22rem]" : "max-h-[18rem]"}`}
+              className={`h-auto w-auto max-w-full rounded-xl object-contain shadow-lg shadow-slate-900/15 ring-1 ring-slate-900/5 ${spacious ? "max-h-72 sm:max-h-80 lg:max-h-64" : isBkash ? "max-h-[22rem]" : "max-h-[18rem]"}`}
             />
           </a>
         </div>
-        <figcaption className="border-t border-slate-100 px-4 py-2 text-center text-xs leading-4 text-slate-500 sm:px-5">
-          {isBkash ? copy.payment.note : copy.qr.note}
+        <figcaption className={`border-t border-slate-100 px-4 text-center text-xs text-slate-500 sm:px-5 ${spacious ? "py-2 leading-5" : "py-2 leading-4"}`}>
+          {!spacious ? (isBkash ? copy.payment.note : copy.qr.note) : null}
           <a href={src} target="_blank" rel="noopener noreferrer" className="mt-1 block font-semibold text-cyan-700 underline underline-offset-2">
             {copy.payment.openQr}
           </a>
@@ -390,7 +390,7 @@ function QrPanel({ copy, isBkash = false }) {
   );
 }
 
-function DonationMethodSlider({ copy, children }) {
+function DonationMethodSlider({ copy, children, spacious = false }) {
   const [activeIndex, setActiveIndex] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
@@ -430,7 +430,7 @@ function DonationMethodSlider({ copy, children }) {
 
   return (
     <section
-      className="mt-6"
+      className={spacious ? "mt-6 grid grid-cols-1 gap-x-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:rounded-3xl lg:border lg:border-slate-200/80 lg:bg-white lg:p-7 lg:shadow-[0_12px_40px_rgba(15,23,42,0.06)] xl:grid-cols-[minmax(0,1fr)_22rem]" : "mt-6"}
       aria-label={copy.payment.heading}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
@@ -442,7 +442,7 @@ function DonationMethodSlider({ copy, children }) {
       onTouchEnd={() => setIsTouching(false)}
       onTouchCancel={() => setIsTouching(false)}
     >
-      <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">{copy.payment.heading}</p>
+      <p className={`mb-3 text-xs font-bold uppercase tracking-wider text-slate-500 ${spacious ? "lg:mb-0 lg:self-center" : ""}`}>{copy.payment.heading}</p>
       <div role="tablist" aria-label={copy.payment.heading} className="relative flex rounded-2xl border border-slate-200 bg-slate-100 p-1">
         <span
           aria-hidden="true"
@@ -461,11 +461,11 @@ function DonationMethodSlider({ copy, children }) {
             tabIndex={activeIndex === index ? 0 : -1}
             onClick={() => setActiveIndex(index)}
             onKeyDown={(event) => handleTabKeyDown(event, index)}
-            className={`relative z-10 flex flex-1 items-center justify-center gap-2 rounded-xl px-1 py-1 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 ${activeIndex === index ? "text-white" : index === 1 ? "text-pink-700 hover:bg-pink-50" : "text-slate-600 hover:text-slate-900"}`}
+            className={`relative z-10 flex flex-1 items-center justify-center gap-2 rounded-xl px-1 py-1 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 ${spacious ? "min-h-12 min-w-0" : ""} ${activeIndex === index ? "text-white" : index === 1 ? "text-pink-700 hover:bg-pink-50" : "text-slate-600 hover:text-slate-900"}`}
           >
             {index === 0 ? <><BankIcon />{method}</> : (
               <span className="rounded-md bg-white px-2 py-1">
-                <Image src="/bKash-logo.webp" alt="" width={2000} height={918} className="h-10 w-30" />
+                <Image src="/bKash-logo.webp" alt="" width={2000} height={918} className={spacious ? "h-7 w-auto sm:h-8" : "h-10 w-30"} />
               </span>
             )}
           </button>
@@ -473,7 +473,7 @@ function DonationMethodSlider({ copy, children }) {
       </div>
 
       <div
-        className="mt-5 touch-pan-y overflow-hidden"
+        className={`mt-5 touch-pan-y overflow-hidden ${spacious ? "lg:col-span-2 lg:mt-6" : ""}`}
         onTouchStart={(event) => {
           const touch = event.touches[0];
           touchStart.current = { x: touch.clientX, y: touch.clientY };
@@ -506,33 +506,34 @@ function DonationMethodSlider({ copy, children }) {
               style={{ height: activeIndex === index ? "auto" : 0, overflow: activeIndex === index ? "visible" : "hidden" }}
             >
               {index === 0 ? children : (
-                <div className="grid items-stretch gap-4 lg:grid-cols-2">
-                  <div className="order-2 flex flex-col lg:order-1">
-                    <div className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-pink-200 bg-white shadow-sm lg:mt-8">
-                      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 bg-white px-4 py-2 sm:px-6">
+                <div className={`grid gap-4 ${spacious ? "lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-stretch lg:gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]" : "items-stretch lg:grid-cols-2"}`}>
+                  <div className="order-2 flex min-w-0 flex-col lg:order-1">
+                    {spacious ? <SectionHeading icon={<HandHeartIcon />}>{copy.payment.bkash}</SectionHeading> : null}
+                    <div className={`flex flex-col overflow-hidden rounded-2xl border border-pink-200 bg-white shadow-sm ${spacious ? "mt-2 lg:flex-1" : "flex-1 lg:mt-8"}`}>
+                      <div className={`flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 bg-white px-4 sm:px-6 ${spacious ? "py-3" : "py-2"}`}>
                         <Image src="/bKash-logo.webp" alt="bKash" width={2000} height={918} className="h-8 w-auto sm:h-10" />
                         <span className="rounded-full border border-pink-200 bg-pink-50 px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-wider text-pink-700">{copy.officialAccount}</span>
                       </div>
                       <dl className="divide-y divide-pink-100">
                         <div className="px-4 py-3 sm:px-5">
                           <dt className="text-[0.6rem] font-semibold uppercase tracking-wider text-slate-400">{copy.payment.accountName}</dt>
-                          <dd className="mt-1 break-words text-sm font-semibold text-slate-900">MIR FARUK &amp; RIMA FOUNDATION</dd>
+                          <dd className={`mt-1 break-words font-semibold text-slate-900 ${spacious ? "text-sm lg:text-lg" : "text-sm"}`}>MIR FARUK &amp; RIMA FOUNDATION</dd>
                         </div>
                         <div className="flex flex-wrap items-center justify-between gap-3 border-l-[3px] border-l-[#e2136e] bg-pink-50 px-4 py-3 sm:px-5">
-                          <div>
+                          <div className="min-w-0">
                             <dt className="text-[0.6rem] font-semibold uppercase tracking-wider text-pink-700">{copy.payment.number}</dt>
-                            <dd className="mt-1 font-mono text-xl font-bold tracking-wide text-slate-900">01771528299</dd>
+                            <dd className={`mt-1 font-mono font-bold tracking-wide text-slate-900 ${spacious ? "text-xl lg:text-3xl" : "text-xl"}`}>01771528299</dd>
                           </div>
-                          <CopyButton value="01771528299" copy={copy.reference} isBkash />
+                          <CopyButton value="01771528299" copy={copy.reference} isBkash spacious={spacious} />
                         </div>
                       </dl>
-                      <div className="space-y-2 px-4 py-3 text-sm leading-5 text-slate-600 sm:px-5">
+                      <div className={`px-4 text-sm text-slate-600 sm:px-5 ${spacious ? "flex flex-col gap-3 py-4 leading-6 lg:py-5" : "space-y-2 py-3 leading-5"}`}>
                         <p>{copy.payment.note}</p>
                         <p className="rounded-xl bg-pink-50 p-2 text-xs leading-4 text-pink-800">{copy.payment.referenceNote}</p>
                       </div>
                     </div>
                   </div>
-                  <QrPanel copy={copy} isBkash />
+                  <QrPanel copy={copy} isBkash spacious={spacious} />
                 </div>
               )}
             </div>
@@ -540,7 +541,7 @@ function DonationMethodSlider({ copy, children }) {
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-center gap-4">
+      <div className={`mt-4 flex items-center justify-center ${spacious ? "flex-wrap gap-2 sm:gap-4 lg:col-span-2 lg:mt-6" : "gap-4"}`}>
         <button type="button" onClick={() => setActiveIndex(1 - activeIndex)} aria-label={copy.payment.previous} className={`flex h-10 w-10 items-center justify-center rounded-full border transition focus-visible:outline-2 ${navigationClass}`}>
           <span aria-hidden="true">&larr;</span>
         </button>
@@ -556,14 +557,14 @@ function DonationMethodSlider({ copy, children }) {
   );
 }
 
-export function DonationPaymentMethods({ copy }) {
+export function DonationPaymentMethods({ copy, spacious = false }) {
   return (
-    <DonationMethodSlider copy={copy}>
-      <div className="grid items-stretch gap-4 lg:grid-cols-2">
-        <div className="order-2 flex flex-col lg:order-1">
+    <DonationMethodSlider copy={copy} spacious={spacious}>
+      <div className={`grid gap-4 ${spacious ? "lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-stretch lg:gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]" : "items-stretch lg:grid-cols-2"}`}>
+        <div className="order-2 flex min-w-0 flex-col lg:order-1">
           <SectionHeading icon={<BankIcon />}>{copy.bankTransfer}</SectionHeading>
-          <div className="mt-2 flex flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-            <div className="relative flex flex-wrap items-center justify-between gap-3 bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-4 py-2 sm:flex-nowrap sm:gap-4 sm:px-6">
+          <div className={`mt-2 flex flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm ${spacious ? "lg:flex-1" : "flex-1"}`}>
+            <div className={`relative flex flex-wrap items-center justify-between gap-3 bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_55%,#155e75_100%)] px-4 sm:flex-nowrap sm:gap-4 sm:px-6 ${spacious ? "py-3" : "py-2"}`}>
               <Image
                 src="/footer-logo.webp"
                 alt="Mutual Trust Bank PLC"
@@ -575,14 +576,14 @@ export function DonationPaymentMethods({ copy }) {
                 {copy.officialAccount}
               </span>
             </div>
-            <dl className="flex flex-1 flex-col gap-px bg-slate-100">
+            <dl className={spacious ? "grid grid-cols-1 gap-px bg-slate-100 lg:grid-cols-2" : "flex flex-1 flex-col gap-px bg-slate-100"}>
               {BANK_DETAILS.map((item) => (
-                <DetailRow key={item.label} item={item} highlight={item.label === "Account No"} />
+                <DetailRow key={item.label} item={item} highlight={item.label === "Account No"} spacious={spacious} />
               ))}
             </dl>
           </div>
         </div>
-        <QrPanel copy={copy} />
+        <QrPanel copy={copy} spacious={spacious} />
       </div>
     </DonationMethodSlider>
   );

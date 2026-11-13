@@ -12,6 +12,7 @@ import { HomeMobile } from "@/components/public/home/home-mobile";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { DonorImpactInfoUpdatePage } from "../goat-farming/donor-impact-info-update";
 import { VideoSection } from "@/components/public/home/video-section";
+import { HomeBankInfo } from "@/components/public/home/home-bank-info";
 
 export function HomePage({ featuredProjects, videoSpeech }) {
   const isMobile = useIsMobile();
@@ -24,6 +25,7 @@ export function HomePage({ featuredProjects, videoSpeech }) {
   return (
     <>
       <Hero />
+      <HomeBankInfo />
       <CeoBani />
 
       <VideoSection videoSpeech={videoSpeech} />
